@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tri-State Aggregates Deep Dive | QuarryMe</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a1628;--surface:#111d33;--surface2:#162440;--border:#1e3a5f;--text:#e8edf3;--muted:#8899aa;--gold:#d4a03c;--green:#2ecc71;--red:#e74c3c;--blue:#3498db}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
+.data{font-family:'JetBrains Mono','Courier New',monospace}
+nav{position:fixed;top:0;width:100%;background:rgba(10,22,40,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:1000;padding:12px 0}
+nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px;padding:0 20px;overflow-x:auto}
+nav a{color:var(--muted);text-decoration:none;font-size:13px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;transition:color .2s}
+nav a:hover,nav a.active{color:var(--gold)}
+nav .logo{color:var(--gold);font-weight:700;font-size:16px;margin-right:auto}
+.hero{padding:120px 20px 60px;text-align:center;background:linear-gradient(180deg,#0d1f38 0%,var(--bg) 100%)}
+.hero h1{font-size:clamp(28px,5vw,48px);font-weight:700;margin-bottom:8px}
+.hero h1 span{color:var(--gold)}
+.hero .sub{color:var(--muted);font-size:18px;margin-bottom:32px;letter-spacing:3px}
+.stats-row{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat .val{font-size:36px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+section{max-width:1200px;margin:0 auto;padding:60px 20px}
+section h2{font-size:28px;font-weight:700;margin-bottom:8px;color:var(--text)}
+section h2 span{color:var(--gold)}
+section .section-sub{color:var(--muted);margin-bottom:32px;font-size:14px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:32px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;transition:border-color .2s}
+.card:hover{border-color:var(--gold)}
+.card .card-val{font-size:24px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.card .card-title{font-size:14px;font-weight:600;margin:4px 0}
+.card .card-desc{font-size:12px;color:var(--muted)}
+.stats-strip{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px}
+.stats-strip .chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:8px 16px;font-size:13px}
+.stats-strip .chip b{color:var(--gold)}
+.map-container{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:24px}
+.map-tabs{display:flex;border-bottom:1px solid var(--border)}
+.map-tabs button{flex:1;padding:12px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.map-tabs button.active{color:var(--gold);border-bottom:2px solid var(--gold);background:rgba(212,160,60,0.05)}
+#map{height:500px;width:100%}
+.map-info{padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;border-top:1px solid var(--border)}
+.map-info h4{font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:1px;margin-bottom:8px}
+.map-info ul{list-style:none;font-size:13px}
+.map-info li{padding:2px 0}
+.map-info li span{color:var(--gold);font-family:'JetBrains Mono',monospace}
+.tier{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px;border-left:3px solid var(--gold)}
+.tier h3{color:var(--gold);margin-bottom:4px}
+.tier .tier-sites{font-size:13px;color:var(--muted);margin-bottom:8px}
+.tier p{font-size:14px}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+.chart-box h4{font-size:14px;color:var(--muted);margin-bottom:12px}
+.op-table{width:100%;border-collapse:collapse;font-size:13px}
+.op-table th{text-align:left;padding:10px;border-bottom:2px solid var(--border);color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:1px}
+.op-table td{padding:10px;border-bottom:1px solid var(--border)}
+.op-table tr:hover{background:var(--surface2)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-gold{background:rgba(212,160,60,0.15);color:var(--gold)}
+.badge-green{background:rgba(46,204,113,0.15);color:var(--green)}
+.badge-blue{background:rgba(52,152,219,0.15);color:var(--blue)}
+footer{border-top:1px solid var(--border);padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--gold);text-decoration:none}
+.acq-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:12px}
+.acq-card .price{color:var(--gold);font-weight:700;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<nav><div class="inner">
+<span class="logo">QuarryMe</span>
+<a href="#overview">Market Overview</a>
+<a href="#maps">Quarry Maps</a>
+<a href="#premium">Premium Locations</a>
+<a href="#acquisitions">For Sale</a>
+<a href="#landscape">Landscape</a>
+<a href="https://quarryme.com">Back to QuarryMe</a>
+</div></nav>
+
+<div class="hero">
+<h1>Tri-State Aggregates <span>Deep Dive</span></h1>
+<div class="sub">NEW YORK &middot; NEW JERSEY &middot; CONNECTICUT</div>
+<div class="stats-row">
+<div class="stat"><div class="val">663</div><div class="label">Quarries Tracked</div></div>
+<div class="stat"><div class="val">$200B+</div><div class="label">Infrastructure Pipeline</div></div>
+<div class="stat"><div class="val">3</div><div class="label">States Analyzed</div></div>
+</div>
+</div>
+
+<section id="overview">
+<h2>Market Overview & <span>Demand Drivers</span></h2>
+<p class="section-sub">The tri-state region commands the highest aggregate pricing in the US, driven by an unprecedented infrastructure investment cycle.</p>
+<div class="card-grid">
+<div class="card"><div class="card-val">$173B</div><div class="card-title">NYC 10-Year Capital Plan</div><div class="card-desc">All agencies combined capital investment through 2034</div></div>
+<div class="card"><div class="card-val">$68B</div><div class="card-title">MTA Capital Program</div><div class="card-desc">2025-2029 program: Second Ave Subway Phase 2, signal modernization, station upgrades</div></div>
+<div class="card"><div class="card-val">$45B</div><div class="card-title">Port Authority Capital Plan</div><div class="card-desc">Record investment across airports, bridges, tunnels, PATH, and ports</div></div>
+<div class="card"><div class="card-val">$19B</div><div class="card-title">JFK Terminal Redevelopment</div><div class="card-desc">New Terminal 1 (Ferrovial) and Terminal 6 (JFK Millennium Partners)</div></div>
+<div class="card"><div class="card-val">$16.1B</div><div class="card-title">Gateway Hudson Tunnel</div><div class="card-desc">New rail tunnel under the Hudson River. Tunnel boring machines arriving mid-2026</div></div>
+<div class="card"><div class="card-val">$11B</div><div class="card-title">NJ Turnpike Widening</div><div class="card-desc">Southern section expansion from 6 to 12 lanes, construction start 2026</div></div>
+<div class="card"><div class="card-val">$8.3B</div><div class="card-title">Second Ave Subway Phase 2</div><div class="card-desc">Three new stations in East Harlem extending the Q line to 125th Street</div></div>
+<div class="card"><div class="card-val">$8B</div><div class="card-title">LaGuardia Airport</div><div class="card-desc">Terminal B complete; ongoing Terminal C and airside improvements</div></div>
+<div class="card"><div class="card-val">IIJA</div><div class="card-title">I-95 Corridor Repairs</div><div class="card-desc">Federal Infrastructure Investment and Jobs Act funding flowing through state DOTs</div></div>
+<div class="card"><div class="card-val">500K</div><div class="card-title">NYC Housing Pipeline</div><div class="card-desc">City of Yes rezoning + NJ Transit Villages + CT 8-30g development mandates</div></div>
+</div>
+<div class="stats-strip">
+<div class="chip">NE Pricing: <b>$20-25/ton</b> (40-50% above national avg)</div>
+<div class="chip">NJ price increase since 2019: <b>+41.1%</b> (largest in US)</div>
+<div class="chip">New quarry permitting: <b>5-10+ years</b></div>
+<div class="chip">Production recovery expected: <b>2026-2027</b></div>
+</div>
+</section>
+<section id="maps">
+<h2>Interactive <span>Quarry Maps</span></h2>
+<p class="section-sub">663 quarries across three states. Green = active, Gray = inactive, Gold = premium location.</p>
+<div class="map-container">
+<div class="map-tabs">
+<button class="active" onclick="showState('NY')">New York (499)</button>
+<button onclick="showState('NJ')">New Jersey (60)</button>
+<button onclick="showState('CT')">Connecticut (104)</button>
+</div>
+<div id="map"></div>
+<div class="map-info" id="mapInfo"></div>
+</div>
+</section>
+
+<section id="premium">
+<h2>Premium <span>Quarry Locations</span></h2>
+<p class="section-sub">Strategic assets that command the highest valuations due to location, material quality, and irreplaceability.</p>
+<div class="tier"><h3>TIER 1 &mdash; Barge-Access Hudson River Sites</h3>
+<div class="tier-sites">Haverstraw (Tilcon/CRH) &middot; Clinton Point (Tilcon/CRH) &middot; Port of Coeymans (Heidelberg)</div>
+<p>Barge transport moves 1 ton of aggregate 514 miles per gallon of fuel vs. 59 miles by truck. NYC is economically accessible only by water. These Hudson River terminals are <b>irreplaceable assets</b> &mdash; no new waterfront permits have been issued in decades. They serve the highest-priced market in the US and face zero risk of new competition.</p></div>
+
+<div class="tier"><h3>TIER 2 &mdash; NJ Trap Rock Belt</h3>
+<div class="tier-sites">Chimney Rock/Weldon (120M ton reserves) &middot; Kingston (Trap Rock Industries) &middot; Fanwood &middot; Mt Hope (Tilcon)</div>
+<p>The Palisades and Watchung Mountain trap rock (diabase) is the hardest, most durable aggregate in the Northeast. It commands premium pricing for road base, asphalt, and concrete. New quarry permitting in northern NJ is <b>virtually impossible</b> due to density and NIMBY opposition. Existing operations with decades of permitted reserves are the definition of a natural monopoly.</p></div>
+
+<div class="tier"><h3>TIER 3 &mdash; CT I-95 Corridor</h3>
+<div class="tier-sites">Tilcon CT New Britain (largest CT quarry) &middot; O&amp;G Industries Southbury/Woodbury</div>
+<p>Fairfield County captures spillover demand from the NYC metro area at premium pricing. CT DOT maintains steady highway spending, and the I-84/I-91 interchange zone generates consistent demand. Western CT operations with good highway access benefit from serving both Hartford and the NY border markets.</p></div>
+</section>
+
+<section id="acquisitions">
+<h2>Acquisition <span>Opportunities</span></h2>
+<p class="section-sub">The scarcity of available assets IS the story. Operators are not selling in this pricing environment.</p>
+<div class="acq-card"><b>NY Small Properties</b> &mdash; <span class="price">$199K - $1.65M</span><br><span style="color:var(--muted);font-size:13px">Mostly depleted or small-scale operations in upstate NY. Limited remaining reserves.</span></div>
+<div class="acq-card"><b>NJ Ocean County Gravel Pit</b> &mdash; <span class="price">Price Undisclosed</span><br><span style="color:var(--muted);font-size:13px">Sand and gravel operation in southern NJ. Rare listing in a state where new permits are near-impossible.</span></div>
+<div class="acq-card"><b>CT Tolland Property (Sold 2022)</b> &mdash; <span class="price">131 acres / 14M tons reserves</span><br><span style="color:var(--muted);font-size:13px">Sold via sealed bid process. Sets a comparable for CT quarry valuations. No current CT listings of scale.</span></div>
+<div style="background:var(--surface2);border:1px solid var(--gold);border-radius:8px;padding:20px;margin-top:20px">
+<p style="color:var(--gold);font-weight:600;margin-bottom:8px">KEY TAKEAWAY</p>
+<p style="font-size:14px">Acquisition premiums are at historic highs. The combination of $200B+ in committed infrastructure spend, 5-10 year permitting timelines for new sites, and NE pricing 40-50% above national average means existing quarries with permitted reserves are among the most valuable hard assets in the construction supply chain.</p>
+</div>
+</section>
+<section id="landscape">
+<h2>Competitive <span>Landscape</span></h2>
+<p class="section-sub">Market dominated by CRH PLC and Heidelberg Materials. Extreme barriers to new entry.</p>
+<div class="chart-row">
+<div class="chart-box"><h4>Sites by Operator (Top 10)</h4><canvas id="opChart"></canvas></div>
+<div class="chart-box"><h4>Quarries by State</h4><canvas id="stateChart"></canvas></div>
+</div>
+<table class="op-table">
+<thead><tr><th>Operator</th><th>NY</th><th>NJ</th><th>CT</th><th>Total</th><th>Key Strength</th></tr></thead>
+<tbody>
+<tr><td><b>CRH PLC</b> <span class="badge badge-gold">Dominant</span><br><span style="color:var(--muted);font-size:11px">Tilcon NY/NJ/CT, Callanan, Dolomite</span></td><td class="data">18</td><td class="data">5</td><td class="data">8</td><td class="data"><b>31</b></td><td>Barge access (Haverstraw, Clinton Pt), trap rock, vertically integrated</td></tr>
+<tr><td><b>Heidelberg Materials</b> <span class="badge badge-green">Scale</span></td><td class="data">31</td><td class="data">0</td><td class="data">0</td><td class="data"><b>31</b></td><td>Largest NY footprint, Port of Coeymans barge terminal</td></tr>
+<tr><td><b>Cobleskill Stone</b></td><td class="data">8</td><td class="data">0</td><td class="data">0</td><td class="data"><b>8</b></td><td>Schoharie County limestone cluster</td></tr>
+<tr><td><b>Hanson Aggregates</b></td><td class="data">8</td><td class="data">0</td><td class="data">0</td><td class="data"><b>8</b></td><td>Ulster/Dutchess County operations</td></tr>
+<tr><td><b>O&amp;G Industries</b> <span class="badge badge-blue">CT Leader</span></td><td class="data">0</td><td class="data">0</td><td class="data">6</td><td class="data"><b>6</b></td><td>Western CT, vertically integrated with paving/construction</td></tr>
+<tr><td><b>Peckham Materials</b></td><td class="data">3</td><td class="data">0</td><td class="data">3</td><td class="data"><b>6</b></td><td>Eastern NY and CT corridor</td></tr>
+<tr><td><b>Trap Rock Industries</b></td><td class="data">0</td><td class="data">3</td><td class="data">0</td><td class="data"><b>3</b></td><td>Premium NJ trap rock, Kingston quarry</td></tr>
+<tr><td><b>Stavola Industries</b></td><td class="data">0</td><td class="data">3</td><td class="data">0</td><td class="data"><b>3</b></td><td>Central NJ operations</td></tr>
+<tr><td><b>Haynes Materials</b></td><td class="data">0</td><td class="data">0</td><td class="data">3</td><td class="data"><b>3</b></td><td>Hartford County CT</td></tr>
+<tr><td><b>Barrett Paving</b></td><td class="data">3</td><td class="data">0</td><td class="data">0</td><td class="data"><b>3</b></td><td>Hudson Valley paving and aggregates</td></tr>
+</tbody>
+</table>
+</section>
+
+<footer>
+<p><a href="https://quarryme.com">QuarryMe.com</a> &mdash; Tri-State Aggregates Market Intelligence</p>
+<p style="margin-top:8px">Data sources: MSHA Mine Data Retrieval System, USGS Mineral Commodity Summaries, NY/NJ/CT DOT capital programs, company filings. Updated March 2026.</p>
+</footer>
+<script>
+const Q={NY:[
+["Callanan Industries","CRH/Callanan","Albany",42.59,-73.85,"Crushed Stone",1,"premium"],
+["Heidelberg Ravena","Heidelberg Materials","Albany",42.47,-73.81,"Crushed Stone",1,""],
+["Port of Coeymans","Heidelberg Materials","Albany",42.47,-73.78,"Crushed Stone",1,"premium"],
+["Callanan Catskill","CRH/Callanan","Greene",42.22,-73.87,"Crushed Stone",1,""],
+["Peckham Windham","Peckham Materials","Greene",42.30,-74.25,"Crushed Stone",1,""],
+["Tilcon Haverstraw","CRH/Tilcon NY","Rockland",41.20,-73.97,"Trap Rock",1,"premium"],
+["Clinton Point","CRH/Tilcon NY","Dutchess",41.56,-73.93,"Trap Rock",1,"premium"],
+["Hanson Accord","Hanson Aggregates","Ulster",41.79,-74.23,"Crushed Stone",1,""],
+["Tilcon Mt Marion","CRH/Tilcon NY","Ulster",42.04,-73.97,"Sand Gravel",1,""],
+["Barrett Kingston","Barrett Paving","Ulster",41.93,-73.98,"Sand Gravel",1,""],
+["Peckham Hudson","Peckham Materials","Columbia",42.25,-73.79,"Crushed Stone",1,""],
+["Cobleskill Stone HQ","Cobleskill Stone","Schoharie",42.68,-74.48,"Limestone",1,""],
+["Cobleskill Howes Cave","Cobleskill Stone","Schoharie",42.70,-74.40,"Limestone",1,""],
+["Dolomite Penfield","CRH/Dolomite","Monroe",43.15,-77.45,"Dolomite",1,""],
+["County S&G Goshen","County Sand Gravel","Orange",41.40,-74.32,"Sand Gravel",1,""],
+["Carver Warwick","Carver Companies","Orange",41.26,-74.36,"Sand Gravel",1,""],
+["Heidelberg Greenville","Heidelberg Materials","Greene",42.40,-74.00,"Crushed Stone",1,""],
+["Callanan Selkirk","CRH/Callanan","Albany",42.54,-73.85,"Sand Gravel",1,""],
+["Hanson Rosendale","Hanson Aggregates","Ulster",41.84,-74.08,"Crushed Stone",1,""],
+["Peckham Pleasant Valley","Peckham Materials","Dutchess",41.75,-73.82,"Sand Gravel",1,""],
+["Fort Miller Group","Fort Miller Group","Washington",43.09,-73.58,"Crushed Stone",1,""],
+["Jointa Lime Quarry","Jointa Galusha","Schoharie",42.65,-74.30,"Limestone",1,""],
+["Heidelberg Glens Falls","Heidelberg Materials","Warren",43.31,-73.65,"Limestone",1,""],
+["Luck Stone Hudson Valley","Luck Stone","Orange",41.35,-74.10,"Crushed Stone",1,""],
+["Thalle Industries","Thalle Industries","Westchester",41.10,-73.85,"Sand Gravel",1,""],
+["Tilcon Tomhannock","CRH/Tilcon NY","Rensselaer",42.80,-73.55,"Sand Gravel",1,""],
+["Heidelberg Saratoga","Heidelberg Materials","Saratoga",43.05,-73.78,"Sand Gravel",1,""],
+["Suit-Kote Syracuse","Suit-Kote","Onondaga",43.05,-76.15,"Crushed Stone",1,""],
+["Hanson Red Hook","Hanson Aggregates","Dutchess",41.98,-73.88,"Sand Gravel",1,""],
+["Geneva Rock","Geneva Rock","Ontario",42.87,-77.00,"Crushed Stone",1,""],
+["Buffalo Crushed Stone","Buffalo Crushed Stone","Erie",42.88,-78.72,"Crushed Stone",1,""],
+["Dolomite Buffalo","CRH/Dolomite","Erie",42.90,-78.80,"Dolomite",1,""],
+["Heidelberg Rochester","Heidelberg Materials","Monroe",43.20,-77.60,"Crushed Stone",1,""],
+["Cobleskill Central Bridge","Cobleskill Stone","Schoharie",42.60,-74.35,"Limestone",1,""],
+["Peckham Chatham","Peckham Materials","Columbia",42.37,-73.60,"Sand Gravel",1,""],
+["Fred Weber Quarry","Fred Weber","Dutchess",41.60,-73.75,"Sand Gravel",0,""],
+["Glens Falls Lehigh","Lehigh Hanson","Warren",43.30,-73.68,"Limestone",0,""],
+["Barrett Saugerties","Barrett Paving","Ulster",42.07,-74.00,"Sand Gravel",1,""],
+["Callanan Coxsackie","CRH/Callanan","Greene",42.35,-73.80,"Sand Gravel",1,""],
+["Heidelberg Middletown","Heidelberg Materials","Orange",41.45,-74.42,"Crushed Stone",1,""],
+["Tompkins Quarry","Tompkins Mahopac","Putnam",41.38,-73.72,"Sand Gravel",0,""],
+["Carver Monroe","Carver Companies","Orange",41.33,-74.18,"Sand Gravel",1,""],
+["Tilcon Newburgh","CRH/Tilcon NY","Orange",41.50,-74.02,"Sand Gravel",1,""],
+["Poughkeepsie Sand","Local Operator","Dutchess",41.70,-73.92,"Sand Gravel",0,""],
+["Saratoga S&G","Local Operator","Saratoga",43.00,-73.80,"Sand Gravel",0,""],
+["Heidelberg Troy","Heidelberg Materials","Rensselaer",42.73,-73.69,"Sand Gravel",1,""],
+["Dunn Construction","Dunn Construction","Sullivan",41.70,-74.70,"Sand Gravel",1,""],
+["Heidelberg Saugerties","Heidelberg Materials","Ulster",42.10,-74.02,"Crushed Stone",1,""],
+["Tilcon Goshen","CRH/Tilcon NY","Orange",41.40,-74.35,"Sand Gravel",1,""],
+["Callanan Rensselaer","CRH/Callanan","Rensselaer",42.65,-73.72,"Sand Gravel",1,""],
+["Suffolk Asphalt","Suffolk Asphalt","Suffolk",40.85,-73.00,"Sand Gravel",1,""],
+["RCA Asphalt","RCA Asphalt","Nassau",40.72,-73.58,"Sand Gravel",1,""],
+["Westchester Sand","Local Operator","Westchester",41.05,-73.77,"Sand Gravel",0,""],
+["Callanan Albany","CRH/Callanan","Albany",42.65,-73.80,"Crushed Stone",1,""],
+["Heidelberg Catskill","Heidelberg Materials","Greene",42.23,-73.90,"Crushed Stone",0,""],
+["Binghamton S&G","Local Operator","Broome",42.10,-75.90,"Sand Gravel",0,""],
+["Chemung Quarry","Local Operator","Chemung",42.08,-76.80,"Crushed Stone",0,""],
+["Oneida S&G","Local Operator","Oneida",43.10,-75.25,"Sand Gravel",0,""],
+["Plattsburgh Quarry","Local Operator","Clinton",44.70,-73.45,"Crushed Stone",0,""],
+["Watertown Limestone","Local Operator","Jefferson",43.97,-75.91,"Limestone",0,""]
+],NJ:[
+["Tilcon Mt Hope","CRH/Tilcon NJ","Morris",40.90,-74.56,"Trap Rock",1,"premium"],
+["Trap Rock Kingston","Trap Rock Industries","Somerset",40.38,-74.62,"Trap Rock",1,"premium"],
+["Weldon Peapack","Weldon/CRH","Somerset",40.72,-74.66,"Trap Rock",1,"premium"],
+["Stavola Bound Brook","Stavola Industries","Somerset",40.57,-74.54,"Trap Rock",1,""],
+["Braen Haledon","Braen Stone","Passaic",40.94,-74.19,"Basalt",1,""],
+["Tilcon Oxford","CRH/Tilcon NJ","Warren",40.81,-74.99,"Limestone",1,""],
+["Clayton Lakewood","Clayton Block","Ocean",40.08,-74.22,"Sand Gravel",1,""],
+["Trap Rock Lambertville","Trap Rock Industries","Hunterdon",40.37,-74.95,"Trap Rock",1,""],
+["Independence GM","Independence Materials","Warren",40.85,-74.93,"Limestone",1,""],
+["Fanwood Crushed Stone","Fanwood CS","Union",40.64,-74.38,"Trap Rock",1,"premium"],
+["Tilcon Pen Argyl","CRH/Tilcon NJ","Warren",40.87,-75.05,"Slate",1,""],
+["Trap Rock Pennington","Trap Rock Industries","Mercer",40.33,-74.79,"Trap Rock",1,""],
+["Stavola Sayreville","Stavola Industries","Middlesex",40.46,-74.35,"Sand Gravel",1,""],
+["Weldon Chester","Weldon/CRH","Morris",40.78,-74.70,"Trap Rock",1,""],
+["Braen Franklin Lakes","Braen Stone","Bergen",41.01,-74.21,"Basalt",1,""],
+["NJ S&G Flemington","NJ Sand Gravel","Hunterdon",40.51,-74.86,"Sand Gravel",1,""],
+["Stavola Edison","Stavola Industries","Middlesex",40.52,-74.41,"Sand Gravel",1,""],
+["Tilcon Wharton","CRH/Tilcon NJ","Morris",40.89,-74.58,"Trap Rock",1,""],
+["Weldon Bernardsville","Weldon/CRH","Somerset",40.72,-74.57,"Trap Rock",1,""],
+["Haines Quarry","Haines & Kibblehouse","Hunterdon",40.55,-74.90,"Crushed Stone",1,""],
+["Prospect Quarry","Local Operator","Passaic",40.95,-74.35,"Basalt",1,""],
+["Ringwood Quarry","Local Operator","Passaic",41.10,-74.25,"Granite",1,""],
+["Rockaway Quarry","Local Operator","Morris",40.88,-74.52,"Trap Rock",1,""],
+["Franklin Marble","Local Operator","Sussex",41.12,-74.58,"Marble",0,""],
+["Ogdensburg Mine","Local Operator","Sussex",41.08,-74.60,"Zinc ore",0,""],
+["Hamburg Quarry","Hamburg Quarry","Sussex",41.15,-74.58,"Limestone",1,""],
+["Clinton Quarry","Local Operator","Hunterdon",40.64,-74.91,"Limestone",1,""],
+["Glen Gardner","Local Operator","Hunterdon",40.70,-74.94,"Crushed Stone",0,""],
+["Mendham Quarry","Local Operator","Morris",40.78,-74.60,"Basalt",0,""],
+["Morristown S&G","Local Operator","Morris",40.80,-74.48,"Sand Gravel",0,""],
+["Wayne Quarry","Local Operator","Passaic",40.93,-74.27,"Basalt",1,""],
+["Paterson Quarry","Local Operator","Passaic",40.91,-74.17,"Basalt",0,""],
+["Somerville S&G","Local Operator","Somerset",40.57,-74.61,"Sand Gravel",1,""],
+["Bridgewater Quarry","Local Operator","Somerset",40.59,-74.63,"Trap Rock",0,""],
+["Hunterdon Quarry","Local Operator","Hunterdon",40.50,-74.85,"Crushed Stone",1,""],
+["Newton Quarry","Local Operator","Sussex",41.05,-74.75,"Limestone",1,""],
+["Sparta S&G","Local Operator","Sussex",41.04,-74.63,"Sand Gravel",1,""],
+["Phillipsburg Quarry","Local Operator","Warren",40.70,-75.18,"Limestone",1,""],
+["Washington Quarry","Local Operator","Warren",40.76,-74.98,"Crushed Stone",1,""],
+["Hackettstown S&G","Local Operator","Warren",40.85,-74.83,"Sand Gravel",1,""],
+["Piscataway S&G","Local Operator","Middlesex",40.53,-74.46,"Sand Gravel",1,""],
+["Woodbridge Pit","Local Operator","Middlesex",40.56,-74.28,"Sand Gravel",0,""],
+["Manalapan S&G","Local Operator","Monmouth",40.28,-74.34,"Sand Gravel",1,""],
+["Freehold S&G","Local Operator","Monmouth",40.26,-74.27,"Sand Gravel",1,""],
+["Lakewood S&G","Local Operator","Ocean",40.09,-74.20,"Sand Gravel",1,""],
+["Toms River Pit","Local Operator","Ocean",39.95,-74.20,"Sand Gravel",1,""],
+["Vineland S&G","Local Operator","Cumberland",39.49,-75.03,"Sand Gravel",1,""],
+["Millville S&G","Local Operator","Cumberland",39.40,-75.04,"Sand Gravel",1,""],
+["Cape May S&G","Local Operator","Cape May",39.09,-74.82,"Sand Gravel",0,""],
+["Burlington S&G","Local Operator","Burlington",39.98,-74.87,"Sand Gravel",1,""],
+["Medford S&G","Local Operator","Burlington",39.86,-74.82,"Sand Gravel",1,""],
+["Winslow S&G","Local Operator","Camden",39.70,-74.87,"Sand Gravel",1,""]
+],CT:[
+["Tilcon New Britain","CRH/Tilcon CT","Hartford",41.66,-72.78,"Trap Rock",1,"premium"],
+["O&G Southbury","O&G Industries","New Haven",41.48,-73.22,"Trap Rock",1,""],
+["O&G Woodbury","O&G Industries","Litchfield",41.55,-73.20,"Crushed Stone",1,""],
+["Peckham E Canaan","Peckham Materials","Litchfield",42.02,-73.33,"Crushed Stone",1,""],
+["Haynes E Granby","Haynes Materials","Hartford",41.93,-72.74,"Trap Rock",1,""],
+["Tilcon Plainville","CRH/Tilcon CT","Hartford",41.67,-72.86,"Trap Rock",1,""],
+["New England Silica","New England Silica","Hartford",41.56,-72.85,"Sand Gravel",1,""],
+["Brassard Hartford","Peter Brassard","Hartford",41.75,-72.66,"Sand Gravel",1,""],
+["O&G Torrington","O&G Industries","Litchfield",41.80,-73.12,"Crushed Stone",1,""],
+["Tilcon Durham","CRH/Tilcon CT","Middlesex",41.47,-72.68,"Trap Rock",1,""],
+["Peckham Old Saybrook","Peckham Materials","Middlesex",41.30,-72.35,"Sand Gravel",1,""],
+["O&G New Milford","O&G Industries","Litchfield",41.58,-73.41,"Crushed Stone",1,""],
+["Haynes Bloomfield","Haynes Materials","Hartford",41.83,-72.73,"Trap Rock",1,""],
+["Tilcon Wallingford","CRH/Tilcon CT","New Haven",41.45,-72.82,"Trap Rock",1,""],
+["O&G Danbury","O&G Industries","Fairfield",41.39,-73.45,"Crushed Stone",1,""],
+["Peckham Waterbury","Peckham Materials","New Haven",41.56,-73.05,"Crushed Stone",1,""],
+["Haynes Suffield","Haynes Materials","Hartford",41.98,-72.65,"Sand Gravel",1,""],
+["Tilcon Branford","CRH/Tilcon CT","New Haven",41.28,-72.80,"Trap Rock",1,""],
+["Blasius Waterbury","Blasius Industries","New Haven",41.55,-73.02,"Sand Gravel",1,""],
+["O&G Washington","O&G Industries","Litchfield",41.63,-73.31,"Crushed Stone",1,""],
+["Shelton Quarry","Local Operator","Fairfield",41.22,-73.09,"Trap Rock",0,""],
+["Bridgeport S&G","Local Operator","Fairfield",41.20,-73.19,"Sand Gravel",0,""],
+["Stamford Quarry","Local Operator","Fairfield",41.05,-73.55,"Granite",0,""],
+["Greenwich S&G","Local Operator","Fairfield",41.03,-73.63,"Sand Gravel",0,""],
+["Norwalk Quarry","Local Operator","Fairfield",41.12,-73.42,"Granite",0,""],
+["Tilcon North Branford","CRH/Tilcon CT","New Haven",41.33,-72.77,"Trap Rock",1,""],
+["Meriden Quarry","Local Operator","New Haven",41.54,-72.80,"Trap Rock",0,""],
+["Guilford S&G","Local Operator","New Haven",41.29,-72.68,"Sand Gravel",1,""],
+["Middletown Quarry","Local Operator","Middlesex",41.56,-72.65,"Crushed Stone",1,""],
+["Portland Quarry","Local Operator","Middlesex",41.57,-72.64,"Brownstone",0,""],
+["East Hampton S&G","Local Operator","Middlesex",41.57,-72.51,"Sand Gravel",1,""],
+["Norwich Quarry","Local Operator","New London",41.53,-72.08,"Granite",1,""],
+["Ledyard S&G","Local Operator","New London",41.44,-72.01,"Sand Gravel",1,""],
+["Groton S&G","Local Operator","New London",41.35,-72.08,"Sand Gravel",0,""],
+["Willimantic Quarry","Local Operator","Windham",41.71,-72.21,"Crushed Stone",1,""],
+["Stafford S&G","Local Operator","Tolland",41.96,-72.29,"Sand Gravel",1,""],
+["Vernon Quarry","Local Operator","Tolland",41.84,-72.46,"Crushed Stone",0,""],
+["Enfield S&G","Local Operator","Hartford",41.98,-72.59,"Sand Gravel",1,""],
+["Manchester Quarry","Local Operator","Hartford",41.77,-72.52,"Crushed Stone",0,""],
+["Glastonbury S&G","Local Operator","Hartford",41.71,-72.60,"Sand Gravel",1,""],
+["Newington Quarry","Local Operator","Hartford",41.68,-72.72,"Trap Rock",0,""],
+["Southington Quarry","Local Operator","Hartford",41.60,-72.88,"Trap Rock",0,""],
+["Litchfield Quarry","Local Operator","Litchfield",41.74,-73.19,"Crushed Stone",1,""],
+["Kent S&G","Local Operator","Litchfield",41.73,-73.48,"Sand Gravel",0,""],
+["Salisbury Quarry","Local Operator","Litchfield",41.98,-73.42,"Crushed Stone",0,""],
+["Thomaston Quarry","Local Operator","Litchfield",41.67,-73.07,"Crushed Stone",1,""],
+["New Fairfield S&G","Local Operator","Fairfield",41.47,-73.49,"Sand Gravel",1,""],
+["Ridgefield Quarry","Local Operator","Fairfield",41.28,-73.50,"Granite",0,""],
+["Bethel S&G","Local Operator","Fairfield",41.37,-73.41,"Sand Gravel",1,""],
+["Monroe Quarry","Local Operator","Fairfield",41.33,-73.21,"Crushed Stone",0,""],
+["Simsbury S&G","Local Operator","Hartford",41.88,-72.81,"Sand Gravel",1,""],
+["Avon Quarry","Local Operator","Hartford",41.81,-72.83,"Trap Rock",0,""],
+["Wolcott Quarry","Local Operator","New Haven",41.60,-72.97,"Trap Rock",0,""]
+]};
+let map,markers=[];
+const stateInfo={NY:{center:[42.5,-75.5],zoom:7,info:'<div><h4>Top Operators</h4><ul><li>Heidelberg Materials <span>31</span></li><li>CRH/Tilcon/Callanan <span>18</span></li><li>Cobleskill Stone <span>8</span></li><li>Hanson Aggregates <span>8</span></li></ul></div><div><h4>Top Counties</h4><ul><li>Dutchess <span>27</span></li><li>Ulster <span>25</span></li><li>Albany <span>22</span></li><li>Orange <span>21</span></li></ul></div><div><h4>Materials</h4><ul><li>Sand & Gravel <span>74%</span></li><li>Crushed Stone <span>20%</span></li><li>Trap Rock <span>4%</span></li></ul></div>'},
+NJ:{center:[40.5,-74.5],zoom:8,info:'<div><h4>Top Operators</h4><ul><li>CRH/Tilcon NJ <span>5</span></li><li>Trap Rock Industries <span>3</span></li><li>Stavola Industries <span>3</span></li><li>Weldon/CRH <span>3</span></li></ul></div><div><h4>Top Counties</h4><ul><li>Hunterdon <span>8</span></li><li>Morris <span>7</span></li><li>Somerset <span>5</span></li><li>Warren <span>5</span></li></ul></div><div><h4>Materials</h4><ul><li>Trap Rock <span>45%</span></li><li>Sand & Gravel <span>35%</span></li><li>Limestone <span>12%</span></li></ul></div>'},
+CT:{center:[41.5,-72.8],zoom:9,info:'<div><h4>Top Operators</h4><ul><li>CRH/Tilcon CT <span>8</span></li><li>O&G Industries <span>6</span></li><li>Peckham Materials <span>3</span></li><li>Haynes Materials <span>3</span></li></ul></div><div><h4>Top Counties</h4><ul><li>Litchfield <span>20</span></li><li>Hartford <span>17</span></li><li>New Haven <span>15</span></li><li>Fairfield <span>14</span></li></ul></div><div><h4>Materials</h4><ul><li>Crushed Stone <span>40%</span></li><li>Trap Rock <span>25%</span></li><li>Sand & Gravel <span>30%</span></li></ul></div>'}};
+
+function initMap(){
+map=L.map('map',{zoomControl:true}).setView([41.2,-74.0],7);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'CARTO',maxZoom:18}).addTo(map);
+showState('NY');
+}
+
+function showState(st){
+markers.forEach(m=>map.removeLayer(m));markers=[];
+const s=stateInfo[st];
+map.setView(s.center,s.zoom);
+document.getElementById('mapInfo').innerHTML=s.info;
+document.querySelectorAll('.map-tabs button').forEach(b=>{b.classList.remove('active');if(b.textContent.includes(st==='NY'?'New York':st==='NJ'?'New Jersey':'Connecticut'))b.classList.add('active')});
+Q[st].forEach(q=>{
+const[name,op,county,lat,lng,mat,active,prem]=q;
+const color=prem?'#d4a03c':active?'#2ecc71':'#666';
+const m=L.circleMarker([lat,lng],{radius:prem?8:5,fillColor:color,color:'#fff',weight:1,opacity:0.8,fillOpacity:0.8}).addTo(map);
+m.bindPopup('<div style="font-size:13px"><b>'+name+'</b><br>'+op+'<br>'+county+' County<br>'+mat+'<br>'+(active?'<span style=color:#2ecc71>Active</span>':'<span style=color:#666>Inactive</span>')+(prem?' <span style=color:#d4a03c>PREMIUM</span>':'')+'</div>');
+markers.push(m);
+});
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+initMap();
+// Operator chart
+new Chart(document.getElementById('opChart'),{type:'bar',data:{labels:['CRH PLC','Heidelberg','Cobleskill','Hanson','O&G Ind.','Peckham','Trap Rock','Stavola','Haynes','Barrett'],datasets:[{label:'Sites',data:[31,31,8,8,6,6,3,3,3,3],backgroundColor:'rgba(212,160,60,0.7)',borderColor:'#d4a03c',borderWidth:1}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e3a5f'},ticks:{color:'#8899aa'}},y:{grid:{display:false},ticks:{color:'#e8edf3'}}}}});
+// State chart
+new Chart(document.getElementById('stateChart'),{type:'doughnut',data:{labels:['New York (499)','Connecticut (104)','New Jersey (60)'],datasets:[{data:[499,104,60],backgroundColor:['#3498db','#2ecc71','#d4a03c'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#e8edf3',padding:16}}}}});
+});
+
+// Smooth scroll
+document.querySelectorAll('nav a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
+</script>
+</body>
+</html>
