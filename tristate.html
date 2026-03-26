@@ -492,7 +492,7 @@ CT:{center:[41.5,-72.8],zoom:9,info:'<div><h4>Top Operators</h4><ul><li>CRH/Tilc
 
 function initMap(){
 map=L.map('map',{zoomControl:true}).setView([41.2,-74.0],7);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'CARTO',maxZoom:18}).addTo(map);
+var darkTiles=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'CARTO',maxZoom:18});var geoTiles=L.tileLayer('https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png',{attribution:'Macrostrat.org Geological Map',maxZoom:16,opacity:0.7});var topoTiles=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'OpenTopoMap',maxZoom:17});darkTiles.addTo(map);var layerControl=L.control.layers({'Dark':darkTiles,'Geological Map':geoTiles,'Topographic':topoTiles},{},{position:'topright'}).addTo(map);var geoLegend=L.control({position:'bottomright'});geoLegend.onAdd=function(){var d=L.DomUtil.create('div','geo-legend');d.style.cssText='background:rgba(0,0,0,0.85);color:#fff;padding:10px 14px;border-radius:8px;font-size:11px;line-height:1.6;display:none';d.innerHTML='<b>Geological Map Legend</b><br><span style="color:#e57373">&#9632;</span> Igneous (trap rock, diabase, basalt)<br><span style="color:#81c784">&#9632;</span> Metamorphic (gneiss, schist)<br><span style="color:#64b5f6">&#9632;</span> Sedimentary (limestone, sandstone)<br><span style="color:#fff176">&#9632;</span> Quaternary (sand &amp; gravel, glacial)';return d};geoLegend.addTo(map);map.on('baselayerchange',function(e){document.querySelector('.geo-legend').style.display=e.name==='Geological Map'?'block':'none'});
 showState('NY');
 }
 
@@ -506,7 +506,7 @@ Q[st].forEach(q=>{
 const[name,op,county,lat,lng,mat,active,prem]=q;
 const color=prem?'#d4a03c':active?'#2ecc71':'#666';
 const m=L.circleMarker([lat,lng],{radius:prem?8:5,fillColor:color,color:'#fff',weight:1,opacity:0.8,fillOpacity:0.8}).addTo(map);
-m.bindPopup('<div style="font-size:13px"><b>'+name+'</b><br>'+op+'<br>'+county+' County, '+st+'<br>'+mat+'<br>'+(active?'<span style=color:#2ecc71>Active</span>':'<span style=color:#666>Inactive</span>')+(prem?' <span style=color:#d4a03c>PREMIUM</span>':'')+'<br><a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank" class="msha-link">&#9881; Look up MSHA Mine ID</a> | <a href="https://mrdata.usgs.gov/general/map-global.html?lat='+lat+'&lng='+lng+'&z=12" target="_blank" class="msha-link">&#127760; USGS Map</a></div>');
+m.bindPopup('<div style="font-size:12px;max-width:280px"><b>'+name+'</b><br><span style="color:#8899aa">'+op+'</span><br>'+county+' County &middot; '+mat+'<br>'+(active?'<span style="color:#2ecc71">Active</span>':'<span style="color:#666">Inactive</span>')+(prem?' <span style="color:#d4a03c;font-weight:bold">PREMIUM</span>':'')+'<hr style="border-color:#333;margin:6px 0"><span style="font-size:11px"><a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank" style="color:#4fc3f7">Look up on MSHA &rarr;</a><br><a href="https://macrostrat.org/map/#/z=12/x='+lng+'/y='+lat+'/bedrock/lines/" target="_blank" style="color:#d4a03c">View Geological Map &rarr;</a></span></div>');
 markers.push(m);
 });
 }
