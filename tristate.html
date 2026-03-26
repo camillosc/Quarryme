@@ -292,9 +292,9 @@ footer a{color:var(--gold);text-decoration:none}
     <p class="section-sub">Official permit databases, geological surveys, and regulatory resources for tri-state quarry operations.</p>
     <h3 style="color:var(--gold);margin:0 0 16px">Federal Databases</h3>
     <div class="resource-grid">
-      <div class="resource-card"><h4>MSHA Mine Data Retrieval System</h4><p>Search active and inactive mines by name, ID, state, or operator. Includes inspection history, violations, and accident data.</p><a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank">msha.gov/mine-data-retrieval-system &rarr;</a></div>
+      <div class="resource-card"><h4>MSHA Mine Data Retrieval System</h4><p>Search active and inactive mines by name, ID, state, or operator. Includes inspection history, violations, and accident data.</p><a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank">MSHA Mine Data Retrieval System &rarr;</a></div>
       <div class="resource-card"><h4>USGS Mineral Resources Data</h4><p>Active mines and mineral deposits map overlay. Geological data, commodity production, and spatial data.</p><a href="https://mrdata.usgs.gov/" target="_blank">mrdata.usgs.gov &rarr;</a></div>
-      <div class="resource-card"><h4>MSHA Mine ID Lookup</h4><p>Every quarry has a unique MSHA Mine ID for inspection records, safety data, and production reports.</p><a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank">Look up any mine by ID &rarr;</a></div>
+      <div class="resource-card"><h4>MSHA Mine ID Lookup</h4><p>Every quarry has a unique MSHA Mine ID for inspection records, safety data, and production reports.</p><a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank">Look up any mine by ID &rarr;</a></div>
     </div>
     <h3 style="color:var(--gold);margin:24px 0 16px">State Permit Databases</h3>
     <div class="resource-grid">
@@ -506,7 +506,7 @@ Q[st].forEach(q=>{
 const[name,op,county,lat,lng,mat,active,prem]=q;
 const color=prem?'#d4a03c':active?'#2ecc71':'#666';
 const m=L.circleMarker([lat,lng],{radius:prem?8:5,fillColor:color,color:'#fff',weight:1,opacity:0.8,fillOpacity:0.8}).addTo(map);
-m.bindPopup('<div style="font-size:13px"><b>'+name+'</b><br>'+op+'<br>'+county+' County, '+st+'<br>'+mat+'<br>'+(active?'<span style=color:#2ecc71>Active</span>':'<span style=color:#666>Inactive</span>')+(prem?' <span style=color:#d4a03c>PREMIUM</span>':'')+'<br><a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank" class="msha-link">&#9881; Look up MSHA Mine ID</a> | <a href="https://mrdata.usgs.gov/general/map-global.html?lat='+lat+'&lng='+lng+'&z=12" target="_blank" class="msha-link">&#127760; USGS Map</a></div>');
+m.bindPopup('<div style="font-size:13px"><b>'+name+'</b><br>'+op+'<br>'+county+' County, '+st+'<br>'+mat+'<br>'+(active?'<span style=color:#2ecc71>Active</span>':'<span style=color:#666>Inactive</span>')+(prem?' <span style=color:#d4a03c>PREMIUM</span>':'')+'<br><a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank" class="msha-link">&#9881; Look up MSHA Mine ID</a> | <a href="https://mrdata.usgs.gov/general/map-global.html?lat='+lat+'&lng='+lng+'&z=12" target="_blank" class="msha-link">&#127760; USGS Map</a></div>');
 markers.push(m);
 });
 }
