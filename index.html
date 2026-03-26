@@ -1,192 +1,386 @@
 <!DOCTYPE html>
 
+
+
 <html lang="en">
+
+
 
 <head>
 
+
+
 <meta charset="UTF-8">
+
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+
 <title>US Aggregate Quarries Map — 10,325 Active Sites</title>
+
+
 
 <style>
 
+
+
 *{box-sizing:border-box;margin:0;padding:0}
+
+
 
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f4f3ee;color:#2c2c2a}
 
+
+
 #hdr{position:relative;background:#2c2c2a;color:#f4f3ee;padding:16px 24px}
+
+
 
 #hdr h1{font-size:18px;font-weight:600;letter-spacing:-0.3px;margin-bottom:2px}
 
+
+
 #hdr p{font-size:12px;color:#b4b2a9}
+
+
 
 #bar{display:flex;gap:8px;padding:12px 24px;background:#eae8e0;flex-wrap:wrap;align-items:center}
 
+
+
 #bar select,#bar input[type=text]{font-size:13px;padding:7px 12px;border:1px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;outline:none}
+
+
 
 #bar select{min-width:130px;max-width:220px}
 
+
+
 #bar input[type=text]{flex:1;min-width:200px}
+
+
 
 .b{font-size:12px;padding:7px 14px;border:1px solid #d3d1c7;border-radius:6px;background:#fff;color:#2c2c2a;cursor:pointer;white-space:nowrap;font-weight:500}
 
+
+
 .b:hover{background:#2c2c2a;color:#fff;border-color:#2c2c2a}
+
+
 
 .b.on{background:#378ADD;color:#fff;border-color:#378ADD}
 
+
+
 #sts{display:flex;gap:10px;padding:10px 24px;flex-wrap:wrap}
+
+
 
 .st{background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:10px 16px;min-width:120px}
 
+
+
 .st em{font-style:normal;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#888780}
+
+
 
 .st b{font-style:normal;display:block;font-size:20px;font-weight:600}
 
+
+
 #mc{position:relative;width:100%;height:650px;overflow:hidden;background:#aad3df}
+
+
 
 #mp{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1}
 
+
+
 .lg{position:absolute;bottom:16px;right:16px;z-index:999;background:rgba(255,255,255,0.95);border:1px solid #d3d1c7;border-radius:8px;padding:12px 16px;font-size:12px;line-height:2.1;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+
 
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 
+
+
 .ft{font-size:11px;color:#888780;padding:8px 24px;background:#eae8e0;border-top:1px solid #d3d1c7;line-height:1.7}
+
+
 
 #gp{display:none;position:absolute;top:0;right:0;width:360px;height:100%;z-index:1001;background:#fff;border-left:1px solid #d3d1c7;box-shadow:-4px 0 12px rgba(0,0,0,.06);overflow-y:auto;padding:16px}
 
+
+
 #gp h3{font-size:15px;font-weight:600;margin-bottom:4px}
+
+
 
 .gc{font-size:12px;color:#888780;margin-bottom:10px}
 
+
+
 .gi{padding:8px 10px;border:1px solid #eae8e0;border-radius:6px;margin-bottom:6px;cursor:pointer;font-size:12px;line-height:1.4;transition:background .15s}
+
+
 
 .gi:hover{background:#f0f6ff;border-color:#378ADD}
 
+
+
 .gi strong{display:block;font-size:13px}
+
+
 
 .gi span{color:#888780}
 
+
+
 .cx{position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:#888780}
+
+
 
 .pn{font-weight:600;font-size:14px;margin-bottom:6px;color:#2c2c2a}
 
+
+
 .pr{display:flex;justify-content:space-between;padding:2px 0;gap:12px}
+
+
 
 .pr .k{color:#888780;font-size:12px;white-space:nowrap}
 
+
+
 .pr .v{font-weight:500;text-align:right;font-size:12px;word-break:break-word}
+
+
 
 .pe{border-top:1px dashed #d3d1c7;margin-top:6px;padding-top:6px}
 
+
+
 .pe .k{color:#854F0B}
+
+
 
 .pe .v{color:#854F0B}
 
+
+
 .est-note{font-size:10px;color:#b4b2a9;margin-top:4px;font-style:italic}
+
+
 
 .pm{border-top:1px solid #d3d1c7;margin-top:8px;padding-top:6px}
 
+
+
 .pm-title{font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px}
+
+
 
 .pm-r .k{font-size:11px}
 
+
+
 .pm-r .v{font-size:11px}
+
+
 
 .ml{display:inline-block;margin-top:8px;font-size:11px;color:#378ADD;text-decoration:none}
 
+
+
 .radius-tip{background:rgba(255,255,255,.9)!important;border:1px solid #d3d1c7!important;color:#2c2c2a!important;font-size:11px!important;padding:2px 8px!important;border-radius:4px!important;box-shadow:0 1px 4px rgba(0,0,0,.1)!important;font-family:'Segoe UI',system-ui,sans-serif!important}
+
+
 
 .radius-tip::before{display:none!important}
 
+
+
 #tile-msg{position:absolute;top:10px;left:60px;z-index:1000;background:rgba(255,255,255,.92);padding:5px 12px;border-radius:6px;font-size:11px;color:#555;display:none;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+
+
 
 </style>
 
+
+
 </head>
+
+
 
 <body>
 
+
+
 <div id="hdr"><h1>US Aggregate Quarries &mdash; Complete Interactive Map</h1><p>10,326 active &amp; intermittent operations &bull; MSHA data + SEC-calibrated production &amp; reserves for major producers</p><a href="tristate.html" style="position:absolute;top:12px;right:16px;font-size:12px;color:#c8a96e;text-decoration:none;opacity:0.8;letter-spacing:0.5px">Tri-State Deep Dive →</a></div>
+
+
 
 <div id="bar">
 
+
+
  <select id="fs"></select>
+
+
 
  <select id="fc"></select>
 
+
+
  <select id="ft"><option value="">Active &amp; Intermittent</option><option value="1">Active only</option><option value="0">Intermittent only</option></select>
+
+
 
  <input type="text" id="fq" placeholder="Search name, operator, controller, or town..."/>
 
+
+
  <button class="b" id="bg">Major groups &#9662;</button>
+
+
 
  <button class="b" id="bradius">Show all radii</button>
 
+
+
  <button class="b" id="brad">Show all radii</button>
+
+
 
  <button class="b" id="br">Reset all</button>
 
+
+
 </div>
+
+
 
 <div id="sts">
 
+
+
  <div class="st"><em>Quarries shown</em><b id="v1">&mdash;</b></div>
+
+
 
  <div class="st"><em>States</em><b id="v2">&mdash;</b></div>
 
+
+
  <div class="st"><em>Est. total production</em><b id="v5">&mdash;</b></div>
+
+
 
  <div class="st"><em>Est. total reserves</em><b id="v6">&mdash;</b></div>
 
+
+
  <div class="st"><em>Total employees</em><b id="v3">&mdash;</b></div>
+
+
 
  <div class="st"><em>Parent groups</em><b id="v4">&mdash;</b></div>
 
+
+
  <div class="st"><em>Avg market balance</em><b id="v7">&mdash;</b></div>
+
+
 
  <div class="st"><em>Undersupplied mkts</em><b id="v8">&mdash;</b></div>
 
+
+
 </div>
+
+
 
 <div id="mc">
 
+
+
  <div id="mp"></div>
+
+
 
  <div id="tile-msg"></div>
 
+
+
  <div class="lg">
+
+
 
   <div><i style="background:#1D9E75"></i>Sand &amp; gravel</div>
 
+
+
   <div><i style="background:#378ADD"></i>Crushed limestone</div>
+
+
 
   <div><i style="background:#D85A30"></i>Crushed stone / other</div>
 
+
+
   <div><i style="background:#D4537E"></i>Granite / traprock / basalt</div>
+
+
 
   <div><i style="background:#854F0B"></i>Dimension stone</div>
 
+
+
   <div><i style="background:#888780"></i>Cement / lime / other</div>
 
+
+
  </div>
+
+
 
  <div id="gp">
 
+
+
   <button class="cx" id="gx">&times;</button>
+
+
 
   <h3>Major operator groups</h3>
 
+
+
   <div class="gc" id="gn"></div>
+
+
 
   <input type="text" id="gs" placeholder="Search groups..." style="width:100%;padding:7px 10px;border:1px solid #d3d1c7;border-radius:6px;font-size:13px;margin-bottom:10px;outline:none"/>
 
+
+
   <div id="gl"></div>
+
+
 
  </div>
 
+
+
 </div>
+
+
+
+
+
+
 
 
 
@@ -196,115 +390,231 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f4f3e
 
 
 
+
+
+
+
 <script>
+
+
 
 (function(){
 
+
+
   var cdns=["https://cdn.jsdelivr.net/npm/","https://unpkg.com/","https://cdnjs.cloudflare.com/ajax/libs/"];
+
+
 
   var lfP=["leaflet@1.9.4/dist/leaflet.min.js","leaflet@1.9.4/dist/leaflet.min.js","leaflet/1.9.4/leaflet.min.js"];
 
+
+
   var lfC=["leaflet@1.9.4/dist/leaflet.css","leaflet@1.9.4/dist/leaflet.css","leaflet/1.9.4/leaflet.min.css"];
+
+
 
   var mcP=["leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js","leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js","leaflet.markercluster/1.5.3/leaflet.markercluster.js"];
 
+
+
   var mc1=["leaflet.markercluster@1.5.3/dist/MarkerCluster.css","leaflet.markercluster@1.5.3/dist/MarkerCluster.css","leaflet.markercluster/1.5.3/MarkerCluster.css"];
+
+
 
   var mc2=["leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css","leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css","leaflet.markercluster/1.5.3/MarkerCluster.Default.css"];
 
+
+
   function addCSS(u){var l=document.createElement("link");l.rel="stylesheet";l.href=u;document.head.appendChild(l)}
+
+
 
   function tryJS(urls,i,cb){if(i>=urls.length){cb(false);return}var s=document.createElement("script");s.src=urls[i];s.onload=function(){cb(true)};s.onerror=function(){tryJS(urls,i+1,cb)};document.head.appendChild(s)}
 
+
+
   cdns.forEach(function(c,i){addCSS(c+lfC[i]);addCSS(c+mc1[i]);addCSS(c+mc2[i])});
+
+
 
   tryJS(cdns.map(function(c,i){return c+lfP[i]}),0,function(ok){
 
+
+
     if(!ok){document.getElementById("tile-msg").style.display="block";document.getElementById("tile-msg").textContent="Failed to load Leaflet.";return}
+
+
 
     tryJS(cdns.map(function(c,i){return c+mcP[i]}),0,function(ok2){
 
+
+
       if(!ok2){document.getElementById("tile-msg").style.display="block";document.getElementById("tile-msg").textContent="Failed to load MarkerCluster.";return}
 
+
+
       initApp()})})
+
+
 
 })();
 
 
 
+
+
+
+
 function initApp(){
+
+
 
 var RAW=JSON.parse(document.getElementById("qdata").textContent);
 
+
+
 var CONTACTS={"Vulcan Materials Company":["Ronnie Pruitt","(205) 298-3000","vulcanmaterials.com","Birmingham, AL"],"Martin Marietta Materials Inc":["Ward Nye","(919) 781-4550","martinmarietta.com","Raleigh, NC"],"CRH PLC":["Jim Mintern","(770) 522-5600","crhamericasmaterials.com","Atlanta, GA (Americas)"],"Summit Materials LLC":["Anne Noonan","(303) 893-0012","summit-materials.com","Denver, CO"],"Knife River Corporation":["Brian Gray","(701) 530-1400","kniferiver.com","Bismarck, ND"],"Heidelberg Materials AG":["Dominik von Achten","(972) 653-5500","heidelbergmaterials.us","Irving, TX (US)"],"Arcosa, Inc":["Antonio Carrillo","(972) 942-6500","arcosaaggregates.com","Dallas, TX"],"Cemex S A":["Jaime Muguiro","(713) 650-6200","cemexusa.com","Houston, TX (US)"],"Granite Construction Inc":["Kyle Larkin","(831) 724-1011","graniteconstruction.com","Watsonville, CA"],"Rogers Group Inc":["Jimmy Patton","(615) 242-0585","rogersgroupincint.com","Nashville, TN"],"Colas S A":["Pierre Vanstoflegatte","(973) 290-9082","colasusa.com","Morristown, NJ (US)"],"Amrize Ltd":["","(816) 459-2500","amrize.com","Kansas City, MO"],"Mathy Construction Company":["","(608) 643-2342","mathy.com","La Crosse, WI"],"Taiheiyo Cement Corp":["","503-335-2600","calportland.com","Portland, OR (CalPortland US)"],"New Enterprise Stone & Lime Company Inc":["","814-766-2211","nesl.com","New Enterprise, PA"],"The Heritage Group":["","317-872-6010","thgrp.com","Indianapolis, IN"],"Carmeuse Holding SA":["","(412) 995-5500","carmeuse.com","Pittsburgh, PA (US)"],"Quikrete Holdings Inc.":["","(404) 634-9100","quikrete.com","Atlanta, GA"],"Riverstone Group":["","(563) 582-6465","riverstonegroup.com","Davenport, IA"],"Charles S  Luck IV":["Charles S. Luck IV","(804) 784-6300","luckstone.com","Richmond, VA"]};
 
+
+
 var D=Array.isArray(RAW)?RAW:(RAW.d||RAW),S={0:"Sand & Gravel",1:"Crushed Stone",2:"Limestone",3:"Granite",4:"Sandstone",5:"Basalt",6:"Slate",7:"Quartzite",8:"Marble",9:"Other Aggregate",10:"Sand & Gravel",11:"Limestone",12:"Cement Limestone",13:"Sand & Gravel",14:"Sand & Gravel",15:"Limestone",16:"Granite",17:"Dimension Stone",18:"Crushed Stone",19:"Other Aggregate",20:"Sand & Gravel",21:"Limestone",22:"Other Aggregate"},aGrp=null;
+
+
 
 var tMsg=document.getElementById("tile-msg");
 
 
 
+
+
+
+
 function sc(i){var s=S[i]||"";
+
+
 
  if(s.indexOf("Sand")>-1||s.indexOf("Gravel")>-1)return"#1D9E75";
 
+
+
  if(s.indexOf("Limestone")>-1)return"#378ADD";
+
+
 
  if(s.indexOf("Granite")>-1||s.indexOf("Trap")>-1||s.indexOf("Basalt")>-1||s.indexOf("Diabase")>-1)return"#D4537E";
 
+
+
  if(s.indexOf("Dimension")===0)return"#854F0B";
+
+
 
  if(s.indexOf("Cement")>-1||s.indexOf("Lime")>-1)return"#888780";
 
+
+
  return"#D85A30"}
 
+
+
 function esc(s){return s?s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"):""}
+
+
 
 function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+"M";if(n>=1e3)return Math.round(n/1e3).toLocaleString()+"K";return n.toLocaleString()}
 
 
 
+
+
+
+
 var map=L.map("mp",{preferCanvas:true}).setView([39.5,-98.5],4);
+
+
 
 var providers=[
 
+
+
   {n:"Esri Topo",u:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",o:{maxZoom:18,attribution:"Esri"}},
+
+
 
   {n:"Esri Street",u:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",o:{maxZoom:18,attribution:"Esri"}},
 
+
+
   {n:"OSM",u:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",o:{maxZoom:19,attribution:"OpenStreetMap",subdomains:"abc"}},
+
+
 
   {n:"CartoDB",u:"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",o:{maxZoom:19,attribution:"CARTO",subdomains:"abcd"}}
 
+
+
 ];
+
+
 
 var curLayer=null,tileOK=false,errCnt=0;
 
+
+
 function tryTiles(idx){
+
+
 
   if(idx>=providers.length){tMsg.style.display="block";tMsg.innerHTML="<b>Tiles failed.</b> Serve via: <code>python3 -m http.server 8000</code>";return}
 
+
+
   var p=providers[idx];tMsg.style.display="block";tMsg.textContent="Loading: "+p.n+"...";errCnt=0;tileOK=false;
+
+
 
   if(curLayer)map.removeLayer(curLayer);curLayer=L.tileLayer(p.u,p.o);
 
+
+
   curLayer.on("tileload",function(){if(!tileOK){tileOK=true;tMsg.textContent="Tiles: "+p.n;setTimeout(function(){tMsg.style.display="none"},2500)}});
+
+
 
   curLayer.on("tileerror",function(){errCnt++;if(errCnt>=4&&!tileOK)tryTiles(idx+1)});
 
+
+
   curLayer.addTo(map);setTimeout(function(){if(!tileOK)tryTiles(idx+1)},6000)}
+
+
 
 tryTiles(0);
 
+
+
 setTimeout(function(){map.invalidateSize()},150);setTimeout(function(){map.invalidateSize()},600);
+
+
 
 window.addEventListener("resize",function(){map.invalidateSize()});
 
 
 
+
+
+
+
 var cl=L.markerClusterGroup({chunkedLoading:true,maxClusterRadius:50,disableClusteringAtZoom:12,spiderfyOnMaxZoom:true,showCoverageOnHover:false,animate:false});
 
+
+
 map.addLayer(cl);
+
+
+
+
 
 
 
@@ -312,361 +622,809 @@ function mkI(c){return L.divIcon({className:"",html:"<div style='width:9px;heigh
 
 
 
+
+
+
+
 function mkM(d){
+
+
 
  var m=L.marker([d[0],d[1]],{icon:mkI(sc(d[5]))});
 
+
+
  var h="<div class='pn'>"+esc(d[2])+"</div>";
+
+
 
  h+="<div class='pr'><span class='k'>MSHA ID</span><span class='v'>"+esc(d[11])+"</span></div>";
 
+
+
  h+="<div class='pr'><span class='k'>Commodity</span><span class='v'>"+esc(S[d[5]])+"</span></div>";
+
+
 
  h+="<div class='pr'><span class='k'>Location</span><span class='v'>"+esc(d[4])+", "+esc(d[3])+"</span></div>";
 
+
+
  h+="<div class='pr'><span class='k'>Status</span><span class='v'>"+(d[9]?"Active":"Intermittent")+"</span></div>";
+
+
 
  if(d[6])h+="<div class='pr'><span class='k'>Parent group</span><span class='v'>"+esc(d[6])+"</span></div>";
 
+
+
  h+="<div class='pr'><span class='k'>Operator</span><span class='v'>"+esc(d[7])+"</span></div>";
+
+
 
  if(d[8])h+="<div class='pr'><span class='k'>Employees</span><span class='v'>"+d[8]+"</span></div>";
 
+
+
  if(d[10])h+="<div class='pr'><span class='k'>Nearest town</span><span class='v'>"+esc(d[10])+"</span></div>";
+
+
 
  var isSec=d[14]===1;
 
+
+
  var badge=isSec?"<span style='display:inline-block;background:#e6f1fb;color:#0c447c;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>SEC filing</span>":"<span style='display:inline-block;background:#faeeda;color:#633806;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>Estimate</span>";
+
+
 
  h+="<div class='pr pe'><span class='k'>Annual production "+badge+"</span><span class='v'>"+fmt(d[12])+" tons/yr</span></div>";
 
+
+
  h+="<div class='pr pe' style='border:none;padding-top:0'><span class='k'>Reserves "+badge+"</span><span class='v'>"+fmt(d[13])+" tons</span></div>";
+
+
 
  h+=isSec?"<div class='est-note'>Calibrated from parent company SEC 10-K/20-F</div>":"<div class='est-note'>Estimated: employees x industry avg productivity</div>";
 
+
+
  h+="<div style='border-top:1px solid #d3d1c7;margin-top:8px;padding-top:6px'>";
+
+
 
  h+="<div style='font-weight:600;font-size:12px;color:#2c2c2a;margin-bottom:4px'>Market opportunity (50-mi / ~1hr drive)</div>";
 
+
+
  var bal=d[20],balTxt,balClr;
+
+
 
  if(bal>0.3){balTxt='Oversupplied';balClr='#1D9E75'}
 
+
+
  else if(bal>-0.1){balTxt='Balanced';balClr='#854F0B'}
+
+
 
  else if(bal>-0.5){balTxt='Undersupplied';balClr='#D85A30'}
 
+
+
  else{balTxt='Severe deficit';balClr='#A32D2D'}
+
+
 
  h+="<div class='pr'><span class='k'>Market balance</span><span class='v' style='color:"+balClr+";font-weight:600'>"+balTxt+"</span></div>";
 
+
+
  h+="<div class='pr'><span class='k'>Est. population (1hr)</span><span class='v'>"+d[15].toLocaleString()+"</span></div>";
+
+
 
  h+="<div class='pr'><span class='k'>Tons per capita/yr</span><span class='v'>"+d[16]+"</span></div>";
 
+
+
  h+="<div class='pr'><span class='k'>Est. demand</span><span class='v'>"+fmt(d[17])+" tons</span></div>";
+
+
 
  h+="<div class='pr'><span class='k'>Local supply (50mi)</span><span class='v'>"+fmt(d[18])+" tons</span></div>";
 
+
+
  var defVal=d[19];
+
+
 
  if(defVal>0){h+="<div class='pr'><span class='k'>Unmet demand</span><span class='v' style='color:#A32D2D;font-weight:600'>"+fmt(defVal)+" tons</span></div>"}
 
+
+
  else{h+="<div class='pr'><span class='k'>Surplus</span><span class='v' style='color:#1D9E75;font-weight:600'>"+fmt(Math.abs(defVal))+" tons</span></div>"}
+
+
 
  h+="</div>";
 
+
+
  if(d[21]||d[22]||d[23]){
+
+
 
  h+="<div style='border-top:1px solid #d3d1c7;margin-top:6px;padding-top:6px'>";
 
+
+
  h+="<div style='font-weight:600;font-size:11px;color:#2c2c2a;margin-bottom:3px'>Contact</div>";
+
+
 
  if(d[21])h+="<div class='pr'><span class='k'>Name</span><span class='v'>"+esc(d[21])+"</span></div>";
 
+
+
  if(d[22])h+="<div class='pr'><span class='k'>Phone</span><span class='v'><a href='tel:"+d[22]+"' style='color:#378ADD;text-decoration:none'>"+esc(d[22])+"</a></span></div>";
+
+
 
  if(d[23])h+="<div class='pr'><span class='k'>Email</span><span class='v'><a href='mailto:"+d[23]+"' style='color:#378ADD;text-decoration:none'>"+esc(d[23])+"</a></span></div>";
 
+
+
  h+="</div>"}
+
+
 
  h+="<a class='ml' href='https://www.msha.gov/mine/"+esc(d[11])+"' target='_blank'>View on MSHA.gov &#x2197;</a>";
 
+
+
  m.bindPopup(h);
+
+
 
  m.on('popupopen',function(){
 
+
+
   if(window._radiusCircle){map.removeLayer(window._radiusCircle);window._radiusCircle=null}
 
+
+
   if(window._railCircle){map.removeLayer(window._railCircle);window._railCircle=null}
+
+
 
   var tons=d[12];
 
+
+
   var rMi=30;
+
+
 
   if(tons<100000)rMi=25;
 
+
+
   else if(tons<500000)rMi=35;
+
+
 
   else if(tons<2000000)rMi=50;
 
+
+
   else rMi=50;
+
+
 
   var rM=rMi*1609.34;
 
+
+
   window._radiusCircle=L.circle([d[0],d[1]],{radius:rM,color:'#378ADD',weight:1.5,fillColor:'#378ADD',fillOpacity:0.08,dashArray:'6,4'}).addTo(map);
+
+
 
   window._radiusCircle.bindTooltip('~'+rMi+' mi truck radius',{permanent:true,direction:'top',className:'radius-tip'});
 
+
+
   if(tons>=2000000){
+
+
 
    var railM=200*1609.34;
 
+
+
    window._railCircle=L.circle([d[0],d[1]],{radius:railM,color:'#854F0B',weight:1,fillColor:'#854F0B',fillOpacity:0.03,dashArray:'3,6'}).addTo(map);
+
+
 
    window._railCircle.bindTooltip('~200 mi rail range',{permanent:true,direction:'bottom',className:'radius-tip'});
 
+
+
   }
 
+
+
  });
+
+
 
  m.on('popupclose',function(){
 
+
+
   if(window._radiusCircle){map.removeLayer(window._radiusCircle);window._radiusCircle=null}
+
+
 
   if(window._railCircle){map.removeLayer(window._railCircle);window._railCircle=null}
 
+
+
  });
+
+
 
  return m}
 
 
 
+
+
+
+
 var sm={};D.forEach(function(d){sm[d[3]]=(sm[d[3]]||0)+1});
+
+
 
 var ss=Object.keys(sm).sort();
 
+
+
 var fs=document.getElementById("fs");
 
+
+
 fs.innerHTML="<option value=''>All states ("+ss.length+")</option>";
+
+
 
 ss.forEach(function(s){var o=document.createElement("option");o.value=s;o.textContent=s+" ("+sm[s]+")";fs.appendChild(o)});
 
 
 
+
+
+
+
 var cm={};D.forEach(function(d){var s=S[d[5]];cm[s]=(cm[s]||0)+1});
+
+
 
 var fc=document.getElementById("fc");
 
+
+
 fc.innerHTML="<option value=''>All commodities</option>";
+
+
 
 Object.entries(cm).sort(function(a,b){return b[1]-a[1]}).forEach(function(e){var o=document.createElement("option");o.value=e[0];o.textContent=e[0]+" ("+e[1]+")";fc.appendChild(o)});
 
 
 
+
+
+
+
 var G={};
 
+
+
 D.forEach(function(d){if(d[6]){if(!G[d[6]])G[d[6]]={n:0,s:{},e:0,p:0,r:0};G[d[6]].n++;G[d[6]].s[d[3]]=1;G[d[6]].e+=(d[8]||0);G[d[6]].p+=d[12];G[d[6]].r+=d[13]}});
+
+
 
 var MG=Object.entries(G).filter(function(e){return e[1].n>=3}).sort(function(a,b){return b[1].n-a[1].n});
 
 
 
+
+
+
+
 function doFilter(){
+
+
 
  var st=fs.value,si=fc.value,ft=document.getElementById("ft").value,q=document.getElementById("fq").value.toLowerCase().trim();
 
+
+
  var f=D.filter(function(d){
+
+
 
   if(st&&d[3]!==st)return false;
 
+
+
   if(si&&S[d[5]]!==si)return false;
+
+
 
   if(ft!==""&&d[9]!==parseInt(ft))return false;
 
+
+
   if(aGrp&&d[6]!==aGrp)return false;
+
+
 
   if(q&&(d[2]+" "+d[7]+" "+d[6]+" "+d[10]+" "+d[4]).toLowerCase().indexOf(q)===-1)return false;
 
+
+
   return true});
+
+
 
  cl.clearLayers();cl.addLayers(f.map(mkM));
 
+
+
  document.getElementById("v1").textContent=f.length.toLocaleString();
+
+
 
  document.getElementById("v2").textContent=new Set(f.map(function(d){return d[3]})).size;
 
+
+
  document.getElementById("v3").textContent=f.reduce(function(a,d){return a+(d[8]||0)},0).toLocaleString();
+
+
 
  document.getElementById("v4").textContent=new Set(f.map(function(d){return d[6]}).filter(Boolean)).size.toLocaleString();
 
+
+
  var tp=f.reduce(function(a,d){return a+d[12]},0);
+
+
 
  var tr=f.reduce(function(a,d){return a+d[13]},0);
 
+
+
  document.getElementById("v5").textContent=fmt(tp)+" tons/yr";
+
+
 
  document.getElementById("v6").textContent=fmt(tr)+" tons";
 
+
+
  var avgBal=f.length?Math.round(f.reduce(function(a,d){return a+(d[20]||0)},0)/f.length*100):0;
+
+
 
  var balLabel=avgBal>0?"+"+avgBal+"%":avgBal+"%";
 
+
+
  var under=f.filter(function(d){return d[20]<-0.1}).length;
+
+
 
  document.getElementById("v7").textContent=balLabel;
 
+
+
  document.getElementById("v8").textContent=under.toLocaleString();
+
+
 
  return f}
 
 
 
+
+
+
+
 var radLayer=L.layerGroup();map.addLayer(radLayer);
+
+
 
 var radOn=false;
 
 
 
+
+
+
+
 function getRadius(tons){
+
+
 
  if(tons>=2000000)return 50;
 
+
+
  if(tons>=500000)return 50;
+
+
 
  if(tons>=100000)return 35;
 
+
+
  return 25;
 
+
+
 }
+
+
+
+
 
 
 
 function drawAllRadii(){
 
+
+
  radLayer.clearLayers();
+
+
 
  if(!radOn)return;
 
+
+
  var st=fs.value,si=fc.value,ft=document.getElementById("ft").value,q=document.getElementById("fq").value.toLowerCase().trim();
+
+
 
  var f=D.filter(function(d){
 
+
+
   if(st&&d[3]!==st)return false;
+
+
 
   if(si&&S[d[5]]!==si)return false;
 
+
+
   if(ft!==""&&d[9]!==parseInt(ft))return false;
+
+
 
   if(aGrp&&d[6]!==aGrp)return false;
 
+
+
   if(q&&(d[2]+" "+d[7]+" "+d[6]+" "+d[10]+" "+d[4]).toLowerCase().indexOf(q)===-1)return false;
+
+
 
   return true;
 
+
+
  });
+
+
 
  f.forEach(function(d){
 
+
+
   var rMi=getRadius(d[12]);
+
+
 
   var rM=rMi*1609.34;
 
+
+
   var c=L.circle([d[0],d[1]],{radius:rM,color:'#378ADD',weight:0.8,fillColor:'#378ADD',fillOpacity:0.06,dashArray:'4,4',interactive:false});
+
+
 
   radLayer.addLayer(c);
 
+
+
  });
 
+
+
 }
+
+
+
+
 
 
 
 document.getElementById("brad").onclick=function(){
 
+
+
  radOn=!radOn;
+
+
 
  this.textContent=radOn?"Hide all radii":"Show all radii";
 
+
+
  if(radOn)this.classList.add("on");else this.classList.remove("on");
 
+
+
  drawAllRadii();
+
+
 
 };
 
 
 
+
+
+
+
 fs.onchange=function(){doFilter();drawAllRadii()};fc.onchange=function(){doFilter();drawAllRadii()};
 
+
+
 document.getElementById("ft").onchange=function(){doFilter();drawAllRadii()};
+
+
 
 var db;document.getElementById("fq").oninput=function(){clearTimeout(db);db=setTimeout(function(){doFilter();drawAllRadii()},250)};
 
 
 
+
+
+
+
 function rGrp(fl){
+
+
 
  var gl=document.getElementById("gl");gl.innerHTML="";
 
+
+
  var lo=fl?fl.toLowerCase():"";
+
+
 
  var sh=MG.filter(function(e){return!lo||e[0].toLowerCase().indexOf(lo)>-1});
 
+
+
  document.getElementById("gn").textContent=sh.length+" groups with 3+ quarries";
+
+
 
  sh.forEach(function(e){
 
+
+
   var d=document.createElement("div");d.className="gi";
+
+
 
   var hasSec=D.some(function(dd){return dd[6]===e[0]&&dd[14]===1});
 
+
+
   var gc=CONTACTS[e[0]];
+
+
 
   d.innerHTML="<strong>"+esc(e[0])+(hasSec?" <span style='background:#e6f1fb;color:#0c447c;font-size:9px;padding:1px 5px;border-radius:3px'>SEC</span>":"")+"</strong><span>"+e[1].n+" quarries &bull; "+Object.keys(e[1].s).length+" states &bull; ~"+fmt(e[1].p)+" tons/yr</span>"+(gc?"<span style='display:block;font-size:11px;color:#378ADD;margin-top:2px'>"+(gc[1]||"")+(gc[2]?" &bull; "+gc[2]:"")+"</span>":"");
 
+
+
   d.onclick=function(){
+
+
 
    aGrp=e[0];document.getElementById("fq").value="";fs.value="";fc.value="";document.getElementById("ft").value="";
 
+
+
    doFilter();
+
+
 
    var gq=D.filter(function(dd){return dd[6]===e[0]});
 
+
+
    if(gq.length>1)map.fitBounds(L.latLngBounds(gq.map(function(dd){return[dd[0],dd[1]]})),{padding:[60,60]});
+
+
 
    document.getElementById("gp").style.display="none";
 
+
+
    document.getElementById("bg").textContent=e[0]+" ("+e[1].n+")";document.getElementById("bg").classList.add("on");drawAllRadii()};
+
+
 
   gl.appendChild(d)})
 
+
+
 }
+
+
 
 document.getElementById("bg").onclick=function(){
 
+
+
  var p=document.getElementById("gp");if(p.style.display==="block"){p.style.display="none";return}
+
+
 
  p.style.display="block";document.getElementById("gs").value="";rGrp()};
 
+
+
 document.getElementById("gs").oninput=function(){rGrp(this.value)};
+
+
 
 document.getElementById("gx").onclick=function(){document.getElementById("gp").style.display="none"};
 
+
+
 document.getElementById("br").onclick=function(){
+
+
 
  fs.value="";fc.value="";document.getElementById("ft").value="";document.getElementById("fq").value="";aGrp=null;
 
+
+
  document.getElementById("bg").textContent="Major groups \u25BE";document.getElementById("bg").classList.remove("on");
+
+
 
  document.getElementById("gp").style.display="none";radOn=false;document.getElementById("brad").textContent="Show all radii";document.getElementById("brad").classList.remove("on");radLayer.clearLayers();doFilter();map.setView([39.5,-98.5],4)};
 
+
+
 doFilter();
+
+
 
 }
 
+
+
 </script>
+
+
+
+
+<!-- RESOURCES SECTION -->
+<div id="resources-section" style="max-width:1200px;margin:40px auto;padding:0 20px">
+<h2 style="font-size:22px;font-weight:600;color:#2c2c2a;margin-bottom:16px">Mining Permit &amp; Geological Resources</h2>
+<p style="font-size:14px;color:#b4b2a9;margin-bottom:24px">Look up individual quarry permits, MSHA inspection records, and geological survey data for any state.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+<div style="background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:20px">
+<h3 style="font-size:16px;color:#2c2c2a;margin-bottom:8px">MSHA Mine Data Retrieval</h3>
+<p style="font-size:13px;color:#666;margin-bottom:8px">Search any mine by name, ID, state, or operator. Includes inspection history, violations, accidents, and employment data.</p>
+<a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">msha.gov/mine-data-retrieval-system &rarr;</a>
+</div>
+
+<div style="background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:20px">
+<h3 style="font-size:16px;color:#2c2c2a;margin-bottom:8px">USGS Mineral Resources</h3>
+<p style="font-size:13px;color:#666;margin-bottom:8px">Interactive map of active mines, mineral deposits, and geological data across the US.</p>
+<a href="https://mrdata.usgs.gov/" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">mrdata.usgs.gov &rarr;</a>
+</div>
+
+<div style="background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:20px">
+<h3 style="font-size:16px;color:#2c2c2a;margin-bottom:8px">State Mining Permits</h3>
+<p style="font-size:13px;color:#666;margin-bottom:8px">Each state regulates mining permits separately. Use these links to look up quarry permits by state.</p>
+<a href="https://www.dec.ny.gov/lands/5020.html" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">NY DEC Mining &rarr;</a>&nbsp;&nbsp;
+<a href="https://www.nj.gov/dep/" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">NJ DEP &rarr;</a>&nbsp;&nbsp;
+<a href="https://portal.ct.gov/DEEP" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">CT DEEP &rarr;</a>
+</div>
+</div>
+
+<div style="background:#f9f8f5;border:1px solid #eae8e0;border-radius:8px;padding:20px;margin-bottom:24px">
+<h3 style="font-size:15px;color:#2c2c2a;margin-bottom:12px">State Geological Surveys (All 50 States)</h3>
+<div style="display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px">
+<a href="https://www.gsa.state.al.us/" style="color:#2c6fbb;text-decoration:none">AL</a>
+<a href="https://dggs.alaska.gov/" style="color:#2c6fbb;text-decoration:none">AK</a>
+<a href="https://azgs.arizona.edu/" style="color:#2c6fbb;text-decoration:none">AZ</a>
+<a href="https://www.geology.arkansas.gov/" style="color:#2c6fbb;text-decoration:none">AR</a>
+<a href="https://www.conservation.ca.gov/cgs" style="color:#2c6fbb;text-decoration:none">CA</a>
+<a href="https://coloradogeologicalsurvey.org/" style="color:#2c6fbb;text-decoration:none">CO</a>
+<a href="https://portal.ct.gov/DEEP/Geology" style="color:#2c6fbb;text-decoration:none">CT</a>
+<a href="https://www.dgs.udel.edu/" style="color:#2c6fbb;text-decoration:none">DE</a>
+<a href="https://www.floridamuseum.ufl.edu/florida-geology/" style="color:#2c6fbb;text-decoration:none">FL</a>
+<a href="https://epd.georgia.gov/georgia-geologic-survey" style="color:#2c6fbb;text-decoration:none">GA</a>
+<a href="https://www.higp.hawaii.edu/" style="color:#2c6fbb;text-decoration:none">HI</a>
+<a href="https://www.idahogeology.org/" style="color:#2c6fbb;text-decoration:none">ID</a>
+<a href="https://isgs.illinois.edu/" style="color:#2c6fbb;text-decoration:none">IL</a>
+<a href="https://igws.indiana.edu/" style="color:#2c6fbb;text-decoration:none">IN</a>
+<a href="https://www.iihr.uiowa.edu/igs/" style="color:#2c6fbb;text-decoration:none">IA</a>
+<a href="https://www.kgs.ku.edu/" style="color:#2c6fbb;text-decoration:none">KS</a>
+<a href="https://www.uky.edu/KGS/" style="color:#2c6fbb;text-decoration:none">KY</a>
+<a href="https://www.lsu.edu/lgs/" style="color:#2c6fbb;text-decoration:none">LA</a>
+<a href="https://www.maine.gov/dacf/mgs/" style="color:#2c6fbb;text-decoration:none">ME</a>
+<a href="https://www.mgs.md.gov/" style="color:#2c6fbb;text-decoration:none">MD</a>
+<a href="https://www.mass.gov/orgs/massachusetts-geological-survey" style="color:#2c6fbb;text-decoration:none">MA</a>
+<a href="https://wmich.edu/geologysurvey" style="color:#2c6fbb;text-decoration:none">MI</a>
+<a href="https://cse.umn.edu/mgs" style="color:#2c6fbb;text-decoration:none">MN</a>
+<a href="https://www.mdeq.ms.gov/geology/" style="color:#2c6fbb;text-decoration:none">MS</a>
+<a href="https://mgsdatamine.rolla.missouri.edu/" style="color:#2c6fbb;text-decoration:none">MO</a>
+<a href="https://www.mbmg.mtech.edu/" style="color:#2c6fbb;text-decoration:none">MT</a>
+<a href="https://snr.unl.edu/csd/" style="color:#2c6fbb;text-decoration:none">NE</a>
+<a href="https://nbmg.unr.edu/" style="color:#2c6fbb;text-decoration:none">NV</a>
+<a href="https://www.des.nh.gov/organization/commissioner/gsu" style="color:#2c6fbb;text-decoration:none">NH</a>
+<a href="https://www.nj.gov/dep/njgs/" style="color:#2c6fbb;text-decoration:none">NJ</a>
+<a href="https://geoinfo.nmt.edu/" style="color:#2c6fbb;text-decoration:none">NM</a>
+<a href="https://www.nysm.nysed.gov/research-collections/geology" style="color:#2c6fbb;text-decoration:none">NY</a>
+<a href="https://deq.nc.gov/about/divisions/energy-mineral-land-resources/north-carolina-geological-survey" style="color:#2c6fbb;text-decoration:none">NC</a>
+<a href="https://www.dmr.nd.gov/ndgs/" style="color:#2c6fbb;text-decoration:none">ND</a>
+<a href="https://geosurvey.ohiodnr.gov/" style="color:#2c6fbb;text-decoration:none">OH</a>
+<a href="https://www.ou.edu/ogs" style="color:#2c6fbb;text-decoration:none">OK</a>
+<a href="https://www.oregongeology.org/" style="color:#2c6fbb;text-decoration:none">OR</a>
+<a href="https://www.dcnr.pa.gov/Geology/Pages/default.aspx" style="color:#2c6fbb;text-decoration:none">PA</a>
+<a href="https://rinhs.org/" style="color:#2c6fbb;text-decoration:none">RI</a>
+<a href="https://www.dnr.sc.gov/geology/" style="color:#2c6fbb;text-decoration:none">SC</a>
+<a href="https://www.sdgs.usd.edu/" style="color:#2c6fbb;text-decoration:none">SD</a>
+<a href="https://www.tn.gov/environment/program-areas/geology" style="color:#2c6fbb;text-decoration:none">TN</a>
+<a href="https://www.beg.utexas.edu/" style="color:#2c6fbb;text-decoration:none">TX</a>
+<a href="https://geology.utah.gov/" style="color:#2c6fbb;text-decoration:none">UT</a>
+<a href="https://dec.vermont.gov/geological-survey" style="color:#2c6fbb;text-decoration:none">VT</a>
+<a href="https://www.dmme.virginia.gov/dgmr/" style="color:#2c6fbb;text-decoration:none">VA</a>
+<a href="https://www.dnr.wa.gov/geology" style="color:#2c6fbb;text-decoration:none">WA</a>
+<a href="https://www.wvgs.wvnet.edu/" style="color:#2c6fbb;text-decoration:none">WV</a>
+<a href="https://wgnhs.wisc.edu/" style="color:#2c6fbb;text-decoration:none">WI</a>
+<a href="https://www.wsgs.wyo.gov/" style="color:#2c6fbb;text-decoration:none">WY</a>
+</div>
+</div>
+</div>
+<!-- END RESOURCES SECTION -->
 
 </body>
 
+
+
 </html>
+
+
 
