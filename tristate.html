@@ -68,6 +68,15 @@ footer{border-top:1px solid var(--border);padding:40px 20px;text-align:center;co
 footer a{color:var(--gold);text-decoration:none}
 .acq-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:12px}
 .acq-card .price{color:var(--gold);font-weight:700;font-family:'JetBrains Mono',monospace}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:24px}
+.resource-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;transition:border-color .2s}
+.resource-card:hover{border-color:var(--gold)}
+.resource-card h4{color:var(--gold);font-size:14px;margin-bottom:8px}
+.resource-card p{font-size:13px;color:var(--muted)}
+.resource-card a{color:var(--gold);text-decoration:none;font-size:13px}
+.resource-card a:hover{text-decoration:underline}
+.msha-link{color:var(--gold);text-decoration:none;font-size:12px}
+.msha-link:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -78,7 +87,8 @@ footer a{color:var(--gold);text-decoration:none}
 <a href="#premium">Premium Locations</a>
 <a href="#acquisitions">For Sale</a>
 <a href="#landscape">Landscape</a>
-<a href="https://quarryme.com">Back to QuarryMe</a>
+<a href="#permits">Permits &amp; Resources</a>
+  <a href="https://quarryme.com">Back to QuarryMe</a>
 </div></nav>
 
 <div class="hero">
@@ -276,7 +286,32 @@ footer a{color:var(--gold);text-decoration:none}
 </table>
 </section>
 
-<footer>
+
+  <section id="permits">
+    <h2>Permits &amp; <span>Resources</span></h2>
+    <p class="section-sub">Official permit databases, geological surveys, and regulatory resources for tri-state quarry operations.</p>
+    <h3 style="color:var(--gold);margin:0 0 16px">Federal Databases</h3>
+    <div class="resource-grid">
+      <div class="resource-card"><h4>MSHA Mine Data Retrieval System</h4><p>Search active and inactive mines by name, ID, state, or operator. Includes inspection history, violations, and accident data.</p><a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank">msha.gov/mine-data-retrieval-system &rarr;</a></div>
+      <div class="resource-card"><h4>USGS Mineral Resources Data</h4><p>Active mines and mineral deposits map overlay. Geological data, commodity production, and spatial data.</p><a href="https://mrdata.usgs.gov/" target="_blank">mrdata.usgs.gov &rarr;</a></div>
+      <div class="resource-card"><h4>MSHA Mine ID Lookup</h4><p>Every quarry has a unique MSHA Mine ID for inspection records, safety data, and production reports.</p><a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank">Look up any mine by ID &rarr;</a></div>
+    </div>
+    <h3 style="color:var(--gold);margin:24px 0 16px">State Permit Databases</h3>
+    <div class="resource-grid">
+      <div class="resource-card" style="border-left:3px solid #3498db"><h4>New York</h4><p><b>DEC Mined Land Reclamation</b> &mdash; All NY mining permits, searchable by county and operator.</p><a href="https://www.dec.ny.gov/lands/5020.html" target="_blank">NY DEC Mining Permits &rarr;</a><br><a href="https://www.nysm.nysed.gov/research-collections/geology/gis" target="_blank">NY Geological Survey &rarr;</a></div>
+      <div class="resource-card" style="border-left:3px solid #2ecc71"><h4>New Jersey</h4><p><b>DEP Bureau of Mining</b> &mdash; NJ mining permits, safety regulations, and reclamation requirements.</p><a href="https://www.nj.gov/dep/" target="_blank">NJ DEP Portal &rarr;</a><br><a href="https://www.nj.gov/dep/njgs/geodata/" target="_blank">NJ Geological Survey &rarr;</a></div>
+      <div class="resource-card" style="border-left:3px solid #d4a03c"><h4>Connecticut</h4><p><b>DEEP Mining Program</b> &mdash; CT mine permits, environmental compliance, and geological resources.</p><a href="https://portal.ct.gov/DEEP" target="_blank">CT DEEP Portal &rarr;</a><br><a href="https://portal.ct.gov/DEEP/Geology/Geologic-Maps" target="_blank">CT Geological Maps &rarr;</a></div>
+    </div>
+    <h3 style="color:var(--gold);margin:24px 0 16px">All 50 States &mdash; Geological Surveys</h3>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Each state maintains a geological survey with bedrock maps, mineral resources data, and mining activity records.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;font-size:13px">
+        <a href="https://www.gsa.state.al.us/" style="color:var(--gold);text-decoration:none">Alabama</a><a href="https://dggs.alaska.gov/" style="color:var(--gold);text-decoration:none">Alaska</a><a href="https://azgs.arizona.edu/" style="color:var(--gold);text-decoration:none">Arizona</a><a href="https://www.geology.arkansas.gov/" style="color:var(--gold);text-decoration:none">Arkansas</a><a href="https://www.conservation.ca.gov/cgs" style="color:var(--gold);text-decoration:none">California</a><a href="https://coloradogeologicalsurvey.org/" style="color:var(--gold);text-decoration:none">Colorado</a><a href="https://portal.ct.gov/DEEP/Geology" style="color:var(--gold);text-decoration:none">Connecticut</a><a href="https://www.dgs.udel.edu/" style="color:var(--gold);text-decoration:none">Delaware</a><a href="https://www.floridamuseum.ufl.edu/florida-geology/" style="color:var(--gold);text-decoration:none">Florida</a><a href="https://epd.georgia.gov/georgia-geologic-survey" style="color:var(--gold);text-decoration:none">Georgia</a><a href="https://www.higp.hawaii.edu/" style="color:var(--gold);text-decoration:none">Hawaii</a><a href="https://www.idahogeology.org/" style="color:var(--gold);text-decoration:none">Idaho</a><a href="https://isgs.illinois.edu/" style="color:var(--gold);text-decoration:none">Illinois</a><a href="https://igws.indiana.edu/" style="color:var(--gold);text-decoration:none">Indiana</a><a href="https://www.iihr.uiowa.edu/igs/" style="color:var(--gold);text-decoration:none">Iowa</a><a href="https://www.kgs.ku.edu/" style="color:var(--gold);text-decoration:none">Kansas</a><a href="https://www.uky.edu/KGS/" style="color:var(--gold);text-decoration:none">Kentucky</a><a href="https://www.lsu.edu/lgs/" style="color:var(--gold);text-decoration:none">Louisiana</a><a href="https://www.maine.gov/dacf/mgs/" style="color:var(--gold);text-decoration:none">Maine</a><a href="https://www.mgs.md.gov/" style="color:var(--gold);text-decoration:none">Maryland</a><a href="https://www.mass.gov/orgs/massachusetts-geological-survey" style="color:var(--gold);text-decoration:none">Massachusetts</a><a href="https://wmich.edu/geologysurvey" style="color:var(--gold);text-decoration:none">Michigan</a><a href="https://cse.umn.edu/mgs" style="color:var(--gold);text-decoration:none">Minnesota</a><a href="https://www.mdeq.ms.gov/geology/" style="color:var(--gold);text-decoration:none">Mississippi</a><a href="https://mgsdatamine.rolla.missouri.edu/" style="color:var(--gold);text-decoration:none">Missouri</a><a href="https://www.mbmg.mtech.edu/" style="color:var(--gold);text-decoration:none">Montana</a><a href="https://snr.unl.edu/csd/" style="color:var(--gold);text-decoration:none">Nebraska</a><a href="https://nbmg.unr.edu/" style="color:var(--gold);text-decoration:none">Nevada</a><a href="https://www.des.nh.gov/organization/commissioner/gsu" style="color:var(--gold);text-decoration:none">New Hampshire</a><a href="https://www.nj.gov/dep/njgs/" style="color:var(--gold);text-decoration:none">New Jersey</a><a href="https://geoinfo.nmt.edu/" style="color:var(--gold);text-decoration:none">New Mexico</a><a href="https://www.nysm.nysed.gov/research-collections/geology" style="color:var(--gold);text-decoration:none">New York</a><a href="https://deq.nc.gov/about/divisions/energy-mineral-land-resources/north-carolina-geological-survey" style="color:var(--gold);text-decoration:none">North Carolina</a><a href="https://www.dmr.nd.gov/ndgs/" style="color:var(--gold);text-decoration:none">North Dakota</a><a href="https://geosurvey.ohiodnr.gov/" style="color:var(--gold);text-decoration:none">Ohio</a><a href="https://www.ou.edu/ogs" style="color:var(--gold);text-decoration:none">Oklahoma</a><a href="https://www.oregongeology.org/" style="color:var(--gold);text-decoration:none">Oregon</a><a href="https://www.dcnr.pa.gov/Geology/Pages/default.aspx" style="color:var(--gold);text-decoration:none">Pennsylvania</a><a href="https://rinhs.org/" style="color:var(--gold);text-decoration:none">Rhode Island</a><a href="https://www.dnr.sc.gov/geology/" style="color:var(--gold);text-decoration:none">South Carolina</a><a href="https://www.sdgs.usd.edu/" style="color:var(--gold);text-decoration:none">South Dakota</a><a href="https://www.tn.gov/environment/program-areas/geology" style="color:var(--gold);text-decoration:none">Tennessee</a><a href="https://www.beg.utexas.edu/" style="color:var(--gold);text-decoration:none">Texas</a><a href="https://geology.utah.gov/" style="color:var(--gold);text-decoration:none">Utah</a><a href="https://dec.vermont.gov/geological-survey" style="color:var(--gold);text-decoration:none">Vermont</a><a href="https://www.dmme.virginia.gov/dgmr/" style="color:var(--gold);text-decoration:none">Virginia</a><a href="https://www.dnr.wa.gov/geology" style="color:var(--gold);text-decoration:none">Washington</a><a href="https://www.wvgs.wvnet.edu/" style="color:var(--gold);text-decoration:none">West Virginia</a><a href="https://wgnhs.wisc.edu/" style="color:var(--gold);text-decoration:none">Wisconsin</a><a href="https://www.wsgs.wyo.gov/" style="color:var(--gold);text-decoration:none">Wyoming</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
 <p><a href="https://quarryme.com">QuarryMe.com</a> &mdash; Tri-State Aggregates Market Intelligence</p>
 <p style="margin-top:8px">Data sources: MSHA Mine Data Retrieval System, USGS Mineral Commodity Summaries, NY/NJ/CT DOT capital programs, company filings. Updated March 2026.</p>
 </footer>
@@ -471,7 +506,7 @@ Q[st].forEach(q=>{
 const[name,op,county,lat,lng,mat,active,prem]=q;
 const color=prem?'#d4a03c':active?'#2ecc71':'#666';
 const m=L.circleMarker([lat,lng],{radius:prem?8:5,fillColor:color,color:'#fff',weight:1,opacity:0.8,fillOpacity:0.8}).addTo(map);
-m.bindPopup('<div style="font-size:13px"><b>'+name+'</b><br>'+op+'<br>'+county+' County<br>'+mat+'<br>'+(active?'<span style=color:#2ecc71>Active</span>':'<span style=color:#666>Inactive</span>')+(prem?' <span style=color:#d4a03c>PREMIUM</span>':'')+'</div>');
+m.bindPopup('<div style="font-size:13px"><b>'+name+'</b><br>'+op+'<br>'+county+' County, '+st+'<br>'+mat+'<br>'+(active?'<span style=color:#2ecc71>Active</span>':'<span style=color:#666>Inactive</span>')+(prem?' <span style=color:#d4a03c>PREMIUM</span>':'')+'<br><a href="https://www.msha.gov/mine-data-retrieval-system" target="_blank" class="msha-link">&#9881; Look up MSHA Mine ID</a> | <a href="https://mrdata.usgs.gov/general/map-global.html?lat='+lat+'&lng='+lng+'&z=12" target="_blank" class="msha-link">&#127760; USGS Map</a></div>');
 markers.push(m);
 });
 }
@@ -488,4 +523,4 @@ new Chart(document.getElementById('stateChart'),{type:'doughnut',data:{labels:['
 document.querySelectorAll('nav a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
 </script>
 </body>
-</html>
+  </html>
