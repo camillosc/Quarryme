@@ -54,7 +54,7 @@ section .section-sub{color:var(--muted);margin-bottom:32px;font-size:14px}
 .tier p{font-size:14px}
 .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
 @media(max-width:768px){.chart-row{grid-template-columns:1fr}}
-.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;max-height:450px;overflow:hidden}
 .chart-box h4{font-size:14px;color:var(--muted);margin-bottom:12px}
 .op-table{width:100%;border-collapse:collapse;font-size:13px}
 .op-table th{text-align:left;padding:10px;border-bottom:2px solid var(--border);color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:1px}
@@ -545,9 +545,9 @@ markers.push(m);
 window.addEventListener('DOMContentLoaded',()=>{
 initMap();
 // Operator chart
-new Chart(document.getElementById('opChart'),{type:'bar',data:{labels:['CRH PLC','Heidelberg','Cobleskill','Hanson','O&G Ind.','Peckham','Trap Rock','Stavola','Haynes','Barrett'],datasets:[{label:'Sites',data:[31,31,8,8,6,6,3,3,3,3],backgroundColor:'rgba(212,160,60,0.7)',borderColor:'#d4a03c',borderWidth:1}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e3a5f'},ticks:{color:'#8899aa'}},y:{grid:{display:false},ticks:{color:'#e8edf3'}}}}});
+new Chart(document.getElementById('opChart'),{type:'bar',data:{labels:['CRH PLC','Heidelberg','Cobleskill','Hanson','O&G Ind.','Peckham','Trap Rock','Stavola','Haynes','Barrett'],datasets:[{label:'Sites',data:[31,31,8,8,6,6,3,3,3,3],backgroundColor:'rgba(212,160,60,0.7)',borderColor:'#d4a03c',borderWidth:1}]},options:{indexAxis:'y',responsive:true,resizeDelay:100,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e3a5f'},ticks:{color:'#8899aa'}},y:{grid:{display:false},ticks:{color:'#e8edf3'}}}}});
 // State chart
-new Chart(document.getElementById('stateChart'),{type:'doughnut',data:{labels:['New York (499)','Connecticut (104)','New Jersey (60)'],datasets:[{data:[499,104,60],backgroundColor:['#3498db','#2ecc71','#d4a03c'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#e8edf3',padding:16}}}}});
+new Chart(document.getElementById('stateChart'),{type:'doughnut',data:{labels:['New York (499)','Connecticut (104)','New Jersey (60)'],datasets:[{data:[499,104,60],backgroundColor:['#3498db','#2ecc71','#d4a03c'],borderWidth:0}]},options:{responsive:true,resizeDelay:100,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e8edf3',padding:16}}}}});
 });
 
 // Smooth scroll
