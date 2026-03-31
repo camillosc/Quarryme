@@ -1,15 +1,13 @@
 /**
  * Cloudflare Worker for quarryme.com
- * Proxies MSHA / DOL API requests to avoid browser CORS restrictions.
+ * Proxies MSHA requests by scraping arlweb.msha.gov (no API key required).
  *
  * Routes:
- *   GET /api/msha/:mineId             -> DOL Mines endpoint
- *   GET /api/msha/:mineId/violations  -> DOL Violations endpoint
- *   GET /api/msha/:mineId/inspections -> DOL Inspections endpoint
- *   GET /api/msha/:mineId/production  -> DOL MineAnnualProductionInfo endpoint
+ *   GET /api/msha/:mineId             -> scrape BasicMineInfoResults.asp
+ *   GET /api/msha/:mineId/violations  -> returns empty array (placeholder)
+ *   GET /api/msha/:mineId/inspections -> returns empty array (placeholder)
+ *   GET /api/msha/:mineId/production  -> returns empty array (placeholder)
  *   everything else -> static assets
- *
- * Optional env var: DOL_API_KEY — set as a Cloudflare Workers secret if needed.
  */
 
 export default {
@@ -22,7 +20,7 @@ export default {
     }
 
     if (url.pathname.startsWith('/api/msha/')) {
-      return proxyMsha(url, env);
+      return handleMsha(url, env);
     }
 
     // Fall through to static assets
@@ -30,53 +28,95 @@ export default {
   },
 };
 
-async function proxyMsha(url, env) {
+async function handleMsha(url, env) {
   // pathname: /api/msha/{mineId}[/sub]
-  const after = url.pathname.slice('/api/msha/'.length); // e.g. "0200032" or "0200032/violations"
+  const after = url.pathname.slice('/api/msha/'.length);
   const slash = after.indexOf('/');
   const mineId = slash === -1 ? after : after.slice(0, slash);
-  const sub = slash === -1 ? '' : after.slice(slash + 1); // 'violations' | 'inspections' | 'production' | ''
+  const sub = slash === -1 ? '' : after.slice(slash + 1);
 
   if (!mineId) {
     return jsonResp({ error: 'Missing mine ID' }, 400);
   }
 
-  const dolHeaders = {};
-  if (env.DOL_API_KEY) {
-    dolHeaders['X-API-KEY'] = env.DOL_API_KEY;
+  // Placeholder routes
+  if (sub === 'violations' || sub === 'inspections' || sub === 'production') {
+    return jsonResp({ value: [] });
   }
 
-  const enc = encodeURIComponent(`MINE_ID eq '${mineId}'`);
-  let apiUrl;
-
-  switch (sub) {
-    case 'violations':
-      apiUrl = `https://api.dol.gov/V2/Mining/Violations?filter=${enc}&$top=100&$orderby=VIOLATION_OCCUR_DT%20desc`;
-      break;
-    case 'inspections':
-      apiUrl = `https://api.dol.gov/V2/Mining/Inspections?filter=${enc}&$top=1&$orderby=INSPECTION_END_DT%20desc`;
-      break;
-    case 'production':
-      apiUrl = `https://api.dol.gov/V2/Mining/MineAnnualProductionInfo?filter=${enc}&$top=5&$orderby=CAL_YR%20desc`;
-      break;
-    default:
-      apiUrl = `https://api.dol.gov/V2/Mining/Mines?filter=${enc}`;
-  }
-
+  // Main mine info: scrape arlweb.msha.gov
   try {
-    const resp = await fetch(apiUrl, { headers: dolHeaders });
-    const text = await resp.text();
-    return new Response(text, {
-      status: resp.status,
+    const scrapeUrl = `https://arlweb.msha.gov/drs/ASP/BasicMineInfoResults.asp?MineId=${encodeURIComponent(mineId)}`;
+    const resp = await fetch(scrapeUrl, {
       headers: {
-        'Content-Type': 'application/json',
-        ...corsHeaders(),
-        'Cache-Control': 'public, max-age=3600',
+        'User-Agent': 'Mozilla/5.0 (compatible; quarryme-proxy/1.0)',
+        'Accept': 'text/html,application/xhtml+xml',
       },
     });
+
+    if (!resp.ok) {
+      return jsonResp({ error: `Upstream returned ${resp.status}` }, 502);
+    }
+
+    const html = await resp.text();
+    const mineInfo = parseMineInfoHtml(html);
+
+    return jsonResp({ value: [mineInfo] });
   } catch (e) {
     return jsonResp({ error: e.message }, 502);
   }
+}
+
+/**
+ * Parse the BasicMineInfoResults.asp HTML page.
+ * The page contains a table with rows of label/value pairs.
+ */
+function parseMineInfoHtml(html) {
+  const info = {};
+
+  // Extract all table cells — the page uses a simple two-column label/value layout
+  // Pattern: <td ...>Label</td><td ...>Value</td>
+  const rowPattern = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+  const cellPattern = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+
+  let rowMatch;
+  while ((rowMatch = rowPattern.exec(html)) !== null) {
+    const rowHtml = rowMatch[1];
+    const cells = [];
+    let cellMatch;
+    const localCellPattern = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+    while ((cellMatch = localCellPattern.exec(rowHtml)) !== null) {
+      cells.push(stripHtml(cellMatch[1]).trim());
+    }
+    if (cells.length >= 2 && cells[0]) {
+      const key = labelToKey(cells[0]);
+      if (key) {
+        info[key] = cells[1] || '';
+      }
+    }
+  }
+
+  return info;
+}
+
+/** Strip HTML tags and decode basic entities */
+function stripHtml(str) {
+  return str
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#\d+;/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Convert a human-readable label to a SCREAMING_SNAKE_CASE key */
+function labelToKey(label) {
+  const cleaned = label.replace(/[^A-Za-z0-9 ]/g, '').trim();
+  if (!cleaned) return null;
+  return cleaned.toUpperCase().replace(/\s+/g, '_');
 }
 
 function corsHeaders() {
