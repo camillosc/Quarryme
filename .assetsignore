@@ -1,0 +1,5 @@
+_msha_cache/
+*.py
+.claude/
+node_modules/
+.git/
