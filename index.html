@@ -677,19 +677,14 @@ async function getPermitInfo(state,lat,lng,mshaId){
             mshaProduction=Number(prodQty);
             var yr=py.CAL_YR?(' '+py.CAL_YR):'';
             var mshaBadge="<span style='display:inline-block;background:#e6f4ea;color:#137333;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>MSHA"+yr+"</span>";
-            var prodEl=document.getElementById('prod-'+mshaId);
-            if(prodEl){
-              prodEl.innerHTML=
-                "<div class='pr pe'><span class='k'>Annual production "+mshaBadge+"</span><span class='v'>"+fmt(mshaProduction)+" tons/yr</span></div>"+
-                "<div class='est-note'>Source: MSHA annual production report"+yr+"</div>";
-            }
-            rows+="<div class='pr'><span class='k'>Permitted mining allowance</span><span class='v'>"+fmt(mshaProduction)+" tons/yr</span></div>";
+            var mshaEl=document.getElementById('prod-msha-'+mshaId);
+            if(mshaEl){mshaEl.style.display='';mshaEl.innerHTML="<div class='pr pe'><span class='k'>Annual production "+mshaBadge+"</span><span class='v'>"+fmt(mshaProduction)+" tons/yr</span></div>";}
+            rows+="<div class='pr'><span class='k'>MSHA reported production"+yr+"</span><span class='v'>"+fmt(mshaProduction)+" tons/yr</span></div>";
           }
         }
       }
       if(mshaProduction===null&&avgEmpl&&avgEmpl>0){
         var estTons=Math.round(avgEmpl*35000);
-        rows+="<div class='pr'><span class='k'>Permitted mining allowance (est.)</span><span class='v'>~"+fmt(estTons)+" tons/yr</span></div>";
       }
       if(rows)return rows+"<div style='margin-top:4px'><a href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank' style='color:#378ADD;font-size:10px'>Full MSHA record \u2197</a></div>";
     }catch(e){}
@@ -757,22 +752,17 @@ function mkM(d){
 
 
  var isSec=d[14]===1;
-
-
-
- var badge=isSec?"<span style='display:inline-block;background:#e6f1fb;color:#0c447c;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>SEC filing</span>":"<span style='display:inline-block;background:#faeeda;color:#633806;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>Estimate</span>";
-
-
-
+ var isMsha=d[14]===2;
+ var mshaBadgeS="<span style='display:inline-block;background:#e6f4ea;color:#137333;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>MSHA</span>";
+ var secBadgeS="<span style='display:inline-block;background:#e6f1fb;color:#0c447c;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>SEC filing</span>";
+ var estBadgeS="<span style='display:inline-block;background:#faeeda;color:#633806;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>Estimate</span>";
  h+="<div id='prod-"+esc(d[11])+"'>";
- h+="<div class='pr pe'><span class='k'>Annual production "+badge+"</span><span class='v'>"+fmt(d[12])+" tons/yr</span></div>";
-
-
-
- h+="<div class='pr pe' style='border:none;padding-top:0'><span class='k'>Reserves "+badge+"</span><span class='v'>"+fmt(d[13])+" tons</span></div>";
-
-
-
+ if(isMsha){h+="<div class='pr pe'><span class='k'>Annual production "+mshaBadgeS+"</span><span class='v'>"+fmt(d[12])+" tons/yr</span></div>";}
+ else{h+="<div id='prod-msha-"+esc(d[11])+"' style='display:none'></div>";}
+ if(isMsha&&d[8]){h+="<div class='pr pe' style='border-top:1px solid #e8e6dc'><span class='k'>Annual production "+estBadgeS+"</span><span class='v'>"+fmt(Math.round(d[8]*35000))+" tons/yr</span></div>";}
+ else if(!isMsha){h+="<div class='pr pe'><span class='k'>Annual production "+(isSec?secBadgeS:estBadgeS)+"</span><span class='v'>"+fmt(d[12])+" tons/yr</span></div>";}
+ h+="<div id='prod-pmax-"+esc(d[11])+"'><div class='pr pe' style='border-top:1px solid #e8e6dc;padding-top:4px'><span class='k'>Permitted max production</span><span class='v' style='color:#aaa'>—</span></div></div>";
+ h+="<div class='pr pe' style='border:none;padding-top:0'><span class='k'>Reserves "+estBadgeS+"</span><span class='v'>"+fmt(d[13])+" tons</span></div>";
  h+=isSec?"<div class='est-note'>Calibrated from parent company SEC 10-K/20-F</div>":"<div class='est-note'>Estimated: employees x industry avg productivity</div>";
  h+="</div>";
 
