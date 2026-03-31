@@ -640,6 +640,7 @@ async function getPermitInfo(state,lat,lng,mshaId){
         fetch(base+'/inspections'),
         fetch(base+'/production')
       ]);
+      var avgEmpl=null;
       if(mineRes.ok){
         var md=await mineRes.json();
         var mr=(md.d&&md.d.results)||md.value||[];
@@ -648,7 +649,7 @@ async function getPermitInfo(state,lat,lng,mshaId){
           if(m.CURRENT_MINE_TYPE)rows+="<div class='pr'><span class='k'>Mine type</span><span class='v'>"+esc(m.CURRENT_MINE_TYPE)+"</span></div>";
           if(m.CURRENT_MINE_STATUS)rows+="<div class='pr'><span class='k'>Mine status</span><span class='v'>"+esc(m.CURRENT_MINE_STATUS)+"</span></div>";
           if(m.CURRENT_STATUS_DT)rows+="<div class='pr'><span class='k'>Status since</span><span class='v'>"+String(m.CURRENT_STATUS_DT).slice(0,10)+"</span></div>";
-          if(m.AVG_MINE_EMPL_CNT!=null&&m.AVG_MINE_EMPL_CNT!=='')rows+="<div class='pr'><span class='k'>Avg. employees (MSHA)</span><span class='v'>"+m.AVG_MINE_EMPL_CNT+"</span></div>";
+          if(m.AVG_MINE_EMPL_CNT!=null&&m.AVG_MINE_EMPL_CNT!==''){avgEmpl=Number(m.AVG_MINE_EMPL_CNT);rows+="<div class='pr'><span class='k'>Avg. employees (MSHA)</span><span class='v'>"+m.AVG_MINE_EMPL_CNT+"</span></div>";}
           if(m.DISTRICT)rows+="<div class='pr'><span class='k'>MSHA district</span><span class='v'>"+esc(m.DISTRICT)+"</span></div>";
         }
       }
@@ -664,24 +665,31 @@ async function getPermitInfo(state,lat,lng,mshaId){
         var ir=(id2.d&&id2.d.results)||id2.value||[];
         if(ir.length>0&&ir[0].INSPECTION_END_DT)rows+="<div class='pr'><span class='k'>Last inspection</span><span class='v'>"+String(ir[0].INSPECTION_END_DT).slice(0,10)+"</span></div>";
       }
+      var mshaProduction=null;
       if(prodRes.ok){
         var pd=await prodRes.json();
-        var pr=(pd.d&&pd.d.results)||pd.value||[];
-        if(pr.length>0){
-          var py=pr[0];
+        var pr2=(pd.d&&pd.d.results)||pd.value||[];
+        if(pr2.length>0){
+          var py=pr2[0];
           // Try known field names for annual production tonnage
           var prodQty=py.PRODUCTION_QTY||py.TOTAL_EXTR_PRODUCE_QTY||py.COAL_PRODUCTION_SHORT_TONS||py.PRODUCTION_SHORT_TONS||null;
           if(prodQty!=null&&prodQty!==''){
+            mshaProduction=Number(prodQty);
+            var yr=py.CAL_YR?(' '+py.CAL_YR):'';
+            var mshaBadge="<span style='display:inline-block;background:#e6f4ea;color:#137333;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>MSHA"+yr+"</span>";
             var prodEl=document.getElementById('prod-'+mshaId);
             if(prodEl){
-              var yr=py.CAL_YR?(' '+py.CAL_YR):'';
-              var mshaBadge="<span style='display:inline-block;background:#e6f4ea;color:#137333;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>MSHA"+yr+"</span>";
               prodEl.innerHTML=
-                "<div class='pr pe'><span class='k'>Annual production "+mshaBadge+"</span><span class='v'>"+fmt(Number(prodQty))+" tons/yr</span></div>"+
+                "<div class='pr pe'><span class='k'>Annual production "+mshaBadge+"</span><span class='v'>"+fmt(mshaProduction)+" tons/yr</span></div>"+
                 "<div class='est-note'>Source: MSHA annual production report"+yr+"</div>";
             }
+            rows+="<div class='pr'><span class='k'>Permitted mining allowance</span><span class='v'>"+fmt(mshaProduction)+" tons/yr</span></div>";
           }
         }
+      }
+      if(mshaProduction===null&&avgEmpl&&avgEmpl>0){
+        var estTons=Math.round(avgEmpl*35000);
+        rows+="<div class='pr'><span class='k'>Permitted mining allowance (est.)</span><span class='v'>~"+fmt(estTons)+" tons/yr</span></div>";
       }
       if(rows)return rows+"<div style='margin-top:4px'><a href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank' style='color:#378ADD;font-size:10px'>Full MSHA record \u2197</a></div>";
     }catch(e){}
@@ -1417,90 +1425,6 @@ doFilter();
 
 
 
-<!-- RESOURCES SECTION -->
-<div id="resources-section" style="max-width:1200px;margin:40px auto;padding:0 20px">
-<h2 style="font-size:22px;font-weight:600;color:#2c2c2a;margin-bottom:16px">Mining Permit &amp; Geological Resources</h2>
-<p style="font-size:14px;color:#b4b2a9;margin-bottom:24px">Look up individual quarry permits, MSHA inspection records, and geological survey data for any state.</p>
-
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
-<div style="background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:20px">
-<h3 style="font-size:16px;color:#2c2c2a;margin-bottom:8px">MSHA Mine Data Retrieval</h3>
-<p style="font-size:13px;color:#666;margin-bottom:8px">Search any mine by name, ID, state, or operator. Includes inspection history, violations, accidents, and employment data.</p>
-<a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">MSHA Mine Data Retrieval System &rarr;</a>
-</div>
-
-<div style="background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:20px">
-<h3 style="font-size:16px;color:#2c2c2a;margin-bottom:8px">USGS Mineral Resources</h3>
-<p style="font-size:13px;color:#666;margin-bottom:8px">Interactive map of active mines, mineral deposits, and geological data across the US.</p>
-<a href="https://mrdata.usgs.gov/" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">mrdata.usgs.gov &rarr;</a>
-</div>
-
-<div style="background:#fff;border:1px solid #eae8e0;border-radius:8px;padding:20px">
-<h3 style="font-size:16px;color:#2c2c2a;margin-bottom:8px">State Mining Permits</h3>
-<p style="font-size:13px;color:#666;margin-bottom:8px">Each state regulates mining permits separately. Use these links to look up quarry permits by state.</p>
-<a href="https://www.dec.ny.gov/lands/5020.html" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">NY DEC Mining &rarr;</a>&nbsp;&nbsp;
-<a href="https://www.nj.gov/dep/" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">NJ DEP &rarr;</a>&nbsp;&nbsp;
-<a href="https://portal.ct.gov/DEEP" target="_blank" style="color:#2c6fbb;text-decoration:none;font-size:13px">CT DEEP &rarr;</a>
-</div>
-</div>
-
-<div style="background:#f9f8f5;border:1px solid #eae8e0;border-radius:8px;padding:20px;margin-bottom:24px">
-<h3 style="font-size:15px;color:#2c2c2a;margin-bottom:12px">State Geological Surveys (All 50 States)</h3>
-<div style="display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px">
-<a href="https://www.gsa.state.al.us/" style="color:#2c6fbb;text-decoration:none">AL</a>
-<a href="https://dggs.alaska.gov/" style="color:#2c6fbb;text-decoration:none">AK</a>
-<a href="https://azgs.arizona.edu/" style="color:#2c6fbb;text-decoration:none">AZ</a>
-<a href="https://www.geology.arkansas.gov/" style="color:#2c6fbb;text-decoration:none">AR</a>
-<a href="https://www.conservation.ca.gov/cgs" style="color:#2c6fbb;text-decoration:none">CA</a>
-<a href="https://coloradogeologicalsurvey.org/" style="color:#2c6fbb;text-decoration:none">CO</a>
-<a href="https://portal.ct.gov/DEEP/Geology" style="color:#2c6fbb;text-decoration:none">CT</a>
-<a href="https://www.dgs.udel.edu/" style="color:#2c6fbb;text-decoration:none">DE</a>
-<a href="https://www.floridamuseum.ufl.edu/florida-geology/" style="color:#2c6fbb;text-decoration:none">FL</a>
-<a href="https://epd.georgia.gov/georgia-geologic-survey" style="color:#2c6fbb;text-decoration:none">GA</a>
-<a href="https://www.higp.hawaii.edu/" style="color:#2c6fbb;text-decoration:none">HI</a>
-<a href="https://www.idahogeology.org/" style="color:#2c6fbb;text-decoration:none">ID</a>
-<a href="https://isgs.illinois.edu/" style="color:#2c6fbb;text-decoration:none">IL</a>
-<a href="https://igws.indiana.edu/" style="color:#2c6fbb;text-decoration:none">IN</a>
-<a href="https://www.iihr.uiowa.edu/igs/" style="color:#2c6fbb;text-decoration:none">IA</a>
-<a href="https://www.kgs.ku.edu/" style="color:#2c6fbb;text-decoration:none">KS</a>
-<a href="https://www.uky.edu/KGS/" style="color:#2c6fbb;text-decoration:none">KY</a>
-<a href="https://www.lsu.edu/lgs/" style="color:#2c6fbb;text-decoration:none">LA</a>
-<a href="https://www.maine.gov/dacf/mgs/" style="color:#2c6fbb;text-decoration:none">ME</a>
-<a href="https://www.mgs.md.gov/" style="color:#2c6fbb;text-decoration:none">MD</a>
-<a href="https://www.mass.gov/orgs/massachusetts-geological-survey" style="color:#2c6fbb;text-decoration:none">MA</a>
-<a href="https://wmich.edu/geologysurvey" style="color:#2c6fbb;text-decoration:none">MI</a>
-<a href="https://cse.umn.edu/mgs" style="color:#2c6fbb;text-decoration:none">MN</a>
-<a href="https://www.mdeq.ms.gov/geology/" style="color:#2c6fbb;text-decoration:none">MS</a>
-<a href="https://mgsdatamine.rolla.missouri.edu/" style="color:#2c6fbb;text-decoration:none">MO</a>
-<a href="https://www.mbmg.mtech.edu/" style="color:#2c6fbb;text-decoration:none">MT</a>
-<a href="https://snr.unl.edu/csd/" style="color:#2c6fbb;text-decoration:none">NE</a>
-<a href="https://nbmg.unr.edu/" style="color:#2c6fbb;text-decoration:none">NV</a>
-<a href="https://www.des.nh.gov/organization/commissioner/gsu" style="color:#2c6fbb;text-decoration:none">NH</a>
-<a href="https://www.nj.gov/dep/njgs/" style="color:#2c6fbb;text-decoration:none">NJ</a>
-<a href="https://geoinfo.nmt.edu/" style="color:#2c6fbb;text-decoration:none">NM</a>
-<a href="https://www.nysm.nysed.gov/research-collections/geology" style="color:#2c6fbb;text-decoration:none">NY</a>
-<a href="https://deq.nc.gov/about/divisions/energy-mineral-land-resources/north-carolina-geological-survey" style="color:#2c6fbb;text-decoration:none">NC</a>
-<a href="https://www.dmr.nd.gov/ndgs/" style="color:#2c6fbb;text-decoration:none">ND</a>
-<a href="https://geosurvey.ohiodnr.gov/" style="color:#2c6fbb;text-decoration:none">OH</a>
-<a href="https://www.ou.edu/ogs" style="color:#2c6fbb;text-decoration:none">OK</a>
-<a href="https://www.oregongeology.org/" style="color:#2c6fbb;text-decoration:none">OR</a>
-<a href="https://www.dcnr.pa.gov/Geology/Pages/default.aspx" style="color:#2c6fbb;text-decoration:none">PA</a>
-<a href="https://rinhs.org/" style="color:#2c6fbb;text-decoration:none">RI</a>
-<a href="https://www.dnr.sc.gov/geology/" style="color:#2c6fbb;text-decoration:none">SC</a>
-<a href="https://www.sdgs.usd.edu/" style="color:#2c6fbb;text-decoration:none">SD</a>
-<a href="https://www.tn.gov/environment/program-areas/geology" style="color:#2c6fbb;text-decoration:none">TN</a>
-<a href="https://www.beg.utexas.edu/" style="color:#2c6fbb;text-decoration:none">TX</a>
-<a href="https://geology.utah.gov/" style="color:#2c6fbb;text-decoration:none">UT</a>
-<a href="https://dec.vermont.gov/geological-survey" style="color:#2c6fbb;text-decoration:none">VT</a>
-<a href="https://www.dmme.virginia.gov/dgmr/" style="color:#2c6fbb;text-decoration:none">VA</a>
-<a href="https://www.dnr.wa.gov/geology" style="color:#2c6fbb;text-decoration:none">WA</a>
-<a href="https://www.wvgs.wvnet.edu/" style="color:#2c6fbb;text-decoration:none">WV</a>
-<a href="https://wgnhs.wisc.edu/" style="color:#2c6fbb;text-decoration:none">WI</a>
-<a href="https://www.wsgs.wyo.gov/" style="color:#2c6fbb;text-decoration:none">WY</a>
-</div>
-</div>
-</div>
-<!-- END RESOURCES SECTION -->
 
 </body>
 
