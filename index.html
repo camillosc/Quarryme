@@ -629,23 +629,58 @@ function mkI(c){return L.divIcon({className:"",html:"<div style='width:9px;heigh
 
 
 
-async function getPermitInfo(state,lat,lng){
+async function getPermitInfo(state,lat,lng,mshaId){
+  var rows='';
+  if(mshaId){
+    try{
+      var enc=encodeURIComponent("MINE_ID eq '"+mshaId+"'");
+      var mineUrl='https://api.dol.gov/V2/Mining/Mines?filter='+enc;
+      var violUrl='https://api.dol.gov/V2/Mining/Violations?filter='+enc+'&$top=100&$orderby=VIOLATION_OCCUR_DT%20desc';
+      var inspUrl='https://api.dol.gov/V2/Mining/Inspections?filter='+enc+'&$top=1&$orderby=INSPECTION_END_DT%20desc';
+      var [mineRes,violRes,inspRes]=await Promise.all([fetch(mineUrl),fetch(violUrl),fetch(inspUrl)]);
+      if(mineRes.ok){
+        var md=await mineRes.json();
+        var mr=(md.d&&md.d.results)||md.value||[];
+        if(mr.length>0){
+          var m=mr[0];
+          if(m.CURRENT_MINE_TYPE)rows+="<div class='pr'><span class='k'>Mine type</span><span class='v'>"+esc(m.CURRENT_MINE_TYPE)+"</span></div>";
+          if(m.CURRENT_MINE_STATUS)rows+="<div class='pr'><span class='k'>Mine status</span><span class='v'>"+esc(m.CURRENT_MINE_STATUS)+"</span></div>";
+          if(m.CURRENT_STATUS_DT)rows+="<div class='pr'><span class='k'>Status since</span><span class='v'>"+String(m.CURRENT_STATUS_DT).slice(0,10)+"</span></div>";
+          if(m.AVG_MINE_EMPL_CNT!=null&&m.AVG_MINE_EMPL_CNT!=='')rows+="<div class='pr'><span class='k'>Avg. employees</span><span class='v'>"+m.AVG_MINE_EMPL_CNT+"</span></div>";
+          if(m.DISTRICT)rows+="<div class='pr'><span class='k'>MSHA district</span><span class='v'>"+esc(m.DISTRICT)+"</span></div>";
+        }
+      }
+      if(violRes.ok){
+        var vd=await violRes.json();
+        var vr=(vd.d&&vd.d.results)||vd.value||[];
+        var vClr=vr.length>10?'#A32D2D':vr.length>0?'#854F0B':'#1D9E75';
+        rows+="<div class='pr'><span class='k'>Violations on record</span><span class='v' style='font-weight:600;color:"+vClr+"'>"+vr.length+(vr.length===100?'+':'')+"</span></div>";
+        if(vr.length>0&&vr[0].VIOLATION_OCCUR_DT)rows+="<div class='pr'><span class='k'>Most recent violation</span><span class='v'>"+String(vr[0].VIOLATION_OCCUR_DT).slice(0,10)+"</span></div>";
+      }
+      if(inspRes.ok){
+        var id2=await inspRes.json();
+        var ir=(id2.d&&id2.d.results)||id2.value||[];
+        if(ir.length>0&&ir[0].INSPECTION_END_DT)rows+="<div class='pr'><span class='k'>Last inspection</span><span class='v'>"+String(ir[0].INSPECTION_END_DT).slice(0,10)+"</span></div>";
+      }
+      if(rows)return rows+"<div style='margin-top:4px'><a href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank' style='color:#378ADD;font-size:10px'>Full MSHA record \u2197</a></div>";
+    }catch(e){}
+  }
+  // State-specific fallback
   if(state==='NY'){
     try{
       var url='https://data.ny.gov/resource/va8e-9s3h.json?$limit=5&$where=within_circle(location,'+lat+','+lng+',5000)';
       var r=await fetch(url);if(!r.ok)throw new Error();
       var data=await r.json();
-      if(data.length===0)return "<span style='color:#888;font-size:10px'>No NY DEC permit found nearby</span>";
-      var p=data[0];var parts=[];
-      if(p.permit_number)parts.push('Permit: '+p.permit_number);
-      if(p.acres)parts.push('Acres: '+p.acres);
-      if(p.mined_material)parts.push('Material: '+p.mined_material);
-      return parts.join(' \u00b7 ')||'<a href="https://data.ny.gov/resource/va8e-9s3h.json" target="_blank">NY DEC record \u2197</a>';
-    }catch(e){return '<a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank">Look up on MSHA \u2197</a>';}
+      if(data.length>0){
+        var p=data[0];var parts=[];
+        if(p.permit_number)parts.push('Permit: '+p.permit_number);
+        if(p.acres)parts.push('Acres: '+p.acres);
+        if(p.mined_material)parts.push('Material: '+p.mined_material);
+        return (parts.join(' \u00b7 ')||'NY DEC record')+'<br><a href="https://data.ny.gov/resource/va8e-9s3h.json" target="_blank" style="color:#378ADD;font-size:10px">NY DEC data \u2197</a>';
+      }
+    }catch(e){}
   }
-  var links={'NJ':'https://www.nj.gov/dep/landuse/mining.html','PA':'https://www.dep.pa.gov/Business/Land/Mining/','TX':'https://www.rrc.texas.gov/','CA':'https://www.conservation.ca.gov/smgb','WA':'https://www.dnr.wa.gov/programs-initiatives/surface-mining','CO':'https://dlss.colorado.gov/mining/reclamation-and-mining','FL':'https://floridadep.gov/water/mining-and-mitigation'};
-  if(links[state])return '<a href="'+links[state]+'" target="_blank">'+state+' permit database \u2197</a>';
-  return '<a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank">Look up on MSHA \u2197</a>';
+  return "<a href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank' style='color:#378ADD;font-size:10px'>Look up on MSHA \u2197</a>";
 }
 
 function mkM(d){
@@ -804,9 +839,11 @@ function mkM(d){
 
 
 
- h+="<a class='ml' href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank'>Look up MSHA ID "+esc(d[11])+" &#x2197;</a>";
+ h+="<div style='border-top:1px solid #d3d1c7;margin-top:8px;padding-top:6px'>";
+ h+="<div style='font-weight:600;font-size:12px;color:#2c2c2a;margin-bottom:4px'>MSHA Permit &amp; Inspection Details</div>";
+ h+="<div id='pi-"+d[11]+"' style='font-size:11px'><div style='color:#888;padding:2px 0'>&#x231B; Loading&hellip;</div></div>";
+ h+="</div>";
  h+="<a class='ml' href='https://macrostrat.org/map/#"+d[0]+"/"+d[1]+"/12' target='_blank'>Geological map &#x2197;</a>";
- h+="<div id='pi-"+d[11]+"' style='font-size:10px;color:#666;margin-top:4px;padding:4px 8px'>Loading permit info...</div>";
 
  m.bindPopup(h);
 
@@ -878,7 +915,7 @@ function mkM(d){
 
   }
 
-  getPermitInfo(d[3],d[0],d[1]).then(function(info){var el=document.getElementById('pi-'+d[11]);if(el)el.innerHTML=info;});
+  getPermitInfo(d[3],d[0],d[1],d[11]).then(function(info){var el=document.getElementById('pi-'+d[11]);if(el)el.innerHTML=info;});
 
  });
 
