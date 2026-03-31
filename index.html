@@ -633,11 +633,13 @@ async function getPermitInfo(state,lat,lng,mshaId){
   var rows='';
   if(mshaId){
     try{
-      var enc=encodeURIComponent("MINE_ID eq '"+mshaId+"'");
-      var mineUrl='https://api.dol.gov/V2/Mining/Mines?filter='+enc;
-      var violUrl='https://api.dol.gov/V2/Mining/Violations?filter='+enc+'&$top=100&$orderby=VIOLATION_OCCUR_DT%20desc';
-      var inspUrl='https://api.dol.gov/V2/Mining/Inspections?filter='+enc+'&$top=1&$orderby=INSPECTION_END_DT%20desc';
-      var [mineRes,violRes,inspRes]=await Promise.all([fetch(mineUrl),fetch(violUrl),fetch(inspUrl)]);
+      var base='/api/msha/'+encodeURIComponent(mshaId);
+      var [mineRes,violRes,inspRes,prodRes]=await Promise.all([
+        fetch(base),
+        fetch(base+'/violations'),
+        fetch(base+'/inspections'),
+        fetch(base+'/production')
+      ]);
       if(mineRes.ok){
         var md=await mineRes.json();
         var mr=(md.d&&md.d.results)||md.value||[];
@@ -646,7 +648,7 @@ async function getPermitInfo(state,lat,lng,mshaId){
           if(m.CURRENT_MINE_TYPE)rows+="<div class='pr'><span class='k'>Mine type</span><span class='v'>"+esc(m.CURRENT_MINE_TYPE)+"</span></div>";
           if(m.CURRENT_MINE_STATUS)rows+="<div class='pr'><span class='k'>Mine status</span><span class='v'>"+esc(m.CURRENT_MINE_STATUS)+"</span></div>";
           if(m.CURRENT_STATUS_DT)rows+="<div class='pr'><span class='k'>Status since</span><span class='v'>"+String(m.CURRENT_STATUS_DT).slice(0,10)+"</span></div>";
-          if(m.AVG_MINE_EMPL_CNT!=null&&m.AVG_MINE_EMPL_CNT!=='')rows+="<div class='pr'><span class='k'>Avg. employees</span><span class='v'>"+m.AVG_MINE_EMPL_CNT+"</span></div>";
+          if(m.AVG_MINE_EMPL_CNT!=null&&m.AVG_MINE_EMPL_CNT!=='')rows+="<div class='pr'><span class='k'>Avg. employees (MSHA)</span><span class='v'>"+m.AVG_MINE_EMPL_CNT+"</span></div>";
           if(m.DISTRICT)rows+="<div class='pr'><span class='k'>MSHA district</span><span class='v'>"+esc(m.DISTRICT)+"</span></div>";
         }
       }
@@ -661,6 +663,25 @@ async function getPermitInfo(state,lat,lng,mshaId){
         var id2=await inspRes.json();
         var ir=(id2.d&&id2.d.results)||id2.value||[];
         if(ir.length>0&&ir[0].INSPECTION_END_DT)rows+="<div class='pr'><span class='k'>Last inspection</span><span class='v'>"+String(ir[0].INSPECTION_END_DT).slice(0,10)+"</span></div>";
+      }
+      if(prodRes.ok){
+        var pd=await prodRes.json();
+        var pr=(pd.d&&pd.d.results)||pd.value||[];
+        if(pr.length>0){
+          var py=pr[0];
+          // Try known field names for annual production tonnage
+          var prodQty=py.PRODUCTION_QTY||py.TOTAL_EXTR_PRODUCE_QTY||py.COAL_PRODUCTION_SHORT_TONS||py.PRODUCTION_SHORT_TONS||null;
+          if(prodQty!=null&&prodQty!==''){
+            var prodEl=document.getElementById('prod-'+mshaId);
+            if(prodEl){
+              var yr=py.CAL_YR?(' '+py.CAL_YR):'';
+              var mshaBadge="<span style='display:inline-block;background:#e6f4ea;color:#137333;font-size:9px;padding:1px 6px;border-radius:3px;margin-left:4px'>MSHA"+yr+"</span>";
+              prodEl.innerHTML=
+                "<div class='pr pe'><span class='k'>Annual production "+mshaBadge+"</span><span class='v'>"+fmt(Number(prodQty))+" tons/yr</span></div>"+
+                "<div class='est-note'>Source: MSHA annual production report"+yr+"</div>";
+            }
+          }
+        }
       }
       if(rows)return rows+"<div style='margin-top:4px'><a href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank' style='color:#378ADD;font-size:10px'>Full MSHA record \u2197</a></div>";
     }catch(e){}
@@ -735,6 +756,7 @@ function mkM(d){
 
 
 
+ h+="<div id='prod-"+esc(d[11])+"'>";
  h+="<div class='pr pe'><span class='k'>Annual production "+badge+"</span><span class='v'>"+fmt(d[12])+" tons/yr</span></div>";
 
 
@@ -744,6 +766,7 @@ function mkM(d){
 
 
  h+=isSec?"<div class='est-note'>Calibrated from parent company SEC 10-K/20-F</div>":"<div class='est-note'>Estimated: employees x industry avg productivity</div>";
+ h+="</div>";
 
 
 
