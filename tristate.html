@@ -122,6 +122,85 @@ footer a{color:var(--gold);text-decoration:none}
 <div class="chip">New quarry permitting: <b>5-10+ years</b></div>
 <div class="chip">Production recovery expected: <b>2026-2027</b></div>
 </div>
+
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin-top:24px">
+<h4 style="font-size:13px;color:var(--muted);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px">NE Aggregate Economics: $22/Ton Price Breakdown</h4>
+<!-- cost-waterfall chart: left bar = Selling Price, right bar = stacked costs + PROFIT (total height matches) -->
+<svg id="cost-waterfall" viewBox="0 0 560 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;margin:0 auto" role="img" aria-label="Cost waterfall chart showing selling price vs stacked cost breakdown">
+  <!-- Left bar: Selling Price $22.00, full height 300px (scale: 300/22 = 13.636 px/$) -->
+  <rect x="30" y="20" width="80" height="300" fill="#d4a03c" rx="3"/>
+  <!-- Dollar value above left bar -->
+  <text x="70" y="13" text-anchor="middle" font-size="13" font-weight="700" fill="#d4a03c">$22.00</text>
+
+  <!-- Right stacked bar — costs ($13.77) + PROFIT ($8.23) = $22.00 total -->
+  <!-- PROFIT (green, top): y=20, h=112.2 -->
+  <rect x="160" y="20" width="80" height="112.2" fill="#2ecc71" rx="3"/>
+  <!-- Royalties & Permits $1.82: y=132.2, h=24.8 -->
+  <rect x="160" y="132.2" width="80" height="24.8" fill="#a855f7"/>
+  <!-- Mining & Blasting $2.00: y=157.0, h=27.3 -->
+  <rect x="160" y="157.0" width="80" height="27.3" fill="#ef4444"/>
+  <!-- Crushing & Processing $3.10: y=184.3, h=42.3 -->
+  <rect x="160" y="184.3" width="80" height="42.3" fill="#f97316"/>
+  <!-- Labor & Benefits $3.50: y=226.6, h=47.7 -->
+  <rect x="160" y="226.6" width="80" height="47.7" fill="#06b6d4"/>
+  <!-- Equipment & Fuel $2.00: y=274.3, h=27.3 -->
+  <rect x="160" y="274.3" width="80" height="27.3" fill="#3b82f6"/>
+  <!-- G&amp;A &amp; Overhead $1.35: y=301.6, h=18.4 -->
+  <rect x="160" y="301.6" width="80" height="18.4" fill="#64748b"/>
+
+  <!-- Dollar value above right bar -->
+  <text x="200" y="13" text-anchor="middle" font-size="13" font-weight="700" fill="#8899aa">$22.00</text>
+
+  <!-- Dashed alignment lines connecting tops/bottoms of both bars -->
+  <line x1="110" y1="20" x2="160" y2="20" stroke="#444" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="110" y1="320" x2="160" y2="320" stroke="#444" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Right-side connector lines and labels -->
+  <!-- PROFIT -->
+  <line x1="240" y1="76" x2="252" y2="76" stroke="#2ecc71" stroke-width="1.5"/>
+  <text x="257" y="72" font-size="12" font-weight="700" fill="#2ecc71">PROFIT  $8.23</text>
+  <text x="257" y="85" font-size="10" fill="#8899aa">37.4% margin</text>
+
+  <!-- Royalties -->
+  <line x1="240" y1="145" x2="252" y2="145" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="257" y="149" font-size="11" fill="#e8edf3">Royalties &amp; Permits  $1.82</text>
+
+  <!-- Mining -->
+  <line x1="240" y1="171" x2="252" y2="171" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="257" y="175" font-size="11" fill="#e8edf3">Mining &amp; Blasting  $2.00</text>
+
+  <!-- Crushing -->
+  <line x1="240" y1="206" x2="252" y2="206" stroke="#f97316" stroke-width="1.5"/>
+  <text x="257" y="210" font-size="11" fill="#e8edf3">Crushing &amp; Processing  $3.10</text>
+
+  <!-- Labor -->
+  <line x1="240" y1="250" x2="252" y2="250" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="257" y="254" font-size="11" fill="#e8edf3">Labor &amp; Benefits  $3.50</text>
+
+  <!-- Equipment -->
+  <line x1="240" y1="288" x2="252" y2="288" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="257" y="292" font-size="11" fill="#e8edf3">Equipment &amp; Fuel  $2.00</text>
+
+  <!-- G&A -->
+  <line x1="240" y1="311" x2="252" y2="311" stroke="#64748b" stroke-width="1.5"/>
+  <text x="257" y="315" font-size="11" fill="#e8edf3">G&amp;A &amp; Overhead  $1.35</text>
+
+  <!-- Total costs brace on left side of right bar -->
+  <line x1="156" y1="132.2" x2="148" y2="132.2" stroke="#8899aa" stroke-width="1"/>
+  <line x1="148" y1="132.2" x2="148" y2="320" stroke="#8899aa" stroke-width="1"/>
+  <line x1="148" y1="320" x2="156" y2="320" stroke="#8899aa" stroke-width="1"/>
+  <text x="144" y="229" text-anchor="end" font-size="11" fill="#8899aa">Total</text>
+  <text x="144" y="242" text-anchor="end" font-size="11" fill="#8899aa">Costs</text>
+  <text x="144" y="255" text-anchor="end" font-size="11" font-weight="700" fill="#8899aa">$13.77</text>
+
+  <!-- X-axis labels -->
+  <text x="70" y="340" text-anchor="middle" font-size="12" font-weight="600" fill="#e8edf3">Selling Price</text>
+  <text x="200" y="340" text-anchor="middle" font-size="12" font-weight="600" fill="#e8edf3">Cost Structure</text>
+  <text x="70" y="354" text-anchor="middle" font-size="11" fill="#8899aa">$/ton</text>
+  <text x="200" y="354" text-anchor="middle" font-size="11" fill="#8899aa">$/ton</text>
+</svg>
+<p style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center">Illustrative NE tri-state trap rock economics. Actual margins vary by operator, site, and market. Source: industry estimates.</p>
+</div>
 </section>
 <section id="maps">
 <h2>Interactive <span>Quarry Maps</span></h2>
