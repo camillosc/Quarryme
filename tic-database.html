@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIC Industry Executive Tracker — Testing, Inspection, Certification & Compliance</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0f1e;--card:#111827;--border:#1e2a45;--gold:#d4a843;--gold-dim:#b8922e;--text:#e2e8f0;--text-dim:#94a3b8;--accent:#1e3a5f;--hover:#162240;--green:#22c55e;--red:#ef4444;--star:#eab308}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.header{background:linear-gradient(135deg,#0d1529 0%,#162240 50%,#0d1529 100%);border-bottom:2px solid var(--gold);padding:2rem 2rem 1.5rem;text-align:center}
+.header h1{font-size:1.8rem;color:var(--gold);font-weight:700;letter-spacing:.5px;margin-bottom:.3rem}
+.header p{color:var(--text-dim);font-size:.95rem}
+.header .subtitle{color:var(--text);font-size:1rem;margin-bottom:.2rem}
+
+.controls{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.controls input[type=text]{background:#0f172a;border:1px solid var(--border);color:var(--text);padding:.5rem .85rem;border-radius:6px;font-size:.85rem;width:280px;outline:none;transition:border .2s}
+.controls input[type=text]:focus{border-color:var(--gold)}
+.controls select{background:#0f172a;border:1px solid var(--border);color:var(--text);padding:.5rem .7rem;border-radius:6px;font-size:.85rem;outline:none;cursor:pointer;appearance:auto}
+.controls select:focus{border-color:var(--gold)}
+.controls .count{margin-left:auto;color:var(--text-dim);font-size:.82rem;white-space:nowrap}
+
+.table-wrap{overflow-x:auto;padding:0 1rem 2rem}
+table{width:100%;border-collapse:collapse;min-width:1600px;margin-top:.5rem}
+thead{position:sticky;top:0;z-index:10}
+th{background:#162240;color:var(--gold);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;padding:.7rem .6rem;text-align:left;border-bottom:2px solid var(--gold);cursor:pointer;white-space:nowrap;user-select:none;transition:background .15s}
+th:hover{background:#1e3050}
+th .sort-icon{display:inline-block;width:14px;text-align:center;margin-left:3px;font-size:.7rem;color:var(--text-dim)}
+th.sorted-asc .sort-icon::after{content:'▲';color:var(--gold)}
+th.sorted-desc .sort-icon::after{content:'▼';color:var(--gold)}
+
+td{padding:.55rem .6rem;font-size:.82rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
+tr{transition:background .1s}
+tr:hover{background:var(--hover)}
+tr:nth-child(even){background:rgba(17,24,39,.5)}
+tr:nth-child(even):hover{background:var(--hover)}
+
+.rank{text-align:center;font-weight:700;color:var(--gold);min-width:40px}
+.name{font-weight:600;color:#f1f5f9;white-space:nowrap}
+.title-col{color:var(--text-dim);max-width:180px}
+.company{color:var(--gold);font-weight:500;white-space:nowrap}
+.revenue{text-align:right;font-variant-numeric:tabular-nums}
+.employees{text-align:right;font-variant-numeric:tabular-nums}
+.acq{text-align:center}
+.deals{max-width:220px;font-size:.78rem;color:var(--text-dim);line-height:1.4}
+.years{text-align:center}
+.focus-col{font-size:.78rem}
+.focus-tag{display:inline-block;background:var(--accent);color:var(--text);padding:1px 7px;border-radius:10px;font-size:.72rem;margin:1px 2px}
+.stars{white-space:nowrap;letter-spacing:1px}
+.star-filled{color:var(--star)}
+.star-empty{color:#334155}
+.ownership{font-size:.78rem}
+.stock{font-weight:600;white-space:nowrap}
+.stock.pos{color:var(--green)}
+.stock.neg{color:var(--red)}
+.stock.na{color:var(--text-dim);font-weight:400}
+
+.footer{text-align:center;padding:1.5rem;color:var(--text-dim);font-size:.78rem;border-top:1px solid var(--border)}
+
+@media(max-width:768px){
+  .header h1{font-size:1.3rem}
+  .controls{flex-direction:column;align-items:stretch}
+  .controls input[type=text]{width:100%}
+  .controls .count{margin-left:0;margin-top:.25rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>TIC Industry Executive Tracker</h1>
+  <p class="subtitle">Testing, Inspection, Certification & Compliance</p>
+  <p>Comprehensive database of industry leaders ranked by scale, M&A activity, and strategic impact</p>
+</div>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="Search executives, companies, deals...">
+  <select id="filterFocus"><option value="">All Industry Focus</option></select>
+  <select id="filterOwnership"><option value="">All Ownership Types</option></select>
+  <select id="filterRevenue">
+    <option value="">All Revenue Ranges</option>
+    <option value="10000">$10B+</option>
+    <option value="5000">$5B+</option>
+    <option value="2000">$2B+</option>
+    <option value="1000">$1B–$2B</option>
+    <option value="500">$500M–$1B</option>
+    <option value="0">Under $500M</option>
+  </select>
+  <span class="count" id="rowCount">Showing 40 of 40</span>
+</div>
+
+<div class="table-wrap">
+<table id="execTable">
+<thead>
+<tr>
+  <th data-col="rank" data-type="num">Rank<span class="sort-icon"></span></th>
+  <th data-col="name" data-type="str">Executive Name<span class="sort-icon"></span></th>
+  <th data-col="title" data-type="str">Title<span class="sort-icon"></span></th>
+  <th data-col="company" data-type="str">Company<span class="sort-icon"></span></th>
+  <th data-col="revenue" data-type="num">Revenue ($M)<span class="sort-icon"></span></th>
+  <th data-col="employees" data-type="num">Employees<span class="sort-icon"></span></th>
+  <th data-col="acquisitions" data-type="num">Acq (#)<span class="sort-icon"></span></th>
+  <th data-col="deals" data-type="str">Key Deals<span class="sort-icon"></span></th>
+  <th data-col="years" data-type="num">Years in Role<span class="sort-icon"></span></th>
+  <th data-col="focus" data-type="str">Industry Focus<span class="sort-icon"></span></th>
+  <th data-col="score" data-type="num">Success Score<span class="sort-icon"></span></th>
+  <th data-col="ownership" data-type="str">Ownership<span class="sort-icon"></span></th>
+  <th data-col="stock" data-type="str">Stock Perf<span class="sort-icon"></span></th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<div class="footer">
+  TIC Industry Executive Tracker &mdash; Data compiled from public filings, press releases, and industry reports &mdash; April 2026
+</div>
+
+<script>
+const DATA=[
+{rank:1,name:"Gilles Martin",title:"Founder & CEO",company:"Eurofins Scientific",revenue:7400,employees:62000,acquisitions:400,deals:"TestAmerica, Pace Analytical, EAG Labs, VRL Labs",years:37,focus:["Lab","Food Safety","Pharma"],score:5,ownership:"Public (ERF.PA)",stock:"+180% 5yr"},
+{rank:2,name:"Alexandre L'Heureux",title:"President & CEO",company:"WSP Global",revenue:19000,employees:73000,acquisitions:60,deals:"AECOM Management, Louis Berger, Environment & Infrastructure",years:6,focus:["Engineering","Environmental"],score:5,ownership:"Public (WSP.TO)",stock:"+120% 5yr"},
+{rank:3,name:"Hinda Gharbi",title:"CEO",company:"Bureau Veritas",revenue:6300,employees:83000,acquisitions:50,deals:"Various bolt-on TIC acquisitions globally",years:2,focus:["Full-spectrum TIC"],score:4,ownership:"Public (BVI.PA)",stock:"+15% 1yr"},
+{rank:4,name:"Dickerson Wright",title:"Chairman & CEO",company:"NV5 Global",revenue:2200,employees:8000,acquisitions:40,deals:"Acuren ($1.7B), CHJ, Continental, Dade Moeller",years:12,focus:["Infrastructure","NDT"],score:5,ownership:"Public (NVEE)",stock:"+85% 5yr"},
+{rank:5,name:"Troy Rudd",title:"CEO",company:"AECOM",revenue:16100,employees:52000,acquisitions:30,deals:"URS Corp, Hunt Construction, Canyon Partners infra",years:5,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"+95% 5yr"},
+{rank:6,name:"Vijay Manthripragada",title:"CEO",company:"Montrose Environmental",revenue:700,employees:4500,acquisitions:25,deals:"Built entirely via M&A: ECT2, Enthalpy, MEG",years:6,focus:["Environmental Services"],score:4,ownership:"Public (MEG)",stock:"-20% 3yr"},
+{rank:7,name:"Colm Sheridan",title:"CEO",company:"Intertek Group",revenue:3200,employees:46000,acquisitions:20,deals:"PSI, Alchemy, various lab acquisitions",years:1,focus:["Full-spectrum TIC"],score:3,ownership:"Public (ITRK.L)",stock:"-15% 5yr"},
+{rank:8,name:"Geraldine Picaud",title:"CEO",company:"SGS SA",revenue:6800,employees:99000,acquisitions:20,deals:"Various global TIC bolt-ons",years:1,focus:["Full-spectrum TIC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% 1yr"},
+{rank:9,name:"Jennifer Scanlon",title:"CEO",company:"UL Solutions",revenue:2900,employees:15000,acquisitions:15,deals:"BattleBorn Batteries testing, various labs",years:5,focus:["Safety Certification"],score:5,ownership:"Public (ULS)",stock:"+56% since IPO"},
+{rank:10,name:"Jo Sherreard",title:"CEO",company:"Element Materials Technology",revenue:1200,employees:9000,acquisitions:30,deals:"Exova, various materials testing labs globally",years:3,focus:["Materials Testing"],score:4,ownership:"PE (Bridgepoint)",stock:"N/A"},
+{rank:11,name:"Dennis Bertolotti",title:"CEO",company:"Terracon",revenue:1600,employees:6000,acquisitions:20,deals:"GeoSyntec acquisition, regional engineering firms",years:8,focus:["Geotech","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A"},
+{rank:12,name:"Manuel Stamatakis",title:"Chairman & CEO",company:"MISTRAS Group",revenue:720,employees:5400,acquisitions:15,deals:"New Century, SCI, various NDT firms",years:15,focus:["NDT","Asset Protection"],score:3,ownership:"Public (MG)",stock:"-40% 5yr"},
+{rank:13,name:"John Tarpey",title:"CEO",company:"Kleinfelder",revenue:800,employees:3500,acquisitions:15,deals:"Sen Geotechnical, various environmental/geotech",years:6,focus:["Geotech","Environmental"],score:4,ownership:"PE (Leonard Green)",stock:"N/A"},
+{rank:14,name:"Keith Leung",title:"CEO",company:"Acuren",revenue:700,employees:5000,acquisitions:10,deals:"Various NDT and inspection firms",years:5,focus:["NDT","Industrial Inspection"],score:4,ownership:"PE (Leonard Green then NV5)",stock:"N/A"},
+{rank:15,name:"Patrick Baughman",title:"CEO",company:"Braun Intertec",revenue:500,employees:2000,acquisitions:10,deals:"Regional testing and engineering firms",years:8,focus:["Materials Testing","Geotech"],score:3,ownership:"Private (ESOP)",stock:"N/A"},
+{rank:16,name:"Antoine de Saint-Affrique",title:"CEO",company:"Applus+",revenue:2100,employees:24000,acquisitions:15,deals:"Various TIC bolt-ons globally",years:3,focus:["Full-spectrum TIC"],score:3,ownership:"PE (Apollo)",stock:"N/A"},
+{rank:17,name:"Christophe Weber",title:"CEO",company:"Merieux NutriSciences",revenue:600,employees:3500,acquisitions:10,deals:"Various food safety labs",years:5,focus:["Food Safety"],score:3,ownership:"Private (Institut Merieux)",stock:"N/A"},
+{rank:18,name:"John Adent",title:"CEO",company:"NEOGEN Corp",revenue:900,employees:5200,acquisitions:10,deals:"3M Food Safety ($5.3B), various food testing",years:9,focus:["Food Safety"],score:4,ownership:"Public (NEOG)",stock:"-30% 3yr"},
+{rank:19,name:"Gavin Liu",title:"CEO",company:"Atlas Technical Consultants",revenue:600,employees:3800,acquisitions:15,deals:"AEC firms across Southeast US",years:4,focus:["Engineering","Testing"],score:3,ownership:"PE (GSO/Blackstone)",stock:"N/A"},
+{rank:20,name:"Mark Spieker",title:"CEO",company:"ECS Group",revenue:500,employees:2500,acquisitions:10,deals:"Regional geotech and environmental firms",years:6,focus:["Geotech","Environmental"],score:3,ownership:"PE",stock:"N/A"},
+{rank:21,name:"Bob Green",title:"CEO",company:"S&ME",revenue:300,employees:1500,acquisitions:8,deals:"Regional engineering firms",years:10,focus:["Materials Testing","Geotech"],score:3,ownership:"Private",stock:"N/A"},
+{rank:22,name:"Amerino Gatti",title:"CEO",company:"Team Industrial Services",revenue:800,employees:4000,acquisitions:5,deals:"Quest Integrity, various industrial services",years:2,focus:["Industrial Inspection"],score:2,ownership:"Public (TISI)",stock:"-60% 5yr"},
+{rank:23,name:"Susan Johnson",title:"CEO",company:"NSF International",revenue:500,employees:3000,acquisitions:5,deals:"Various certification bodies",years:4,focus:["Certification","Standards"],score:3,ownership:"Non-profit",stock:"N/A"},
+{rank:24,name:"David Adler",title:"CEO",company:"CSA Group",revenue:400,employees:2500,acquisitions:5,deals:"Various standards/certification acquisitions",years:6,focus:["Certification","Standards"],score:3,ownership:"Non-profit",stock:"N/A"},
+{rank:25,name:"Rolf-Dieter Lafrenz",title:"CEO",company:"ALS Limited",revenue:2100,employees:18000,acquisitions:20,deals:"Nuvisan pharma services, various environmental labs",years:4,focus:["Lab","Environmental","Life Sciences"],score:4,ownership:"Public (ALQ.AX)",stock:"+45% 3yr"},
+{rank:26,name:"Todd Gleason",title:"CEO",company:"CECO Environmental",revenue:550,employees:1800,acquisitions:12,deals:"Peerless Mfg, Zhongli, various air quality firms",years:5,focus:["Environmental Services","Air Quality"],score:3,ownership:"Public (CECO)",stock:"+25% 3yr"},
+{rank:27,name:"Patrick Shea",title:"President",company:"GZA GeoEnvironmental",revenue:180,employees:800,acquisitions:4,deals:"Regional environmental and geotech firms",years:7,focus:["Geotech","Environmental"],score:3,ownership:"Private (ESOP)",stock:"N/A"},
+{rank:28,name:"Peter Oosterveer",title:"CEO",company:"Arcadis",revenue:5200,employees:36000,acquisitions:25,deals:"DPS Group, AECOM environmental, IBI Group",years:7,focus:["Environmental","Engineering","Consulting"],score:4,ownership:"Public (ARCAD.AS)",stock:"+65% 5yr"},
+{rank:29,name:"Thomas Bertels",title:"President",company:"Waygate Technologies",revenue:900,employees:3200,acquisitions:6,deals:"Spun from Baker Hughes, CT/UT/RT inspection platforms",years:4,focus:["NDT","Industrial Inspection"],score:4,ownership:"PE (ICG)",stock:"N/A"},
+{rank:30,name:"David Greve",title:"CEO",company:"Zetec Inc.",revenue:150,employees:450,acquisitions:3,deals:"Structural Integrity Associates NDT, eddy current tech",years:5,focus:["NDT","Nuclear Inspection"],score:3,ownership:"PE (Roper Technologies)",stock:"N/A"},
+{rank:31,name:"Shigeto Nakamura",title:"President",company:"Evident (Olympus NDT)",revenue:1100,employees:4500,acquisitions:8,deals:"Olympus NDT division spinoff, phased array ultrasonics",years:3,focus:["NDT","Scientific Instruments"],score:4,ownership:"PE (Bain Capital)",stock:"N/A"},
+{rank:32,name:"Kurt Brunner",title:"Managing Director",company:"Romer Labs",revenue:250,employees:1200,acquisitions:5,deals:"Diagnostic systems, food pathogen testing kits",years:8,focus:["Food Safety","Diagnostics"],score:3,ownership:"Private (Erber Group)",stock:"N/A"},
+{rank:33,name:"Ryan Casey",title:"CEO",company:"Construction Testing & Engineering",revenue:120,employees:600,acquisitions:3,deals:"Regional materials testing and inspection firms",years:6,focus:["Materials Testing","Construction"],score:3,ownership:"Private",stock:"N/A"},
+{rank:34,name:"Matt Luttrell",title:"CEO",company:"Professional Service Industries (PSI)",revenue:450,employees:2800,acquisitions:10,deals:"Merged into Intertek, construction materials testing",years:5,focus:["Materials Testing","Construction"],score:3,ownership:"Public (Intertek subsidiary)",stock:"N/A"},
+{rank:35,name:"Juan Peinado",title:"CEO",company:"Geosyntec Consultants",revenue:400,employees:1800,acquisitions:6,deals:"Environmental remediation, water resources consulting",years:5,focus:["Environmental","Geotech"],score:4,ownership:"Private (ESOP)",stock:"N/A"},
+{rank:36,name:"David Testa",title:"CEO",company:"Pace Analytical",revenue:800,employees:4000,acquisitions:15,deals:"TestAmerica merger, environmental lab consolidation",years:4,focus:["Lab","Environmental"],score:4,ownership:"PE (CD&R then Eurofins)",stock:"N/A"},
+{rank:37,name:"Robert Eichelberg",title:"CEO",company:"TestAmerica (now Eurofins)",revenue:500,employees:2200,acquisitions:8,deals:"Environmental lab network, merged with Pace Analytical",years:6,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A"},
+{rank:38,name:"Michael Turner",title:"CEO",company:"TRC Companies",revenue:700,employees:7500,acquisitions:12,deals:"Lockheed Martin environmental, Pioneer Technologies",years:5,focus:["Environmental","Engineering","Energy"],score:4,ownership:"PE (Warburg Pincus)",stock:"N/A"},
+{rank:39,name:"Nathalie Brunelle",title:"CEO",company:"SOCOTEC",revenue:1000,employees:12000,acquisitions:18,deals:"RSK, Bureau Alpes Controles, UK building inspection firms",years:4,focus:["Construction","Building Inspection"],score:4,ownership:"PE (Caisse de Depot)",stock:"N/A"},
+{rank:40,name:"Mark Taylor",title:"CEO",company:"Kiwa Group",revenue:700,employees:10000,acquisitions:20,deals:"Vinotte, various European TIC firms, certification bodies",years:5,focus:["Certification","Full-spectrum TIC"],score:3,ownership:"Non-profit (Kiwa Foundation)",stock:"N/A"}
+];
+
+// Build focus + ownership dropdowns
+const focusSet=new Set(), ownSet=new Set();
+DATA.forEach(d=>{d.focus.forEach(f=>focusSet.add(f)); ownSet.add(d.ownership.split('(')[0].trim().split(' ')[0])});
+const focusSel=document.getElementById('filterFocus');
+[...focusSet].sort().forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;focusSel.appendChild(o)});
+const ownSel=document.getElementById('filterOwnership');
+[...ownSet].sort().forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;ownSel.appendChild(o)});
+
+function stars(n){let s='';for(let i=0;i<5;i++) s+=`<span class="${i<n?'star-filled':'star-empty'}">★</span>`;return s}
+
+function stockClass(s){if(s==='N/A')return 'na';return s.startsWith('-')?'neg':'pos'}
+
+function renderRows(rows){
+  const tb=document.getElementById('tbody');
+  tb.innerHTML=rows.map((d,i)=>`<tr>
+    <td class="rank">${d.rank}</td>
+    <td class="name">${d.name}</td>
+    <td class="title-col">${d.title}</td>
+    <td class="company">${d.company}</td>
+    <td class="revenue">$${d.revenue.toLocaleString()}</td>
+    <td class="employees">${d.employees.toLocaleString()}</td>
+    <td class="acq">${d.acquisitions}+</td>
+    <td class="deals">${d.deals}</td>
+    <td class="years">${d.years}</td>
+    <td class="focus-col">${d.focus.map(f=>`<span class="focus-tag">${f}</span>`).join('')}</td>
+    <td class="stars">${stars(d.score)}</td>
+    <td class="ownership">${d.ownership}</td>
+    <td class="stock ${stockClass(d.stock)}">${d.stock}</td>
+  </tr>`).join('');
+  document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${DATA.length}`;
+}
+
+let sortCol=null, sortDir=1;
+
+function getFiltered(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const ff=focusSel.value;
+  const fo=ownSel.value;
+  const fr=document.getElementById('filterRevenue').value;
+  return DATA.filter(d=>{
+    if(q){const blob=(d.name+d.title+d.company+d.deals+d.focus.join(' ')+d.ownership+d.stock).toLowerCase();if(!blob.includes(q))return false}
+    if(ff&&!d.focus.includes(ff))return false;
+    if(fo&&!d.ownership.startsWith(fo))return false;
+    if(fr){
+      const rv=+fr;
+      if(rv>=10000&&d.revenue<10000)return false;
+      if(rv===5000&&(d.revenue<5000||d.revenue>=10000))return false;
+      if(rv===2000&&(d.revenue<2000||d.revenue>=5000))return false;
+      if(rv===1000&&(d.revenue<1000||d.revenue>=2000))return false;
+      if(rv===500&&(d.revenue<500||d.revenue>=1000))return false;
+      if(rv===0&&d.revenue>=500)return false;
+    }
+    return true;
+  });
+}
+
+function sortAndRender(){
+  let rows=getFiltered();
+  if(sortCol){
+    rows.sort((a,b)=>{
+      let va=a[sortCol],vb=b[sortCol];
+      if(Array.isArray(va))va=va.join(',');
+      if(Array.isArray(vb))vb=vb.join(',');
+      if(typeof va==='string')return va.localeCompare(vb)*sortDir;
+      return (va-vb)*sortDir;
+    });
+  }
+  renderRows(rows);
+}
+
+document.querySelectorAll('th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col=th.dataset.col;
+    document.querySelectorAll('th').forEach(t=>t.classList.remove('sorted-asc','sorted-desc'));
+    if(sortCol===col){sortDir*=-1}else{sortCol=col;sortDir=1}
+    th.classList.add(sortDir===1?'sorted-asc':'sorted-desc');
+    sortAndRender();
+  });
+});
+
+document.getElementById('search').addEventListener('input',sortAndRender);
+focusSel.addEventListener('change',sortAndRender);
+ownSel.addEventListener('change',sortAndRender);
+document.getElementById('filterRevenue').addEventListener('change',sortAndRender);
+
+renderRows(DATA);
+</script>
+</body>
+</html>
