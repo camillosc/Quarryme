@@ -24,7 +24,7 @@ a:hover{text-decoration:underline}
 .controls .count{margin-left:auto;color:var(--text-dim);font-size:.82rem;white-space:nowrap}
 
 .table-wrap{overflow-x:auto;padding:0 1rem 2rem}
-table{width:100%;border-collapse:collapse;min-width:1800px;margin-top:.5rem}
+table{width:100%;border-collapse:collapse;min-width:2000px;margin-top:.5rem}
 thead{position:sticky;top:0;z-index:10}
 th{background:#162240;color:var(--gold);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;padding:.7rem .6rem;text-align:left;border-bottom:2px solid var(--gold);cursor:pointer;white-space:nowrap;user-select:none;transition:background .15s}
 th:hover{background:#1e3050}
@@ -60,6 +60,7 @@ tr:nth-child(even):hover{background:var(--hover)}
 .status-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap}
 .status-current{background:#166534;color:#bbf7d0}
 .status-former{background:#374151;color:#9ca3af}
+.li-link{font-size:.78rem;white-space:nowrap}
 
 .footer{text-align:center;padding:1.5rem;color:var(--text-dim);font-size:.78rem;border-top:1px solid var(--border)}
 
@@ -75,8 +76,8 @@ tr:nth-child(even):hover{background:var(--hover)}
 
 <div class="header">
   <h1>TICC Industry Executive Tracker</h1>
-  <p class="subtitle">Testing, Inspection, Certification & Compliance</p>
-  <p>Comprehensive database of industry leaders ranked by scale, M&A activity, and strategic impact</p>
+  <p class="subtitle">Testing, Inspection, Certification &amp; Compliance</p>
+  <p>Comprehensive database of industry leaders ranked by scale, M&amp;A activity, and strategic impact</p>
 </div>
 
 <div class="controls">
@@ -106,6 +107,7 @@ tr:nth-child(even):hover{background:var(--hover)}
 <tr>
   <th data-col="rank" data-type="num">Rank<span class="sort-icon"></span></th>
   <th data-col="name" data-type="str">Executive Name<span class="sort-icon"></span></th>
+  <th data-col="age" data-type="num">Age (Est.)<span class="sort-icon"></span></th>
   <th data-col="title" data-type="str">Title<span class="sort-icon"></span></th>
   <th data-col="company" data-type="str">Company<span class="sort-icon"></span></th>
   <th data-col="status" data-type="str">Status<span class="sort-icon"></span></th>
@@ -117,7 +119,8 @@ tr:nth-child(even):hover{background:var(--hover)}
   <th data-col="focus" data-type="str">Industry Focus<span class="sort-icon"></span></th>
   <th data-col="score" data-type="num">Success Score<span class="sort-icon"></span></th>
   <th data-col="ownership" data-type="str">Ownership<span class="sort-icon"></span></th>
-  <th data-col="stock" data-type="str">Stock Perf<span class="sort-icon"></span></th>
+  <th data-col="stock" data-type="str">Stock Perf (Tenure)<span class="sort-icon"></span></th>
+  <th data-col="linkedin" data-type="str">LinkedIn<span class="sort-icon"></span></th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -130,113 +133,306 @@ tr:nth-child(even):hover{background:var(--hover)}
 
 <script>
 const DATA=[
-// === CURRENT C-SUITE ===
-{rank:1,name:"Gilles Martin",title:"Founder & CEO",company:"Eurofins Scientific",status:"Current",revenue:7400,employees:62000,acquisitions:400,deals:"TestAmerica, Pace Analytical, EAG Labs, VRL Labs",years:37,focus:["Lab","Food Safety","Pharma"],score:5,ownership:"Public (ERF.PA)",stock:"+180% 5yr"},
-{rank:2,name:"Alexandre L'Heureux",title:"President & CEO",company:"WSP Global",status:"Current",revenue:19000,employees:73000,acquisitions:60,deals:"AECOM Management, Louis Berger, Environment & Infrastructure",years:6,focus:["Engineering","Environmental"],score:5,ownership:"Public (WSP.TO)",stock:"+120% 5yr"},
-{rank:3,name:"Hinda Gharbi",title:"CEO",company:"Bureau Veritas",status:"Current",revenue:6300,employees:83000,acquisitions:50,deals:"Various bolt-on TICC acquisitions globally",years:2,focus:["Full-spectrum TICC"],score:4,ownership:"Public (BVI.PA)",stock:"+15% 1yr"},
-{rank:4,name:"Dickerson Wright",title:"Chairman & CEO",company:"NV5 Global",status:"Current",revenue:2200,employees:8000,acquisitions:40,deals:"Acuren ($1.7B), CHJ, Continental, Dade Moeller",years:12,focus:["Infrastructure","NDT"],score:5,ownership:"Public (NVEE)",stock:"+85% 5yr"},
-{rank:5,name:"Troy Rudd",title:"CEO",company:"AECOM",status:"Current",revenue:16100,employees:52000,acquisitions:30,deals:"URS Corp, Hunt Construction, Canyon Partners infra",years:5,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"+95% 5yr"},
-{rank:6,name:"Vijay Manthripragada",title:"CEO",company:"Montrose Environmental",status:"Current",revenue:700,employees:4500,acquisitions:25,deals:"Built entirely via M&A: ECT2, Enthalpy, MEG",years:6,focus:["Environmental Services"],score:4,ownership:"Public (MEG)",stock:"-20% 3yr"},
-{rank:7,name:"Colm Sheridan",title:"CEO",company:"Intertek Group",status:"Current",revenue:3200,employees:46000,acquisitions:20,deals:"PSI, Alchemy, various lab acquisitions",years:1,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ITRK.L)",stock:"-15% 5yr"},
-{rank:8,name:"Geraldine Picaud",title:"CEO",company:"SGS SA",status:"Current",revenue:6800,employees:99000,acquisitions:20,deals:"Various global TICC bolt-ons",years:1,focus:["Full-spectrum TICC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% 1yr"},
-{rank:9,name:"Jennifer Scanlon",title:"CEO",company:"UL Solutions",status:"Current",revenue:2900,employees:15000,acquisitions:15,deals:"BattleBorn Batteries testing, various labs",years:5,focus:["Safety Certification"],score:5,ownership:"Public (ULS)",stock:"+56% since IPO"},
-{rank:10,name:"Jo Sherreard",title:"CEO",company:"Element Materials Technology",status:"Current",revenue:1200,employees:9000,acquisitions:30,deals:"Exova, various materials testing labs globally",years:3,focus:["Materials Testing"],score:4,ownership:"PE (Bridgepoint)",stock:"N/A"},
-{rank:11,name:"Dennis Bertolotti",title:"CEO",company:"Terracon",status:"Current",revenue:1600,employees:6000,acquisitions:20,deals:"GeoSyntec acquisition, regional engineering firms",years:8,focus:["Geotech","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:12,name:"Manuel Stamatakis",title:"Chairman & CEO",company:"MISTRAS Group",status:"Current",revenue:720,employees:5400,acquisitions:15,deals:"New Century, SCI, various NDT firms",years:15,focus:["NDT","Asset Protection"],score:3,ownership:"Public (MG)",stock:"-40% 5yr"},
-{rank:13,name:"John Tarpey",title:"CEO",company:"Kleinfelder",status:"Current",revenue:800,employees:3500,acquisitions:15,deals:"Sen Geotechnical, various environmental/geotech",years:6,focus:["Geotech","Environmental"],score:4,ownership:"PE (Leonard Green)",stock:"N/A"},
-{rank:14,name:"Keith Leung",title:"CEO",company:"Acuren",status:"Current",revenue:700,employees:5000,acquisitions:10,deals:"Various NDT and inspection firms",years:5,focus:["NDT","Industrial Inspection"],score:4,ownership:"PE (Leonard Green then NV5)",stock:"N/A"},
-{rank:15,name:"Patrick Baughman",title:"CEO",company:"Braun Intertec",status:"Current",revenue:500,employees:2000,acquisitions:10,deals:"Regional testing and engineering firms",years:8,focus:["Materials Testing","Geotech"],score:3,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:16,name:"Antoine de Saint-Affrique",title:"CEO",company:"Applus+",status:"Current",revenue:2100,employees:24000,acquisitions:15,deals:"Various TICC bolt-ons globally",years:3,focus:["Full-spectrum TICC"],score:3,ownership:"PE (Apollo)",stock:"N/A"},
-{rank:17,name:"Christophe Weber",title:"CEO",company:"Merieux NutriSciences",status:"Current",revenue:600,employees:3500,acquisitions:10,deals:"Various food safety labs",years:5,focus:["Food Safety"],score:3,ownership:"Private (Institut Merieux)",stock:"N/A"},
-{rank:18,name:"John Adent",title:"CEO",company:"NEOGEN Corp",status:"Current",revenue:900,employees:5200,acquisitions:10,deals:"3M Food Safety ($5.3B), various food testing",years:9,focus:["Food Safety"],score:4,ownership:"Public (NEOG)",stock:"-30% 3yr"},
-{rank:19,name:"Gavin Liu",title:"CEO",company:"Atlas Technical Consultants",status:"Current",revenue:600,employees:3800,acquisitions:15,deals:"AEC firms across Southeast US",years:4,focus:["Engineering","Testing"],score:3,ownership:"PE (GSO/Blackstone)",stock:"N/A"},
-{rank:20,name:"Mark Spieker",title:"CEO",company:"ECS Group",status:"Current",revenue:500,employees:2500,acquisitions:10,deals:"Regional geotech and environmental firms",years:6,focus:["Geotech","Environmental"],score:3,ownership:"PE",stock:"N/A"},
-{rank:21,name:"Bob Green",title:"CEO",company:"S&ME",status:"Current",revenue:300,employees:1500,acquisitions:8,deals:"Regional engineering firms",years:10,focus:["Materials Testing","Geotech"],score:3,ownership:"Private",stock:"N/A"},
-{rank:22,name:"Amerino Gatti",title:"CEO",company:"Team Industrial Services",status:"Current",revenue:800,employees:4000,acquisitions:5,deals:"Quest Integrity, various industrial services",years:2,focus:["Industrial Inspection"],score:2,ownership:"Public (TISI)",stock:"-60% 5yr"},
-{rank:23,name:"Susan Johnson",title:"CEO",company:"NSF International",status:"Current",revenue:500,employees:3000,acquisitions:5,deals:"Various certification bodies",years:4,focus:["Certification","Standards"],score:3,ownership:"Non-profit",stock:"N/A"},
-{rank:24,name:"David Adler",title:"CEO",company:"CSA Group",status:"Current",revenue:400,employees:2500,acquisitions:5,deals:"Various standards/certification acquisitions",years:6,focus:["Certification","Standards"],score:3,ownership:"Non-profit",stock:"N/A"},
-{rank:25,name:"Rolf-Dieter Lafrenz",title:"CEO",company:"ALS Limited",status:"Current",revenue:2100,employees:18000,acquisitions:20,deals:"Nuvisan pharma services, various environmental labs",years:4,focus:["Lab","Environmental","Life Sciences"],score:4,ownership:"Public (ALQ.AX)",stock:"+45% 3yr"},
-{rank:26,name:"Todd Gleason",title:"CEO",company:"CECO Environmental",status:"Current",revenue:550,employees:1800,acquisitions:12,deals:"Peerless Mfg, Zhongli, various air quality firms",years:5,focus:["Environmental Services","Air Quality"],score:3,ownership:"Public (CECO)",stock:"+25% 3yr"},
-{rank:27,name:"Patrick Shea",title:"President",company:"GZA GeoEnvironmental",status:"Current",revenue:180,employees:800,acquisitions:4,deals:"Regional environmental and geotech firms",years:7,focus:["Geotech","Environmental"],score:3,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:28,name:"Peter Oosterveer",title:"CEO",company:"Arcadis",status:"Current",revenue:5200,employees:36000,acquisitions:25,deals:"DPS Group, AECOM environmental, IBI Group",years:7,focus:["Environmental","Engineering","Consulting"],score:4,ownership:"Public (ARCAD.AS)",stock:"+65% 5yr"},
-{rank:29,name:"Thomas Bertels",title:"President",company:"Waygate Technologies",status:"Current",revenue:900,employees:3200,acquisitions:6,deals:"Spun from Baker Hughes, CT/UT/RT inspection platforms",years:4,focus:["NDT","Industrial Inspection"],score:4,ownership:"PE (ICG)",stock:"N/A"},
-{rank:30,name:"David Greve",title:"CEO",company:"Zetec Inc.",status:"Current",revenue:150,employees:450,acquisitions:3,deals:"Structural Integrity Associates NDT, eddy current tech",years:5,focus:["NDT","Nuclear Inspection"],score:3,ownership:"PE (Roper Technologies)",stock:"N/A"},
-{rank:31,name:"Shigeto Nakamura",title:"President",company:"Evident (Olympus NDT)",status:"Current",revenue:1100,employees:4500,acquisitions:8,deals:"Olympus NDT division spinoff, phased array ultrasonics",years:3,focus:["NDT","Scientific Instruments"],score:4,ownership:"PE (Bain Capital)",stock:"N/A"},
-{rank:32,name:"Kurt Brunner",title:"Managing Director",company:"Romer Labs",status:"Current",revenue:250,employees:1200,acquisitions:5,deals:"Diagnostic systems, food pathogen testing kits",years:8,focus:["Food Safety","Diagnostics"],score:3,ownership:"Private (Erber Group)",stock:"N/A"},
-{rank:33,name:"Ryan Casey",title:"CEO",company:"Construction Testing & Engineering",status:"Current",revenue:120,employees:600,acquisitions:3,deals:"Regional materials testing and inspection firms",years:6,focus:["Materials Testing","Construction"],score:3,ownership:"Private",stock:"N/A"},
-{rank:34,name:"Matt Luttrell",title:"CEO",company:"Professional Service Industries (PSI)",status:"Current",revenue:450,employees:2800,acquisitions:10,deals:"Merged into Intertek, construction materials testing",years:5,focus:["Materials Testing","Construction"],score:3,ownership:"Public (Intertek subsidiary)",stock:"N/A"},
-{rank:35,name:"Juan Peinado",title:"CEO",company:"Geosyntec Consultants",status:"Current",revenue:400,employees:1800,acquisitions:6,deals:"Environmental remediation, water resources consulting",years:5,focus:["Environmental","Geotech"],score:4,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:36,name:"David Testa",title:"CEO",company:"Pace Analytical",status:"Current",revenue:800,employees:4000,acquisitions:15,deals:"TestAmerica merger, environmental lab consolidation",years:4,focus:["Lab","Environmental"],score:4,ownership:"PE (CD&R then Eurofins)",stock:"N/A"},
-{rank:37,name:"Robert Eichelberg",title:"CEO",company:"TestAmerica (now Eurofins)",status:"Current",revenue:500,employees:2200,acquisitions:8,deals:"Environmental lab network, merged with Pace Analytical",years:6,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A"},
-{rank:38,name:"Michael Turner",title:"CEO",company:"TRC Companies",status:"Current",revenue:700,employees:7500,acquisitions:12,deals:"Lockheed Martin environmental, Pioneer Technologies",years:5,focus:["Environmental","Engineering","Energy"],score:4,ownership:"PE (Warburg Pincus)",stock:"N/A"},
-{rank:39,name:"Nathalie Brunelle",title:"CEO",company:"SOCOTEC",status:"Current",revenue:1000,employees:12000,acquisitions:18,deals:"RSK, Bureau Alpes Controles, UK building inspection firms",years:4,focus:["Construction","Building Inspection"],score:4,ownership:"PE (Caisse de Depot)",stock:"N/A"},
-{rank:40,name:"Mark Taylor",title:"CEO",company:"Kiwa Group",status:"Current",revenue:700,employees:10000,acquisitions:20,deals:"Vinotte, various European TICC firms, certification bodies",years:5,focus:["Certification","Full-spectrum TICC"],score:3,ownership:"Non-profit (Kiwa Foundation)",stock:"N/A"},
+// === CURRENT C-SUITE — MAJOR PUBLIC TICC ===
+{rank:1,name:"Gilles Martin",title:"Founder & CEO",company:"Eurofins Scientific",status:"Current",revenue:7400,employees:62000,acquisitions:400,deals:"TestAmerica, Pace Analytical, EAG Labs, VRL Labs",years:37,focus:["Lab","Food Safety","Pharma"],score:5,ownership:"Public (ERF.PA)",stock:"+180% (1987-present)",linkedin:"https://be.linkedin.com/in/gillesamartin"},
+{rank:2,name:"Alexandre L'Heureux",title:"President & CEO",company:"WSP Global",status:"Current",revenue:19000,employees:73000,acquisitions:60,deals:"AECOM Management, Louis Berger, Wood E&I ($1.8B)",years:6,focus:["Engineering","Environmental"],score:5,ownership:"Public (WSP.TO)",stock:"+120% (2020-present)",linkedin:""},
+{rank:3,name:"Hinda Gharbi",title:"CEO",company:"Bureau Veritas",status:"Current",revenue:6300,employees:83000,acquisitions:50,deals:"APP Group, IDP Group, ArcVera Renewables, Contec AQS, GeoAssay",years:2,focus:["Full-spectrum TICC"],score:4,ownership:"Public (BVI.PA)",stock:"+15% (2023-present)",linkedin:""},
+{rank:4,name:"Dickerson Wright",title:"Chairman & CEO",company:"NV5 Global",status:"Current",revenue:2200,employees:8000,acquisitions:40,deals:"Acuren ($1.7B), CHJ, Continental, Dade Moeller",years:12,focus:["Infrastructure","NDT"],score:5,ownership:"Public (NVEE)",stock:"+85% (2012-present)",linkedin:""},
+{rank:5,name:"Troy Rudd",title:"CEO",company:"AECOM",status:"Current",revenue:16100,employees:52000,acquisitions:30,deals:"URS Corp, Hunt Construction, Canyon Partners infra",years:5,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"+95% (2021-present)",linkedin:""},
+{rank:6,name:"Vijay Manthripragada",title:"CEO",company:"Montrose Environmental",status:"Current",revenue:830,employees:4500,acquisitions:25,deals:"Built via M&A: ECT2, Enthalpy, MEG, Paragon Soil (Canada)",years:8,focus:["Environmental Services"],score:4,ownership:"Public (MEG)",stock:"-20% (2016-present)",linkedin:"https://www.linkedin.com/in/vijay-manthripragada-21259871"},
+{rank:7,name:"Colm Sheridan",title:"CEO",company:"Intertek Group",status:"Current",revenue:3400,employees:46000,acquisitions:20,deals:"PSI, Alchemy, various lab acquisitions",years:1,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ITRK.L)",stock:"-15% (2023-present)",linkedin:""},
+{rank:8,name:"Geraldine Picaud",title:"CEO",company:"SGS SA",status:"Current",revenue:6800,employees:99000,acquisitions:20,deals:"ArcLight Wireless, Gossamer, AQM; 11 acquisitions in 2024",years:2,focus:["Full-spectrum TICC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (2024-present)",linkedin:"https://ch.linkedin.com/in/geraldinep"},
+{rank:9,name:"Jennifer Scanlon",title:"President & CEO",company:"UL Solutions",status:"Current",revenue:3050,employees:15000,acquisitions:15,deals:"TesTneT Engineering, BatterieIngenieure, German EV/decarbonization labs",years:7,focus:["Safety Certification"],score:5,ownership:"Public (ULS)",stock:"+56% (2019-IPO)",linkedin:"https://www.linkedin.com/in/j-scanlon/"},
+{rank:10,name:"Jo Sherreard",title:"CEO",company:"Element Materials Technology",status:"Current",revenue:1200,employees:9000,acquisitions:30,deals:"Exova, various materials testing labs globally",years:3,focus:["Materials Testing"],score:4,ownership:"PE (Bridgepoint)",stock:"N/A",linkedin:""},
+{rank:11,name:"Dennis Bertolotti",title:"CEO",company:"Terracon",status:"Current",revenue:1600,employees:6000,acquisitions:20,deals:"GeoSyntec acquisition, regional engineering firms",years:8,focus:["Geotech","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A",linkedin:""},
+{rank:12,name:"Manuel Stamatakis",title:"Chairman & CEO",company:"MISTRAS Group",status:"Current",revenue:724,employees:5400,acquisitions:15,deals:"New Century, SCI, West Penn Testing Group ($74M), various NDT",years:15,focus:["NDT","Asset Protection"],score:3,ownership:"Public (MG)",stock:"-40% (2009-present)",linkedin:""},
+{rank:13,name:"John Tarpey",title:"CEO",company:"Kleinfelder",status:"Current",revenue:800,employees:3500,acquisitions:15,deals:"Sen Geotechnical, various environmental/geotech",years:6,focus:["Geotech","Environmental"],score:4,ownership:"PE (Leonard Green)",stock:"N/A",linkedin:""},
+{rank:14,name:"Keith Leung",title:"CEO",company:"Acuren",status:"Current",revenue:700,employees:5000,acquisitions:10,deals:"Various NDT and inspection firms",years:5,focus:["NDT","Industrial Inspection"],score:4,ownership:"PE (Leonard Green then NV5)",stock:"N/A",linkedin:""},
+{rank:15,name:"Patrick Baughman",title:"CEO",company:"Braun Intertec",status:"Current",revenue:500,employees:2000,acquisitions:10,deals:"Regional testing and engineering firms",years:8,focus:["Materials Testing","Geotech"],score:3,ownership:"Private (ESOP)",stock:"N/A",linkedin:""},
+{rank:16,name:"Antoine de Saint-Affrique",title:"CEO",company:"Applus+",status:"Current",revenue:2100,employees:24000,acquisitions:15,deals:"Various TICC bolt-ons globally",years:3,focus:["Full-spectrum TICC"],score:3,ownership:"PE (Apollo)",stock:"N/A",linkedin:""},
+{rank:17,name:"Christophe Weber",title:"CEO",company:"Merieux NutriSciences",status:"Current",revenue:600,employees:3500,acquisitions:10,deals:"Various food safety labs",years:5,focus:["Food Safety"],score:3,ownership:"Private (Institut Merieux)",stock:"N/A",linkedin:""},
+{rank:18,name:"John Adent",title:"CEO",company:"NEOGEN Corp",status:"Current",revenue:900,employees:5200,acquisitions:10,deals:"3M Food Safety ($5.3B), various food testing",years:9,focus:["Food Safety"],score:4,ownership:"Public (NEOG)",stock:"-30% (2017-present)",linkedin:""},
+{rank:19,name:"Gavin Liu",title:"CEO",company:"Atlas Technical Consultants",status:"Current",revenue:600,employees:3800,acquisitions:15,deals:"AEC firms across Southeast US",years:4,focus:["Engineering","Testing"],score:3,ownership:"PE (GSO/Blackstone)",stock:"N/A",linkedin:""},
+{rank:20,name:"Mark Spieker",title:"CEO",company:"ECS Group",status:"Current",revenue:500,employees:2500,acquisitions:10,deals:"Regional geotech and environmental firms",years:6,focus:["Geotech","Environmental"],score:3,ownership:"PE",stock:"N/A",linkedin:""},
+{rank:21,name:"Bob Green",title:"CEO",company:"S&ME",status:"Current",revenue:300,employees:1500,acquisitions:8,deals:"Regional engineering firms",years:10,focus:["Materials Testing","Geotech"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:22,name:"Amerino Gatti",title:"CEO",company:"Team Industrial Services",status:"Current",revenue:800,employees:4000,acquisitions:5,deals:"Quest Integrity, various industrial services",years:2,focus:["Industrial Inspection"],score:2,ownership:"Public (TISI)",stock:"-60% (2022-present)",linkedin:""},
+{rank:23,name:"Susan Johnson",title:"CEO",company:"NSF International",status:"Current",revenue:500,employees:3000,acquisitions:5,deals:"Various certification bodies",years:4,focus:["Certification","Standards"],score:3,ownership:"Non-profit",stock:"N/A",linkedin:""},
+{rank:24,name:"David Adler",title:"CEO",company:"CSA Group",status:"Current",revenue:400,employees:2500,acquisitions:5,deals:"Various standards/certification acquisitions",years:6,focus:["Certification","Standards"],score:3,ownership:"Non-profit",stock:"N/A",linkedin:""},
+{rank:25,name:"Rolf-Dieter Lafrenz",title:"CEO",company:"ALS Limited",status:"Current",revenue:2100,employees:18000,acquisitions:20,deals:"Nuvisan pharma services, various environmental labs",years:4,focus:["Lab","Environmental","Life Sciences"],score:4,ownership:"Public (ALQ.AX)",stock:"+45% (2022-present)",linkedin:""},
+{rank:26,name:"Todd Gleason",title:"CEO",company:"CECO Environmental",status:"Current",revenue:550,employees:1800,acquisitions:12,deals:"Peerless Mfg, Zhongli, various air quality firms",years:5,focus:["Environmental Services","Air Quality"],score:3,ownership:"Public (CECO)",stock:"+25% (2021-present)",linkedin:""},
+{rank:27,name:"Patrick Shea",title:"President",company:"GZA GeoEnvironmental",status:"Current",revenue:180,employees:800,acquisitions:4,deals:"Regional environmental and geotech firms",years:7,focus:["Geotech","Environmental"],score:3,ownership:"Private (ESOP)",stock:"N/A",linkedin:""},
+{rank:28,name:"Peter Oosterveer",title:"Former CEO",company:"Arcadis",status:"Former",revenue:4700,employees:36000,acquisitions:25,deals:"DPS Group, AECOM environmental, IBI Group",years:7,focus:["Environmental","Engineering"],score:4,ownership:"Public (ARCAD.AS)",stock:"+65% (2018-2025)",linkedin:""},
+{rank:29,name:"Thomas Bertels",title:"President",company:"Waygate Technologies",status:"Current",revenue:900,employees:3200,acquisitions:6,deals:"Spun from Baker Hughes, CT/UT/RT inspection platforms",years:4,focus:["NDT","Industrial Inspection"],score:4,ownership:"PE (ICG)",stock:"N/A",linkedin:""},
+{rank:30,name:"David Greve",title:"CEO",company:"Zetec Inc.",status:"Current",revenue:150,employees:450,acquisitions:3,deals:"Structural Integrity Associates NDT, eddy current tech",years:5,focus:["NDT","Nuclear Inspection"],score:3,ownership:"PE (Roper Technologies)",stock:"N/A",linkedin:""},
+{rank:31,name:"Shigeto Nakamura",title:"President",company:"Evident (Olympus NDT)",status:"Current",revenue:1100,employees:4500,acquisitions:8,deals:"Olympus NDT division spinoff, phased array ultrasonics",years:3,focus:["NDT","Scientific Instruments"],score:4,ownership:"PE (Bain Capital)",stock:"N/A",linkedin:""},
+{rank:32,name:"Kurt Brunner",title:"Managing Director",company:"Romer Labs",status:"Current",revenue:250,employees:1200,acquisitions:5,deals:"Diagnostic systems, food pathogen testing kits",years:8,focus:["Food Safety","Diagnostics"],score:3,ownership:"Private (Erber Group)",stock:"N/A",linkedin:""},
+{rank:33,name:"Ryan Casey",title:"CEO",company:"Construction Testing & Engineering",status:"Current",revenue:120,employees:600,acquisitions:3,deals:"Regional materials testing and inspection firms",years:6,focus:["Materials Testing","Construction"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:34,name:"Matt Luttrell",title:"CEO",company:"Professional Service Industries (PSI)",status:"Current",revenue:450,employees:2800,acquisitions:10,deals:"Merged into Intertek, construction materials testing",years:5,focus:["Materials Testing","Construction"],score:3,ownership:"Public (Intertek subsidiary)",stock:"N/A",linkedin:""},
+{rank:35,name:"Juan Peinado",title:"CEO",company:"Geosyntec Consultants",status:"Former",revenue:570,employees:1800,acquisitions:6,deals:"Environmental remediation, water resources consulting",years:5,focus:["Environmental","Geotech"],score:4,ownership:"Private (ESOP)",stock:"N/A (2020-2024)",linkedin:""},
+{rank:36,name:"David Testa",title:"CEO",company:"Pace Analytical",status:"Former",revenue:800,employees:4000,acquisitions:15,deals:"TestAmerica merger, environmental lab consolidation",years:4,focus:["Lab","Environmental"],score:4,ownership:"PE (CD&R then Eurofins)",stock:"N/A",linkedin:""},
+{rank:37,name:"Robert Eichelberg",title:"CEO",company:"TestAmerica (now Eurofins)",status:"Former",revenue:500,employees:2200,acquisitions:8,deals:"Environmental lab network, merged with Pace Analytical",years:6,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A",linkedin:""},
+{rank:38,name:"Michael Turner",title:"CEO",company:"TRC Companies",status:"Current",revenue:700,employees:7500,acquisitions:12,deals:"Lockheed Martin environmental, Pioneer Technologies",years:5,focus:["Environmental","Engineering","Energy"],score:4,ownership:"PE (Warburg Pincus)",stock:"N/A",linkedin:""},
+{rank:39,name:"Nathalie Brunelle",title:"CEO",company:"SOCOTEC",status:"Current",revenue:1000,employees:12000,acquisitions:18,deals:"RSK, Bureau Alpes Controles, UK building inspection firms",years:4,focus:["Construction","Building Inspection"],score:4,ownership:"PE (Caisse de Depot)",stock:"N/A",linkedin:""},
+{rank:40,name:"Mark Taylor",title:"CEO",company:"Kiwa Group",status:"Current",revenue:700,employees:10000,acquisitions:20,deals:"Vinotte, various European TICC firms, certification bodies",years:5,focus:["Certification","Full-spectrum TICC"],score:3,ownership:"Non-profit (Kiwa Foundation)",stock:"N/A",linkedin:""},
 
 // === FORMER C-SUITE ===
-{rank:41,name:"Chris Kirk",title:"Former CEO",company:"SGS SA",status:"Former",revenue:6000,employees:85000,acquisitions:50,deals:"Major global TICC consolidation roll-up 2002–2015",years:13,focus:["Full-spectrum TICC"],score:5,ownership:"Public (SGSN.SW)",stock:"N/A (former)"},
-{rank:42,name:"Wolfhart Hauser",title:"Former CEO",company:"Intertek Group",status:"Former",revenue:2900,employees:43000,acquisitions:30,deals:"PSI ($570M), tripled revenue via acquisitions 2005–2015",years:10,focus:["Full-spectrum TICC"],score:5,ownership:"Public (ITRK.L)",stock:"N/A (former)"},
-{rank:43,name:"Sotirios Vahaviolos",title:"Founder & Former CEO",company:"MISTRAS Group",status:"Former",revenue:720,employees:5400,acquisitions:25,deals:"Built MISTRAS from startup to $720M revenue 1978–2020",years:42,focus:["NDT","Asset Protection"],score:5,ownership:"Public (MG)",stock:"N/A (former)"},
-{rank:44,name:"Keith Williams",title:"Former CEO",company:"UL Solutions",status:"Former",revenue:2200,employees:14000,acquisitions:12,deals:"Transformed UL from non-profit to global commercial entity 2005–2018",years:13,focus:["Safety Certification"],score:5,ownership:"Non-profit (then public)",stock:"N/A (former)"},
-{rank:45,name:"Pierre Shoiry",title:"Former CEO",company:"WSP Global",status:"Former",revenue:3000,employees:15000,acquisitions:40,deals:"Grew WSP from 300 to 15,000 employees via acquisitions 1998–2012",years:14,focus:["Engineering","Environmental"],score:5,ownership:"Public (WSP.TO)",stock:"N/A (former)"},
-{rank:46,name:"Didier Michaud-Daniel",title:"Former CEO",company:"Bureau Veritas",status:"Former",revenue:5800,employees:80000,acquisitions:30,deals:"Digital transformation and bolt-on M&A globally 2012–2023",years:11,focus:["Full-spectrum TICC"],score:4,ownership:"Public (BVI.PA)",stock:"N/A (former)"},
-{rank:47,name:"John Dionisio",title:"Former CEO",company:"AECOM",status:"Former",revenue:15000,employees:100000,acquisitions:30,deals:"URS Corp ($4B), Davis Langdon, Tishman Construction 2005–2014",years:9,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"N/A (former)"},
-{rank:48,name:"Michael Burke",title:"Former CEO",company:"AECOM",status:"Former",revenue:20000,employees:87000,acquisitions:15,deals:"$17B in total acquisitions, AECOM Capital formation 2014–2020",years:6,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"N/A (former)"},
-{rank:49,name:"Jacqueline Hinman",title:"Former CEO",company:"CH2M Hill",status:"Former",revenue:8500,employees:27000,acquisitions:5,deals:"Negotiated and closed sale to Jacobs Engineering ($3.3B) 2017",years:3,focus:["Engineering","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:50,name:"Lee McIntire",title:"Former CEO",company:"CH2M Hill",status:"Former",revenue:8000,employees:26000,acquisitions:8,deals:"Global infrastructure and environmental expansion 2009–2014",years:5,focus:["Engineering","Environmental"],score:3,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:51,name:"Fernando Basabe",title:"Former CEO",company:"Applus+",status:"Former",revenue:1800,employees:22000,acquisitions:20,deals:"Grew via bolt-on TICC acquisitions globally 2007–2020",years:13,focus:["Full-spectrum TICC"],score:4,ownership:"Public (APPS.MC)",stock:"N/A (former)"},
-{rank:52,name:"Frankie Ng",title:"Former CEO",company:"SGS SA",status:"Former",revenue:7000,employees:96000,acquisitions:15,deals:"Expanded Americas footprint and lab network 2015–2022",years:7,focus:["Full-spectrum TICC"],score:4,ownership:"Public (SGSN.SW)",stock:"N/A (former)"},
-{rank:53,name:"Charles Noall",title:"Former CEO",company:"Element Materials Technology",status:"Former",revenue:1000,employees:8000,acquisitions:25,deals:"Exova acquisition ($730M), global materials lab roll-up 2013–2022",years:9,focus:["Materials Testing"],score:4,ownership:"PE (Bridgepoint)",stock:"N/A"},
-{rank:54,name:"Richard Nelson",title:"Former COO",company:"Intertek Group",status:"Former",revenue:2500,employees:40000,acquisitions:20,deals:"Operational integration lead across 20+ acquisitions 2008–2018",years:10,focus:["Full-spectrum TICC"],score:4,ownership:"Public (ITRK.L)",stock:"N/A (former)"},
-{rank:55,name:"Joan Amigo",title:"Former CEO",company:"Applus+",status:"Former",revenue:2100,employees:24000,acquisitions:5,deals:"Apollo PE take-private ($1.4B) concluded 2024",years:4,focus:["Full-spectrum TICC"],score:3,ownership:"PE (Apollo)",stock:"N/A"},
-{rank:56,name:"David Gaboury",title:"Former CEO",company:"Terracon",status:"Former",revenue:1200,employees:5000,acquisitions:20,deals:"Tripled revenue via regional M&A 2005–2018",years:13,focus:["Geotech","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:57,name:"Jon Carlson",title:"Former CEO",company:"Braun Intertec",status:"Former",revenue:350,employees:1600,acquisitions:8,deals:"Grew ESOP model via regional materials testing acquisitions 2000–2018",years:18,focus:["Materials Testing","Geotech"],score:3,ownership:"Private (ESOP)",stock:"N/A"},
-{rank:58,name:"Joe Boyer",title:"Former CEO",company:"Atlas Technical Consultants",status:"Former",revenue:600,employees:3500,acquisitions:12,deals:"Led IPO 2020, subsequent PE take-private by GSO/Blackstone",years:5,focus:["Engineering","Testing"],score:3,ownership:"PE (GSO/Blackstone)",stock:"N/A"},
-{rank:59,name:"George Pierson",title:"Former CEO",company:"Kleinfelder",status:"Former",revenue:500,employees:2500,acquisitions:10,deals:"PE transition and regional engineering firm roll-up 2000–2015",years:15,focus:["Geotech","Environmental"],score:3,ownership:"PE (Leonard Green)",stock:"N/A"},
-{rank:60,name:"Bill Siegel",title:"Former CEO",company:"Kleinfelder",status:"Former",revenue:700,employees:3000,acquisitions:8,deals:"PE-backed growth strategy under Leonard Green 2015–2020",years:5,focus:["Geotech","Environmental"],score:3,ownership:"PE (Leonard Green)",stock:"N/A"},
-{rank:61,name:"Rachel Brydon Jannetta",title:"Former CEO",company:"TestAmerica",status:"Former",revenue:500,employees:2200,acquisitions:8,deals:"Environmental lab network consolidation, sale to Eurofins 2018",years:5,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A"},
-{rank:62,name:"Steve Vanderboom",title:"Former CEO",company:"Pace Analytical",status:"Former",revenue:700,employees:3500,acquisitions:12,deals:"Environmental lab network roll-up, sale to Eurofins",years:7,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A"},
-{rank:63,name:"Natalia Shuman",title:"CEO / Former President BV North America",company:"MISTRAS Group",status:"Current",revenue:720,employees:5400,acquisitions:5,deals:"Led BV North America, transitioned to CEO of MISTRAS 2023",years:3,focus:["Full-spectrum TICC","NDT"],score:3,ownership:"Public (MG)",stock:"-40% 5yr"},
+{rank:41,name:"Chris Kirk",title:"Former CEO",company:"SGS SA",status:"Former",revenue:6000,employees:85000,acquisitions:50,deals:"Major global TICC consolidation roll-up 2002–2015",years:13,focus:["Full-spectrum TICC"],score:5,ownership:"Public (SGSN.SW)",stock:"N/A (2002-2015)",linkedin:""},
+{rank:42,name:"Wolfhart Hauser",title:"Former CEO",company:"Intertek Group",status:"Former",revenue:2900,employees:43000,acquisitions:30,deals:"PSI ($570M), tripled revenue via acquisitions 2005–2015",years:10,focus:["Full-spectrum TICC"],score:5,ownership:"Public (ITRK.L)",stock:"N/A (2005-2015)",linkedin:""},
+{rank:43,name:"Sotirios Vahaviolos",title:"Founder & Former CEO",company:"MISTRAS Group",status:"Former",revenue:720,employees:5400,acquisitions:25,deals:"Built MISTRAS from startup to $720M revenue 1978–2020",years:42,focus:["NDT","Asset Protection"],score:5,ownership:"Public (MG)",stock:"+50% (1978-2020)",linkedin:""},
+{rank:44,name:"Keith Williams",title:"Former CEO",company:"UL Solutions",status:"Former",revenue:2200,employees:14000,acquisitions:12,deals:"Transformed UL from non-profit to global commercial entity",years:13,focus:["Safety Certification"],score:5,ownership:"Non-profit (then public)",stock:"N/A (2005-2018)",linkedin:""},
+{rank:45,name:"Pierre Shoiry",title:"Former CEO",company:"WSP Global",status:"Former",revenue:3000,employees:15000,acquisitions:40,deals:"Grew WSP from 300 to 15,000 employees via acquisitions",years:14,focus:["Engineering","Environmental"],score:5,ownership:"Public (WSP.TO)",stock:"N/A (1998-2012)",linkedin:""},
+{rank:46,name:"Didier Michaud-Daniel",title:"Former CEO",company:"Bureau Veritas",status:"Former",revenue:5800,employees:80000,acquisitions:30,deals:"Digital transformation and bolt-on M&A globally 2012–2023",years:11,focus:["Full-spectrum TICC"],score:4,ownership:"Public (BVI.PA)",stock:"N/A (2012-2023)",linkedin:""},
+{rank:47,name:"John Dionisio",title:"Former CEO",company:"AECOM",status:"Former",revenue:15000,employees:100000,acquisitions:30,deals:"URS Corp ($4B), Davis Langdon, Tishman Construction",years:9,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"N/A (2005-2014)",linkedin:""},
+{rank:48,name:"Michael Burke",title:"Former CEO",company:"AECOM",status:"Former",revenue:20000,employees:87000,acquisitions:15,deals:"$17B in total acquisitions, AECOM Capital formation",years:6,focus:["Engineering","Environmental"],score:4,ownership:"Public (ACM)",stock:"N/A (2014-2020)",linkedin:""},
+{rank:49,name:"Jacqueline Hinman",title:"Former CEO",company:"CH2M Hill",status:"Former",revenue:8500,employees:27000,acquisitions:5,deals:"Negotiated and closed sale to Jacobs Engineering ($3.3B) 2017",years:3,focus:["Engineering","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A (2014-2017)",linkedin:""},
+{rank:50,name:"Lee McIntire",title:"Former CEO",company:"CH2M Hill",status:"Former",revenue:8000,employees:26000,acquisitions:8,deals:"Global infrastructure and environmental expansion 2009–2014",years:5,focus:["Engineering","Environmental"],score:3,ownership:"Private (ESOP)",stock:"N/A (2009-2014)",linkedin:""},
+{rank:51,name:"Fernando Basabe",title:"Former CEO",company:"Applus+",status:"Former",revenue:1800,employees:22000,acquisitions:20,deals:"Grew via bolt-on TICC acquisitions globally 2007–2020",years:13,focus:["Full-spectrum TICC"],score:4,ownership:"Public (APPS.MC)",stock:"N/A (2007-2020)",linkedin:""},
+{rank:52,name:"Frankie Ng",title:"Former CEO",company:"SGS SA",status:"Former",revenue:7000,employees:96000,acquisitions:15,deals:"Expanded Americas footprint and lab network 2015–2022",years:7,focus:["Full-spectrum TICC"],score:4,ownership:"Public (SGSN.SW)",stock:"N/A (2015-2022)",linkedin:""},
+{rank:53,name:"Charles Noall",title:"Former CEO",company:"Element Materials Technology",status:"Former",revenue:1000,employees:8000,acquisitions:25,deals:"Exova acquisition ($730M), global materials lab roll-up",years:9,focus:["Materials Testing"],score:4,ownership:"PE (Bridgepoint)",stock:"N/A (2013-2022)",linkedin:""},
+{rank:54,name:"Richard Nelson",title:"Former COO",company:"Intertek Group",status:"Former",revenue:2500,employees:40000,acquisitions:20,deals:"Operational integration lead across 20+ acquisitions 2008–2018",years:10,focus:["Full-spectrum TICC"],score:4,ownership:"Public (ITRK.L)",stock:"N/A (2008-2018)",linkedin:""},
+{rank:55,name:"Joan Amigo",title:"Former CEO",company:"Applus+",status:"Former",revenue:2100,employees:24000,acquisitions:5,deals:"Apollo PE take-private ($1.4B) concluded 2024",years:4,focus:["Full-spectrum TICC"],score:3,ownership:"PE (Apollo)",stock:"N/A (2020-2024)",linkedin:""},
+{rank:56,name:"David Gaboury",title:"Former CEO",company:"Terracon",status:"Former",revenue:1200,employees:5000,acquisitions:20,deals:"Tripled revenue via regional M&A 2005–2018",years:13,focus:["Geotech","Environmental"],score:4,ownership:"Private (ESOP)",stock:"N/A (2005-2018)",linkedin:""},
+{rank:57,name:"Jon Carlson",title:"Former CEO",company:"Braun Intertec",status:"Former",revenue:350,employees:1600,acquisitions:8,deals:"Grew ESOP model via regional materials testing acquisitions",years:18,focus:["Materials Testing","Geotech"],score:3,ownership:"Private (ESOP)",stock:"N/A (2000-2018)",linkedin:""},
+{rank:58,name:"Joe Boyer",title:"Former CEO",company:"Atlas Technical Consultants",status:"Former",revenue:600,employees:3500,acquisitions:12,deals:"Led IPO 2020, subsequent PE take-private by GSO/Blackstone",years:5,focus:["Engineering","Testing"],score:3,ownership:"PE (GSO/Blackstone)",stock:"N/A (2018-2023)",linkedin:""},
+{rank:59,name:"George Pierson",title:"Former CEO",company:"Kleinfelder",status:"Former",revenue:500,employees:2500,acquisitions:10,deals:"PE transition and regional engineering firm roll-up",years:15,focus:["Geotech","Environmental"],score:3,ownership:"PE (Leonard Green)",stock:"N/A (2000-2015)",linkedin:""},
+{rank:60,name:"Bill Siegel",title:"Former CEO",company:"Kleinfelder",status:"Former",revenue:700,employees:3000,acquisitions:8,deals:"PE-backed growth strategy under Leonard Green",years:5,focus:["Geotech","Environmental"],score:3,ownership:"PE (Leonard Green)",stock:"N/A (2015-2020)",linkedin:""},
+{rank:61,name:"Rachel Brydon Jannetta",title:"Former CEO",company:"TestAmerica",status:"Former",revenue:500,employees:2200,acquisitions:8,deals:"Environmental lab network consolidation, sale to Eurofins 2018",years:5,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A (2013-2018)",linkedin:""},
+{rank:62,name:"Steve Vanderboom",title:"Former CEO",company:"Pace Analytical",status:"Former",revenue:700,employees:3500,acquisitions:12,deals:"Environmental lab network roll-up, sale to Eurofins",years:7,focus:["Lab","Environmental"],score:3,ownership:"PE (then Eurofins)",stock:"N/A (2011-2018)",linkedin:""},
+{rank:63,name:"Natalia Shuman",title:"President & CEO",company:"MISTRAS Group",status:"Current",revenue:724,employees:5400,acquisitions:5,deals:"Appointed Dec 2025; 20+ yrs TIC leadership; former CEO BV North America; integrating West Penn Testing Group",years:1,focus:["Full-spectrum TICC","NDT"],score:3,ownership:"Public (MG)",stock:"-40% (2025-present)",linkedin:"https://www.linkedin.com/in/nataliashuman/"},
 
 // === DIVISION PRESIDENTS (CURRENT) ===
-{rank:64,name:"Greg Kelly",title:"President, US",company:"WSP Global",status:"Current",revenue:5000,employees:25000,acquisitions:15,deals:"US regional leadership, M&A integration and organic growth",years:4,focus:["Engineering","Environmental"],score:4,ownership:"Public (WSP.TO)",stock:"+120% 5yr"},
-{rank:65,name:"Bob Noonan",title:"CEO, Environment Testing NA",company:"Eurofins Scientific",status:"Current",revenue:800,employees:8000,acquisitions:15,deals:"US environmental lab network consolidation and expansion",years:5,focus:["Lab","Environmental"],score:4,ownership:"Public (ERF.PA)",stock:"+180% 5yr"},
-{rank:66,name:"Drew Jeter",title:"President, Environment",company:"AECOM",status:"Current",revenue:3000,employees:12000,acquisitions:5,deals:"Environment & Sustainability division leadership at AECOM",years:3,focus:["Environmental","Engineering"],score:3,ownership:"Public (ACM)",stock:"+95% 5yr"},
-{rank:67,name:"Martin Richards",title:"President, Testing",company:"Intertek Group",status:"Current",revenue:2000,employees:20000,acquisitions:8,deals:"Global testing division leadership and regional expansion",years:4,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ITRK.L)",stock:"-15% 5yr"},
-{rank:68,name:"Luke Goulding",title:"President, Americas",company:"Bureau Veritas",status:"Current",revenue:2000,employees:25000,acquisitions:10,deals:"Americas region growth strategy and M&A integration",years:3,focus:["Full-spectrum TICC"],score:3,ownership:"Public (BVI.PA)",stock:"+15% 1yr"},
-{rank:69,name:"Ryan Robinson",title:"President, Infrastructure",company:"NV5 Global",status:"Current",revenue:1000,employees:4000,acquisitions:10,deals:"Infrastructure division leadership and organic growth",years:3,focus:["Infrastructure","NDT"],score:3,ownership:"Public (NVEE)",stock:"+85% 5yr"},
-{rank:70,name:"Matt Gorzkowicz",title:"COO",company:"UL Solutions",status:"Current",revenue:2900,employees:15000,acquisitions:5,deals:"Operational leadership and integration following IPO",years:3,focus:["Safety Certification"],score:3,ownership:"Public (ULS)",stock:"+56% since IPO"},
-{rank:71,name:"Jeff McDonald",title:"EVP, North America",company:"SGS SA",status:"Current",revenue:1500,employees:15000,acquisitions:5,deals:"North America regional leadership and operations management",years:4,focus:["Full-spectrum TICC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% 1yr"},
-{rank:72,name:"Alberto Grazi",title:"President, Americas",company:"Element Materials Technology",status:"Current",revenue:500,employees:4000,acquisitions:10,deals:"Americas region M&A execution and lab integration",years:3,focus:["Materials Testing"],score:3,ownership:"PE (Bridgepoint)",stock:"N/A"},
-{rank:73,name:"Todd Wintner",title:"EVP, Building Products",company:"Intertek Group",status:"Current",revenue:400,employees:5000,acquisitions:5,deals:"Building products testing division expansion and certification",years:5,focus:["Full-spectrum TICC","Materials Testing"],score:3,ownership:"Public (ITRK.L)",stock:"-15% 5yr"}
+{rank:64,name:"Greg Kelly",title:"President, US",company:"WSP Global",status:"Current",revenue:5000,employees:25000,acquisitions:15,deals:"US regional leadership, M&A integration and organic growth",years:4,focus:["Engineering","Environmental"],score:4,ownership:"Public (WSP.TO)",stock:"+120% (2022-present)",linkedin:""},
+{rank:65,name:"Bob Noonan",title:"CEO, Environment Testing NA",company:"Eurofins Scientific",status:"Current",revenue:800,employees:8000,acquisitions:15,deals:"US environmental lab network consolidation and expansion",years:5,focus:["Lab","Environmental"],score:4,ownership:"Public (ERF.PA)",stock:"+180% (2019-present)",linkedin:""},
+{rank:66,name:"Drew Jeter",title:"President, Environment",company:"AECOM",status:"Current",revenue:3000,employees:12000,acquisitions:5,deals:"Environment & Sustainability division leadership at AECOM",years:3,focus:["Environmental","Engineering"],score:3,ownership:"Public (ACM)",stock:"+95% (2023-present)",linkedin:""},
+{rank:67,name:"Martin Richards",title:"President, Testing",company:"Intertek Group",status:"Current",revenue:2000,employees:20000,acquisitions:8,deals:"Global testing division leadership and regional expansion",years:4,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ITRK.L)",stock:"-15% (2022-present)",linkedin:""},
+{rank:68,name:"Luke Goulding",title:"President, Americas",company:"Bureau Veritas",status:"Current",revenue:2000,employees:25000,acquisitions:10,deals:"Americas region growth strategy and M&A integration",years:3,focus:["Full-spectrum TICC"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2021-present)",linkedin:""},
+{rank:69,name:"Ryan Robinson",title:"President, Infrastructure",company:"NV5 Global",status:"Current",revenue:1000,employees:4000,acquisitions:10,deals:"Infrastructure division leadership and organic growth",years:3,focus:["Infrastructure","NDT"],score:3,ownership:"Public (NVEE)",stock:"+85% (2023-present)",linkedin:""},
+{rank:70,name:"Matt Gorzkowicz",title:"COO",company:"UL Solutions",status:"Current",revenue:2900,employees:15000,acquisitions:5,deals:"Operational leadership and integration following IPO",years:3,focus:["Safety Certification"],score:3,ownership:"Public (ULS)",stock:"+56% (2023-IPO)",linkedin:""},
+{rank:71,name:"Jeff McDonald",title:"EVP North America / Head Business Assurance",company:"SGS SA",status:"Current",revenue:1500,employees:15000,acquisitions:5,deals:"North America regional leadership; COO NA 2007-2015",years:30,focus:["Full-spectrum TICC","Certification"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (1994-present)",linkedin:""},
+{rank:72,name:"Alberto Grazi",title:"President, Americas",company:"Element Materials Technology",status:"Current",revenue:500,employees:4000,acquisitions:10,deals:"Americas region M&A execution and lab integration",years:3,focus:["Materials Testing"],score:3,ownership:"PE (Bridgepoint)",stock:"N/A",linkedin:""},
+{rank:73,name:"Todd Wintner",title:"EVP, Building Products",company:"Intertek Group",status:"Current",revenue:400,employees:5000,acquisitions:5,deals:"Building products testing division expansion and certification",years:5,focus:["Full-spectrum TICC","Materials Testing"],score:3,ownership:"Public (ITRK.L)",stock:"-15% (2021-present)",linkedin:""},
+
+// === BUREAU VERITAS DIVISION LEADERS ===
+{rank:74,name:"Alex Gregg-Smith",title:"President, Marine & Offshore Division",company:"Bureau Veritas",status:"Current",revenue:480,employees:3000,acquisitions:5,deals:"Marine division expansion; IACS Council Chair 2027-2029; 2025 Shanghai Magnolia Gold Award",years:5,focus:["Marine","Industrial Inspection"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2020-present)",linkedin:"https://www.linkedin.com/in/alexander-gregg-smith-32a04b15/"},
+{rank:75,name:"Catherine Chen",title:"EVP, Consumer Products Services",company:"Bureau Veritas",status:"Current",revenue:870,employees:5000,acquisitions:8,deals:"CPS division Pan-Asia expansion; 20+ yrs global CPS; former TÜV SÜD",years:5,focus:["Consumer Products","Testing"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2020-present)",linkedin:"https://www.linkedin.com/in/catherine-chen-248bbbb/"},
+{rank:76,name:"Marc Roussel",title:"EVP, Urbanization and Assurance",company:"Bureau Veritas",status:"Current",revenue:2100,employees:10000,acquisitions:8,deals:"London Building Control acquisition; AI assessment; sustainable finance verification",years:10,focus:["Buildings","Certification"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2015-present)",linkedin:""},
+{rank:77,name:"Matthieu Gondallier de Tugny",title:"EVP, Industrials and Commodities",company:"Bureau Veritas",status:"Current",revenue:1440,employees:8000,acquisitions:5,deals:"Commodities division expansion; 30+ yrs at BV since 1994; former EVP Marine",years:2,focus:["Industrial Testing","Commodities"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2024-present)",linkedin:""},
+{rank:78,name:"Santiago Arias Duval",title:"EVP, Americas Region",company:"Bureau Veritas",status:"Current",revenue:1500,employees:15000,acquisitions:5,deals:"Americas expansion integration; former SVP Ingersoll Rand; MBA MIT",years:1,focus:["Full-spectrum TICC"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2025-present)",linkedin:""},
+{rank:79,name:"Surachet Tanwongswal",title:"EVP, Asia Pacific",company:"Bureau Veritas",status:"Current",revenue:1500,employees:15000,acquisitions:3,deals:"APAC strategic acquisitions; 23+ yrs senior mgmt; McKinsey background",years:2,focus:["Full-spectrum TICC"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2024-present)",linkedin:""},
+{rank:80,name:"Vincent Bourdil",title:"EVP, Europe",company:"Bureau Veritas",status:"Current",revenue:2000,employees:20000,acquisitions:5,deals:"European regional expansion; built Global Food Service Line; HEC Paris",years:2,focus:["Full-spectrum TICC","Food"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2024-present)",linkedin:""},
+{rank:81,name:"Khurram Majeed",title:"EVP, Commodities Industry & Facilities (MECA)",company:"Bureau Veritas",status:"Current",revenue:500,employees:8000,acquisitions:3,deals:"MECA region 78 countries; former Johnson Controls, Baker Hughes, GE",years:1,focus:["Full-spectrum TICC","Energy"],score:3,ownership:"Public (BVI.PA)",stock:"+15% (2024-present)",linkedin:""},
+
+// === SGS DIVISION LEADERS ===
+{rank:82,name:"Egidijus Jokubauskas",title:"Head, Industries & Environment and Natural Resources",company:"SGS SA",status:"Current",revenue:500,employees:3000,acquisitions:3,deals:"Division integration and expansion; former Head Mineral Commodities",years:2,focus:["Industrial Testing","Environmental"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (2024-present)",linkedin:""},
+{rank:83,name:"Malcolm Reid",title:"Head of Europe",company:"SGS SA",status:"Current",revenue:1500,employees:15000,acquisitions:3,deals:"European expansion; joined SGS 1987; BSc Chemistry Glasgow",years:2,focus:["Full-spectrum TICC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (2024-present)",linkedin:""},
+{rank:84,name:"Rafael Navazo",title:"Head of Latin America",company:"SGS SA",status:"Current",revenue:500,employees:5000,acquisitions:3,deals:"LatAm expansion strategy; former VP Vesuvius; MSc HEC Paris",years:2,focus:["Full-spectrum TICC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (2024-present)",linkedin:""},
+{rank:85,name:"Steven Du",title:"Head of Asia Pacific",company:"SGS SA",status:"Current",revenue:1000,employees:10000,acquisitions:5,deals:"APAC M&A integration; established China's first commercial food testing lab (2002)",years:2,focus:["Asia Pacific","Food Testing"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (2024-present)",linkedin:""},
+{rank:86,name:"Teymur Abasov",title:"Head, Eastern Europe, Middle East and Africa",company:"SGS SA",status:"Current",revenue:500,employees:5000,acquisitions:3,deals:"EEMA region development; joined SGS 1994; MD roles Kazakhstan, Azerbaijan, Georgia",years:2,focus:["Full-spectrum TICC"],score:3,ownership:"Public (SGSN.SW)",stock:"+5% (2024-present)",linkedin:""},
+{rank:87,name:"Charles Ly Wa Hoi",title:"EVP, Connectivity & Products (Departing)",company:"SGS SA",status:"Former",revenue:500,employees:3000,acquisitions:5,deals:"25 years with SGS; Electronics Engineering ENSEIRB-MATMECA",years:1,focus:["Consumer Products","Pharma"],score:3,ownership:"Public (SGSN.SW)",stock:"N/A (2024-2025)",linkedin:""},
+
+// === INTERTEK LEADERS ===
+{rank:88,name:"André Lacroix",title:"Former CEO",company:"Intertek Group",status:"Former",revenue:3200,employees:46000,acquisitions:20,deals:"Total Quality Assurance strategy; Base Metallurgical Labs, TESIS, Envirolab, PTL; former CEO Euro Disney",years:9,focus:["Full-spectrum TICC"],score:4,ownership:"Public (ITRK.L)",stock:"-15% (2015-2024)",linkedin:"https://uk.linkedin.com/in/andr%C3%A9-lacroix-lws"},
+{rank:89,name:"Colm Deasy",title:"Chief Financial Officer",company:"Intertek Group",status:"Current",revenue:3400,employees:46000,acquisitions:3,deals:"Financial strategy for 2024-2025 acquisitions; 7+ yrs at Intertek; BSc Chemistry UCD",years:3,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ITRK.L)",stock:"-15% (2023-present)",linkedin:""},
+{rank:90,name:"Gregg Tiemann",title:"EVP Americas — Chief Executive Products",company:"Intertek Group",status:"Current",revenue:950,employees:15000,acquisitions:10,deals:"Products division acquisitions; merger of divisions into Products business; joined 1993",years:15,focus:["Consumer Products","Testing"],score:3,ownership:"Public (ITRK.L)",stock:"-15% (2010-present)",linkedin:""},
+
+// === MISTRAS LEADERSHIP ===
+{rank:91,name:"Edward J. Prajzner",title:"SVP & Chief Financial Officer",company:"MISTRAS Group",status:"Current",revenue:724,employees:5400,acquisitions:5,deals:"Financial oversight of acquisition strategy; former CFO CECO Environmental; CPA",years:7,focus:["NDT","Asset Protection"],score:3,ownership:"Public (MG)",stock:"-40% (2018-present)",linkedin:""},
+{rank:92,name:"Hani Hammad",title:"EVP & Chief Operating Officer",company:"MISTRAS Group",status:"Current",revenue:724,employees:5400,acquisitions:3,deals:"Led Project Phoenix ($47M EBITDA); former AlixPartners; Baker Hughes/GE background",years:2,focus:["NDT","Industrial Inspection"],score:3,ownership:"Public (MG)",stock:"-40% (2024-present)",linkedin:""},
+{rank:93,name:"Gennaro D'Alterio",title:"EVP & Chief Commercial Officer",company:"MISTRAS Group",status:"Current",revenue:724,employees:5400,acquisitions:3,deals:"Commercial integration post-acquisitions; VP at CECO Environmental; MBA Villanova",years:2,focus:["NDT","Asset Protection"],score:3,ownership:"Public (MG)",stock:"-40% (2023-present)",linkedin:""},
+
+// === TIC SOLUTIONS / NV5 ===
+{rank:94,name:"Benjamin Heraud",title:"President & Incoming CEO",company:"TIC Solutions (NV5/Acuren)",status:"Current",revenue:2100,employees:8000,acquisitions:15,deals:"Led NV5 through Acuren merger ($1.7B, 2025); $25M synergies; 3 operating segments created",years:8,focus:["Full-spectrum TICC","Engineering"],score:4,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/ben-heraud-66325720/"},
+{rank:95,name:"Tal Pizzey",title:"CEO (Retiring 2026)",company:"TIC Solutions (formerly Acuren)",status:"Former",revenue:2100,employees:8000,acquisitions:10,deals:"40 years of service; led Acuren through $1.7B merger with NV5 (Aug 2025)",years:40,focus:["NDT","Industrial Inspection"],score:4,ownership:"Private",stock:"N/A (1986-2026)",linkedin:""},
+
+// === UL SOLUTIONS LEADERSHIP ===
+{rank:96,name:"Alex Dadakis",title:"EVP & President, TIC Segment",company:"UL Solutions",status:"Current",revenue:1400,employees:8000,acquisitions:5,deals:"TIC segment strategy and positioning; MBA Chicago Booth; transitioned Sep 2025",years:1,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ULS)",stock:"+56% (2025-present)",linkedin:"https://www.linkedin.com/in/alex-dadakis-379b765/"},
+{rank:97,name:"Gitte Schjøtz",title:"EVP & Chief Business Operations Officer",company:"UL Solutions",status:"Current",revenue:3050,employees:15000,acquisitions:5,deals:"Acquisition integration; former president Software segment; joined UL 1996; MIT AI cert",years:29,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ULS)",stock:"+56% (1996-present)",linkedin:""},
+{rank:98,name:"John Genovesi",title:"EVP, Risk & Compliance Software",company:"UL Solutions",status:"Current",revenue:400,employees:3000,acquisitions:3,deals:"Software segment expansion; 32 yrs Rockwell Automation; MBA Case Western",years:3,focus:["Software","Compliance"],score:3,ownership:"Public (ULS)",stock:"+56% (2023-present)",linkedin:""},
+{rank:99,name:"Weifang Zhou",title:"EVP, Special Advisor (Former TIC President)",company:"UL Solutions",status:"Current",revenue:1400,employees:8000,acquisitions:5,deals:"Drove TIC segment growth; 13 yrs GE Water/Process China; joined UL 2009",years:16,focus:["Full-spectrum TICC"],score:3,ownership:"Public (ULS)",stock:"+56% (2009-present)",linkedin:""},
+
+// === WSP LEADERSHIP ===
+{rank:100,name:"Joseph Sczurko",title:"President USA & President, Earth & Environment",company:"WSP Global",status:"Current",revenue:7000,employees:20000,acquisitions:15,deals:"Integrated Wood E&I ($1.8B); Earth & Environment leadership; 36 yrs experience",years:4,focus:["Environmental","Infrastructure"],score:4,ownership:"Public (WSP.TO)",stock:"+120% (2022-present)",linkedin:"https://www.linkedin.com/in/josephjsczurko/"},
+{rank:101,name:"Chris Peters",title:"Chief Operating Officer, USA",company:"WSP Global",status:"Current",revenue:5000,employees:20000,acquisitions:10,deals:"Operational integration across USA platform; 30 yrs engineering; joined 2017",years:4,focus:["Engineering","Environmental"],score:3,ownership:"Public (WSP.TO)",stock:"+120% (2017-present)",linkedin:""},
+
+// === AECOM DIVISION LEADERS ===
+{rank:102,name:"Richard Whitehead",title:"Regional CEO — Europe & India",company:"AECOM",status:"Current",revenue:3000,employees:15000,acquisitions:5,deals:"Allen Gordon LLP acquisition (Scotland, 2025); 30+ yrs experience; 12+ yrs AECOM",years:12,focus:["Engineering","Environmental"],score:3,ownership:"Public (ACM)",stock:"+95% (2013-present)",linkedin:""},
+{rank:103,name:"Sam Donelson",title:"EVP, Regional CEO — US East & Latin America",company:"AECOM",status:"Current",revenue:5000,employees:20000,acquisitions:5,deals:"Large-scale program management; 30+ yrs infrastructure; 11+ yrs AECOM",years:11,focus:["Engineering","Environmental"],score:3,ownership:"Public (ACM)",stock:"+95% (2014-present)",linkedin:"https://www.linkedin.com/in/samuel-donelson-1a65b911/"},
+
+// === ELEMENT DIVISION LEADERS ===
+{rank:104,name:"Rick Sluiters",title:"Executive Vice President, Americas",company:"Element Materials Technology",status:"Current",revenue:500,employees:4000,acquisitions:10,deals:"Quadrupled global aerospace business; 10+ acquisitions; 88 Americas labs; joined 2004",years:21,focus:["Materials Testing","Aerospace"],score:4,ownership:"PE (Bridgepoint)",stock:"N/A",linkedin:"https://www.linkedin.com/in/sluiters/"},
+{rank:105,name:"Matthew Hopkinson",title:"Executive Vice President, EMEAA",company:"Element Materials Technology",status:"Current",revenue:400,employees:4000,acquisitions:8,deals:"KDK calibration acquisition (Germany); European expansion; former BV SVP Commodities",years:6,focus:["Materials Testing","Engineering"],score:3,ownership:"PE (Bridgepoint)",stock:"N/A",linkedin:""},
+
+// === ARCADIS LEADERSHIP ===
+{rank:106,name:"Heather Polinsky",title:"CEO & Chair of Executive Board",company:"Arcadis",status:"Current",revenue:4700,employees:36000,acquisitions:10,deals:"First woman CEO of Arcadis; assumed role Mar 2026; former COO North America",years:1,focus:["Environmental","Engineering"],score:3,ownership:"Public (ARCAD.AS)",stock:"+65% (2026-present)",linkedin:"https://www.linkedin.com/in/heather-polinsky-pmp-f-same-90944910/"},
+{rank:107,name:"Alan Brookes",title:"Former CEO & Chair",company:"Arcadis",status:"Former",revenue:4700,employees:36000,acquisitions:10,deals:"Steered company through strategic growth period; stepped down Mar 2026",years:8,focus:["Environmental","Engineering"],score:3,ownership:"Public (ARCAD.AS)",stock:"+65% (2018-2026)",linkedin:""},
+{rank:108,name:"Melissa Pomales",title:"President, North America",company:"Arcadis",status:"Current",revenue:2000,employees:15000,acquisitions:5,deals:"North American operations leadership; significant regional consulting",years:2,focus:["Environmental","Infrastructure"],score:3,ownership:"Public (ARCAD.AS)",stock:"+65% (2024-present)",linkedin:""},
+
+// === MID-MARKET TICC & ENVIRONMENTAL ===
+{rank:109,name:"Mark Fallon",title:"Chief Executive Officer",company:"APTIM",status:"Current",revenue:500,employees:3000,acquisitions:5,deals:"25+ yrs across government and commercial markets; environmental and infrastructure",years:6,focus:["Environmental Services","Infrastructure"],score:3,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/mark-fallon-bb82249/"},
+{rank:110,name:"Mario Azar",title:"Chairman & CEO",company:"Black & Veatch",status:"Current",revenue:4700,employees:10000,acquisitions:8,deals:"Launched Environmental Business Unit; 8th leader in 119-yr history",years:4,focus:["Environmental","Water Infrastructure"],score:4,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/marioazar/"},
+{rank:111,name:"Rich D'Amato",title:"Chairman & CEO",company:"Brown and Caldwell",status:"Current",revenue:230,employees:1900,acquisitions:3,deals:"Acquired Separation Processes Inc. (2025); largest firm solely focused on US water/environmental",years:7,focus:["Water Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/richdamato/"},
+{rank:112,name:"Bob Pragada",title:"Chief Executive Officer",company:"Jacobs Solutions",status:"Current",revenue:12390,employees:55000,acquisitions:20,deals:"CH2M ($3.27B, 2017), Wood Nuclear (2020), PA Consulting ($1.6B, 2026)",years:3,focus:["Environmental","Engineering"],score:4,ownership:"Public (J)",stock:"+40% (2023-present)",linkedin:"https://www.linkedin.com/in/bobpragada/"},
+{rank:113,name:"Gord Johnston",title:"President & CEO",company:"Stantec",status:"Current",revenue:6500,employees:34000,acquisitions:20,deals:"34,000 employees; 450+ locations; $6.5B revenue (2025); 10.7% growth",years:8,focus:["Engineering","Environmental"],score:4,ownership:"Public (STN)",stock:"+45% (2018-present)",linkedin:"https://ca.linkedin.com/in/gord-johnston-525a047"},
+{rank:114,name:"Dan Batrack",title:"Executive Chairman",company:"Tetra Tech",status:"Current",revenue:5000,employees:27000,acquisitions:20,deals:"Transitioned to Chairman (Feb 2026); long CEO tenure; drove major growth",years:21,focus:["Environmental","Water Infrastructure"],score:4,ownership:"Public (TTEK)",stock:"+40% (2005-present)",linkedin:"https://www.linkedin.com/in/dan-batrack-4b652b210/"},
+{rank:115,name:"Roger Argus",title:"Chief Executive Officer",company:"Tetra Tech",status:"Current",revenue:5000,employees:27000,acquisitions:10,deals:"40+ yrs experience; 30+ at Tetra Tech; became CEO Feb 2026; chemical engineer",years:1,focus:["Environmental","Water Infrastructure"],score:4,ownership:"Public (TTEK)",stock:"+40% (2026-present)",linkedin:""},
+{rank:116,name:"Carey Smith",title:"Chairwoman, President & CEO",company:"Parsons Corporation",status:"Current",revenue:6800,employees:19000,acquisitions:12,deals:"BCC Engineering ($230M), TRS Group, Sealing Tech, BlackSignal, CTI, ASC",years:5,focus:["Environmental","Infrastructure"],score:4,ownership:"Public (PSN)",stock:"+35% (2021-present)",linkedin:"https://www.linkedin.com/in/carey-smith-7545a613"},
+{rank:117,name:"Thomas Bell",title:"Chief Executive Officer",company:"Leidos Holdings",status:"Current",revenue:16700,employees:47000,acquisitions:15,deals:"NorthStar 2030 strategy; defense/environmental/cyber services",years:3,focus:["Environmental","Defense Tech"],score:4,ownership:"Public (LDOS)",stock:"+25% (2023-present)",linkedin:""},
+{rank:118,name:"Jim Giannopoulos",title:"Global CEO",company:"GHD Group",status:"Current",revenue:2500,employees:10000,acquisitions:8,deals:"Global CEO since Apr 2024; previously led Americas region",years:8,focus:["Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:119,name:"Jens-Peter Saul",title:"CEO",company:"Ramboll",status:"Current",revenue:2350,employees:18000,acquisitions:8,deals:"Record revenue and profit; 18,000+ employees across 35+ countries",years:12,focus:["Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:120,name:"John Henderson",title:"Chief Executive Officer",company:"HDR Inc.",status:"Current",revenue:10000,employees:13000,acquisitions:10,deals:"CEO Dec 2023; retired Army Colonel; former asst secretary US Air Force",years:3,focus:["Engineering","Environmental"],score:4,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:121,name:"Majdi Othman",title:"President & CEO",company:"Geosyntec Consultants",status:"Current",revenue:570,employees:1800,acquisitions:5,deals:"32-yr veteran; elected CEO Jan 2025; PhD PE from Univ of Wisconsin",years:2,focus:["Environmental","Geotech"],score:3,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/majdi-othman-1882276/"},
+{rank:122,name:"Peter Zeeb",title:"Former President & CEO",company:"Geosyntec Consultants",status:"Former",revenue:570,employees:1800,acquisitions:5,deals:"8 years as CEO; PhD, PG; transitioned Jan 2025",years:8,focus:["Environmental","Geotech"],score:3,ownership:"Private",stock:"N/A (2017-2025)",linkedin:""},
+{rank:123,name:"Scott Wallington",title:"Chief Executive Officer",company:"GEI Consultants",status:"Current",revenue:190,employees:900,acquisitions:3,deals:"Part of GISI family ($13B); selected CEO 2025; GISI acquired GEI May 2022",years:1,focus:["Environmental","Geotech"],score:3,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/scott-wallington-326443b2/"},
+{rank:124,name:"Ron Palmieri",title:"Former President & CEO",company:"GEI Consultants",status:"Former",revenue:190,employees:900,acquisitions:5,deals:"Strategic direction 2018-2024; GISI acquisition leadership",years:7,focus:["Environmental","Geotech"],score:3,ownership:"Private",stock:"N/A (2018-2025)",linkedin:""},
+{rank:125,name:"David Gockel",title:"President & CEO",company:"Langan Engineering",status:"Current",revenue:500,employees:2500,acquisitions:5,deals:"20+ years as CEO; PE, PP, LEED AP; founded 1970",years:23,focus:["Environmental","Geotech"],score:4,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/david-gockel-636961a"},
+{rank:126,name:"Shawn Fiore",title:"Chair & CEO",company:"Haley & Aldrich",status:"Current",revenue:155,employees:600,acquisitions:3,deals:"Acquired ELM Group; complex regulatory/engineering issues; joined 2002",years:7,focus:["Environmental","Geotech"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:127,name:"Chris Hunter",title:"CEO, Americas",company:"GHD Group",status:"Current",revenue:1000,employees:4500,acquisitions:5,deals:"Leads GHD Americas 4,500+ professionals; 25-yr GHD career",years:2,focus:["Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:128,name:"Raj Arora",title:"Chief Executive Officer",company:"Jensen Hughes",status:"Current",revenue:190,employees:800,acquisitions:8,deals:"Gryphon PE acquisition; Safety Management Services; Professional Loss Control",years:6,focus:["Fire Protection","Safety"],score:3,ownership:"PE (Gryphon)",stock:"N/A",linkedin:"https://www.linkedin.com/in/raj-k-arora-44438b7/"},
+{rank:129,name:"Robert Seager",title:"EVP Environmental Services",company:"Stantec",status:"Current",revenue:1000,employees:5000,acquisitions:5,deals:"Environmental services division leadership across Americas",years:4,focus:["Environmental Services","Engineering"],score:3,ownership:"Public (STN)",stock:"+45% (2022-present)",linkedin:""},
+{rank:130,name:"Liz Porter",title:"President, Health and Civil Sector",company:"Leidos Holdings",status:"Current",revenue:3000,employees:15000,acquisitions:5,deals:"Environmental and civil infrastructure; energy infrastructure programs",years:6,focus:["Environmental Services","Energy"],score:3,ownership:"Public (LDOS)",stock:"+25% (2020-present)",linkedin:""},
+{rank:131,name:"Bernard Teufele",title:"President, Environment/Geotech Division",company:"Tetra Tech",status:"Current",revenue:1000,employees:5000,acquisitions:5,deals:"Environmental and geotechnical services division leadership",years:6,focus:["Environmental","Geotech"],score:3,ownership:"Public (TTEK)",stock:"+40% (2020-present)",linkedin:""},
+{rank:132,name:"Cheryl Ginyard-Jones",title:"Managing Director, Americas",company:"Ramboll",status:"Current",revenue:500,employees:3000,acquisitions:3,deals:"Americas regional leadership 2023; sustainability infrastructure; UC Berkeley Haas",years:3,focus:["Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:133,name:"Jens-Peter Saul",title:"CEO",company:"Ramboll",status:"Current",revenue:2350,employees:18000,acquisitions:8,deals:"Record revenue growth; global expansion; 18,000+ employees",years:12,focus:["Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:134,name:"Gord Johnston",title:"President & CEO",company:"Stantec",status:"Current",revenue:6500,employees:34000,acquisitions:20,deals:"$6.5B revenue (2025); 34,000 employees; 450+ locations on six continents",years:8,focus:["Engineering","Environmental"],score:4,ownership:"Public (STN)",stock:"+45% (2018-present)",linkedin:"https://ca.linkedin.com/in/gord-johnston-525a047"},
+{rank:135,name:"William Nugent",title:"President & CEO",company:"WJE Associates",status:"Current",revenue:250,employees:1200,acquisitions:2,deals:"CEO since 1997; 500+ investigation and repair design projects",years:29,focus:["Materials Testing","Building Inspection"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:136,name:"Ken Gilmartin",title:"Chief Executive Officer",company:"Wood Group",status:"Current",revenue:3000,employees:12000,acquisitions:5,deals:"Divested E&I division to WSP ($1.9B, 2022); focused on core services",years:4,focus:["Engineering","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:137,name:"Hassan Zahran",title:"Chief Executive Officer",company:"CTL Engineering",status:"Current",revenue:100,employees:500,acquisitions:2,deals:"Barco Investment acquired CTLGroup; building science and materials testing",years:3,focus:["Materials Testing","Engineering"],score:2,ownership:"PE (Barco)",stock:"N/A",linkedin:""},
+{rank:138,name:"John McQuillan",title:"Founder, Chairman & CEO",company:"Triumvirate Environmental",status:"Current",revenue:300,employees:2000,acquisitions:15,deals:"Founded 1988; $1.8B Berkshire Partners valuation (Feb 2025); MPA Harvard",years:38,focus:["Environmental Consulting","Full-spectrum TICC"],score:4,ownership:"PE (Berkshire)",stock:"N/A",linkedin:"https://www.linkedin.com/in/john-mcquillan-b38179"},
+{rank:139,name:"Liling Cao",title:"Senior Principal, NDT Division",company:"Thornton Tomasetti",status:"Current",revenue:300,employees:1500,acquisitions:2,deals:"Nondestructive testing division in New York; advanced inspection expertise",years:3,focus:["NDT","Materials Testing"],score:3,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/liling-cao-43733020"},
+{rank:140,name:"Bradley Andrews",title:"Chief Executive Officer",company:"SLR Consulting",status:"Current",revenue:200,employees:1500,acquisitions:5,deals:"Sustainability consulting; joined from Worley; Ares Management backing",years:6,focus:["Environmental Consulting","Sustainability"],score:3,ownership:"PE (Ares)",stock:"N/A",linkedin:""},
+{rank:141,name:"Neil Penhall",title:"Vice Chair (Former CEO)",company:"SLR Consulting",status:"Current",revenue:200,employees:1500,acquisitions:5,deals:"Built sustainability consulting platform over 10 years",years:10,focus:["Environmental Consulting","Sustainability"],score:3,ownership:"PE (Ares)",stock:"N/A",linkedin:""},
+
+// === PE-BACKED PLATFORMS ===
+{rank:142,name:"Alan McKim",title:"Executive Chairman & CTO",company:"Clean Harbors",status:"Current",revenue:5900,employees:20000,acquisitions:30,deals:"Founder (1980); built hazardous waste powerhouse; transitioned to Chairman/CTO 2023",years:44,focus:["Hazardous Waste","Environmental Services"],score:5,ownership:"Public (CLH)",stock:"+50% (1980-present)",linkedin:"https://www.linkedin.com/in/alan-mckim-b67955251/"},
+{rank:143,name:"Eric Gerstenberg",title:"Co-Chief Executive Officer",company:"Clean Harbors",status:"Current",revenue:5900,employees:20000,acquisitions:15,deals:"8 years as COO before Co-CEO (2023); operational expertise in hazardous waste",years:3,focus:["Hazardous Waste","Industrial Services"],score:4,ownership:"Public (CLH)",stock:"+50% (2023-present)",linkedin:""},
+{rank:144,name:"Michael Battles",title:"Co-Chief Executive Officer",company:"Clean Harbors",status:"Current",revenue:5900,employees:20000,acquisitions:10,deals:"Co-CEO since 2023; leadership restructuring with dual CEO model",years:3,focus:["Hazardous Waste","Industrial Services"],score:4,ownership:"Public (CLH)",stock:"+50% (2023-present)",linkedin:""},
+{rank:145,name:"Jon Vander Ark",title:"President & CEO",company:"Republic Services",status:"Current",revenue:14000,employees:40000,acquisitions:20,deals:"US Ecology ($2.2B, 2022), ACV Enviro, ECOFLO, ACT Enviro; transformed to sustainability company",years:5,focus:["Environmental Services","Waste Management"],score:4,ownership:"Public (RSG)",stock:"+30% (2021-present)",linkedin:""},
+{rank:146,name:"Simon Parrington",title:"Founder & CEO",company:"Celnor Group",status:"Current",revenue:300,employees:2000,acquisitions:19,deals:"19 acquisitions in year 1; £250M revenue; Inflexion-backed; Aitken Labs, Rural Solutions, JTC",years:3,focus:["Full-spectrum TICC"],score:4,ownership:"PE (Inflexion)",stock:"N/A",linkedin:"https://www.linkedin.com/in/simon-parrington-3888b869/"},
+{rank:147,name:"HP Nanda",title:"Chief Executive Officer",company:"Arcwood Environmental",status:"Current",revenue:300,employees:2000,acquisitions:5,deals:"Acquired MXI Environmental; new Texas incineration; Ohio shredding; former DuPont VP",years:4,focus:["Environmental Services","Hazardous Waste"],score:3,ownership:"PE (EQT)",stock:"N/A",linkedin:"https://www.linkedin.com/in/hp-nanda"},
+{rank:148,name:"Jeff Laborsky",title:"Former CEO",company:"Arcwood Environmental (Heritage)",status:"Former",revenue:300,employees:2000,acquisitions:8,deals:"CEO for 12 years; Led EQT Infrastructure partnership (2024)",years:12,focus:["Environmental Services","Hazardous Waste"],score:3,ownership:"PE (EQT)",stock:"N/A (2012-2024)",linkedin:""},
+{rank:149,name:"Nicholas Grasberger",title:"CEO, President & Chairman",company:"Enviri Group",status:"Current",revenue:600,employees:3000,acquisitions:8,deals:"CEO since 2018; environmental services and industrial services platform",years:8,focus:["Environmental Services","Industrial Services"],score:3,ownership:"Public (NVRI)",stock:"+10% (2018-present)",linkedin:""},
+{rank:150,name:"Edmond Coletta",title:"President & CEO",company:"Casella Waste Systems",status:"Current",revenue:1200,employees:7000,acquisitions:10,deals:"2nd CEO in 50-yr history (Jan 2026); President since 2022; recycling/sustainability focus",years:1,focus:["Waste Management","Environmental"],score:3,ownership:"Public (CWST)",stock:"+25% (2026-present)",linkedin:""},
+{rank:151,name:"John Casella",title:"Executive Chairman",company:"Casella Waste Systems",status:"Current",revenue:1200,employees:7000,acquisitions:15,deals:"Founded company; 50-year tenure; transitioned from CEO Jan 2026",years:50,focus:["Waste Management"],score:4,ownership:"Public (CWST)",stock:"+25% (1975-present)",linkedin:""},
+{rank:152,name:"Azeez Mohammed",title:"President & CEO",company:"Reworld (formerly Covanta)",status:"Current",revenue:2000,employees:4000,acquisitions:5,deals:"EQT acquired Covanta ($5.3B, Dec 2021); company rebranded Reworld Apr 2024",years:4,focus:["Waste Management","Environmental"],score:3,ownership:"PE (EQT)",stock:"N/A",linkedin:""},
+{rank:153,name:"Chris LeMay",title:"Chief Executive Officer",company:"Alliance Technical Group",status:"Current",revenue:300,employees:2200,acquisitions:5,deals:"Acquired by Blackstone (Jan 2026); 60+ offices; Summit Env, Fremont Analytical",years:24,focus:["Environmental Testing","Lab"],score:3,ownership:"PE (Blackstone)",stock:"N/A",linkedin:""},
+{rank:154,name:"Shawn Doherty",title:"Chief Executive Officer",company:"Apex Companies",status:"Current",revenue:200,employees:1000,acquisitions:3,deals:"Acquired PBS Engineering (2023); CEO from Nov 2024; 30 yrs at ERM",years:2,focus:["Environmental Consulting"],score:3,ownership:"Private",stock:"N/A",linkedin:"https://www.linkedin.com/in/shawn-doherty-a001811/"},
+{rank:155,name:"Cindy Miller",title:"Former CEO",company:"Stericycle (acquired by WM)",status:"Former",revenue:2500,employees:18000,acquisitions:8,deals:"Led through WM acquisition (Nov 2024); 30-yr UPS career from driver to SVP",years:5,focus:["Environmental Services","Waste Management"],score:3,ownership:"Private",stock:"N/A (2019-2024)",linkedin:""},
+{rank:156,name:"Jeff Feeler",title:"Former Chairman & CEO",company:"US Ecology (acquired by Republic)",status:"Former",revenue:500,employees:2000,acquisitions:8,deals:"Led US Ecology through Republic acquisition ($2.2B, 2022)",years:9,focus:["Environmental Services","Hazardous Waste"],score:3,ownership:"Public (RSG)",stock:"N/A (2013-2022)",linkedin:""},
+{rank:157,name:"John McQuillan",title:"Founder & CEO",company:"Triumvirate Environmental",status:"Current",revenue:300,employees:2000,acquisitions:15,deals:"Founded 1988; $1.8B Berkshire Partners valuation (2025); 40 years leadership",years:38,focus:["Environmental Consulting","Full-spectrum TICC"],score:4,ownership:"PE (Berkshire)",stock:"N/A",linkedin:"https://www.linkedin.com/in/john-mcquillan-b38179"},
+{rank:158,name:"Bobby Toups",title:"President & CEO",company:"ATC Group Services",status:"Current",revenue:200,employees:1000,acquisitions:3,deals:"Environmental consulting; relocated HQ to Lafayette, Louisiana",years:8,focus:["Environmental Services"],score:2,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:159,name:"Seth Goodman",title:"Chief Executive Officer",company:"Northstar Recycling",status:"Current",revenue:150,employees:350,acquisitions:4,deals:"Acquired WTS, Sonoco Sustainability Solutions, Complete Recycling; Zero Waste focus",years:8,focus:["Waste Management","Sustainability"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:160,name:"Ken Beyer",title:"Chief Executive Officer",company:"Pace Analytical",status:"Current",revenue:200,employees:1000,acquisitions:5,deals:"Appointed Dec 2025; 25+ yrs exec experience; former CEO Transportation Insight",years:1,focus:["Lab","Environmental"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:161,name:"David Tortorello",title:"Chief Executive Officer",company:"Vertex Companies",status:"Current",revenue:100,employees:500,acquisitions:3,deals:"PE-backed leadership (Mar 2024); former Ankura VP; former Navigant GM $325M",years:2,focus:["Environmental Services","Engineering"],score:2,ownership:"PE",stock:"N/A",linkedin:"https://www.linkedin.com/in/dave-tortorello/"},
+{rank:162,name:"John O'Connell",title:"Chief Executive Officer",company:"Wind River Environmental",status:"Current",revenue:100,employees:500,acquisitions:5,deals:"Non-hazardous liquid waste; B&P Environmental, Metro-Rooter, Stright Sewage",years:8,focus:["Environmental Services"],score:2,ownership:"PE (Gryphon)",stock:"N/A",linkedin:""},
+{rank:163,name:"Ed Genovese",title:"Chief Executive Officer",company:"TAS Environmental Services",status:"Current",revenue:100,employees:500,acquisitions:6,deals:"Blue Point PE-backed; 5+ acquisitions including Environmental Concepts & Services (2023)",years:5,focus:["Environmental Services","Industrial"],score:2,ownership:"PE (Blue Point)",stock:"N/A",linkedin:""},
+{rank:164,name:"Michael Rigg",title:"Chief Executive Officer",company:"GreenField Environmental Solutions",status:"Current",revenue:200,employees:1000,acquisitions:3,deals:"Energy infrastructure decommissioning; oil & gas services",years:5,focus:["Environmental Services","Oil & Gas"],score:2,ownership:"PE",stock:"N/A",linkedin:""},
+{rank:165,name:"Richard Alario",title:"Executive Chairman",company:"GreenField Environmental Solutions",status:"Current",revenue:200,employees:1000,acquisitions:2,deals:"35+ years oilfield service; strategic oversight for GreenField",years:5,focus:["Oil & Gas","Environmental"],score:2,ownership:"PE",stock:"N/A",linkedin:""},
+{rank:166,name:"Russell Hochman",title:"CEO Designate",company:"Enviri Group (New Enviri spinoff)",status:"Current",revenue:400,employees:2000,acquisitions:3,deals:"CEO designate Jan 2026 for New Enviri standalone entity spinoff",years:1,focus:["Environmental Services"],score:3,ownership:"Public (NVRI)",stock:"N/A (2025-present)",linkedin:""},
+{rank:167,name:"Jeff Beswick",title:"SVP & President, Clean Earth Division",company:"Enviri Group (Clean Earth)",status:"Current",revenue:400,employees:2000,acquisitions:5,deals:"Nearly 30 yrs environmental services; former CEO Tradebe US (28 locations, 900+ employees)",years:3,focus:["Environmental Services","Waste Management"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:168,name:"Marc Kaplan",title:"President & COO",company:"Jensen Hughes",status:"Current",revenue:190,employees:800,acquisitions:5,deals:"Appointed Jan 2025; post-Gryphon acquisition; former CEO CIBT global mobility",years:1,focus:["Fire Protection","Safety"],score:3,ownership:"PE (Gryphon)",stock:"N/A",linkedin:""},
+{rank:169,name:"Upayan Sengupta",title:"SVP, TIC Consumer Segment",company:"UL Solutions",status:"Current",revenue:1250,employees:8000,acquisitions:3,deals:"Consumer segment strategy; 15+ yrs GE HealthCare; joined UL 2015; MBA Kellogg",years:10,focus:["Consumer Products","Safety Certification"],score:3,ownership:"Public (ULS)",stock:"+56% (2015-present)",linkedin:""},
+{rank:170,name:"Nigel Astell",title:"SVP, Rail Strategy Leader",company:"WSP Global",status:"Current",revenue:500,employees:2000,acquisitions:2,deals:"Federal railroad investment capture; transit/rail infrastructure; London Underground background",years:5,focus:["Transportation","Infrastructure"],score:3,ownership:"Public (WSP.TO)",stock:"+120% (2019-present)",linkedin:""},
+{rank:171,name:"Lisa Fewins",title:"MD, Environmental Business Unit",company:"Black & Veatch",status:"Current",revenue:500,employees:3000,acquisitions:2,deals:"Launched new environmental business unit 2023; ecological compliance experts",years:3,focus:["Environmental Consulting","Sustainability"],score:3,ownership:"Private",stock:"N/A",linkedin:""},
+{rank:172,name:"Tom Barry",title:"Chief Executive Officer",company:"Jones Lake Management",status:"Current",revenue:50,employees:200,acquisitions:3,deals:"Acquired Ponds Rx, Ponds Beautiful; aquatic ecosystem services; PE-backed",years:5,focus:["Environmental Services"],score:2,ownership:"PE",stock:"N/A",linkedin:""},
+{rank:173,name:"Darren Billings",title:"CEO & Founder",company:"Atlas Inspection Technologies",status:"Former",revenue:50,employees:200,acquisitions:1,deals:"Atlas acquired by Industrial Inspection & Analysis (IIA) Jul 2024; trenchless restoration",years:5,focus:["NDT","Oil & Gas"],score:2,ownership:"Private",stock:"N/A (2019-2024)",linkedin:""}
 ];
+
+// Deduplicate by name (keep first occurrence)
+const seen=new Set();
+const DEDUPED=DATA.filter(d=>{
+  const key=d.name.toLowerCase().replace(/[^a-z]/g,'');
+  if(seen.has(key))return false;
+  seen.add(key);
+  return true;
+});
 
 // Build focus + ownership dropdowns
 const focusSet=new Set(), ownSet=new Set();
-DATA.forEach(d=>{d.focus.forEach(f=>focusSet.add(f)); ownSet.add(d.ownership.split('(')[0].trim().split(' ')[0])});
+DEDUPED.forEach(d=>{d.focus.forEach(f=>focusSet.add(f)); ownSet.add(d.ownership.split('(')[0].trim().split(' ')[0])});
 const focusSel=document.getElementById('filterFocus');
 [...focusSet].sort().forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;focusSel.appendChild(o)});
 const ownSel=document.getElementById('filterOwnership');
 [...ownSet].sort().forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;ownSel.appendChild(o)});
 
+// Estimated ages (2026) based on career timelines
+const AGES={
+  "Gilles Martin":64,"Alexandre L'Heureux":56,"Hinda Gharbi":54,"Dickerson Wright":66,
+  "Troy Rudd":57,"Vijay Manthripragada":50,"Colm Sheridan":52,"Geraldine Picaud":56,
+  "Jennifer Scanlon":60,"Jo Sherreard":51,"Dennis Bertolotti":62,"Manuel Stamatakis":72,
+  "John Tarpey":57,"Keith Leung":51,"Patrick Baughman":56,"Antoine de Saint-Affrique":56,
+  "Christophe Weber":56,"John Adent":56,"Gavin Liu":51,"Mark Spieker":56,
+  "Bob Green":61,"Amerino Gatti":56,"Susan Johnson":56,"David Adler":61,
+  "Rolf-Dieter Lafrenz":56,"Todd Gleason":56,"Patrick Shea":56,
+  "Peter Oosterveer":58,"Thomas Bertels":51,"David Greve":56,"Shigeto Nakamura":56,
+  "Kurt Brunner":56,"Ryan Casey":51,"Matt Luttrell":56,"Juan Peinado":56,
+  "David Testa":56,"Robert Eichelberg":61,"Michael Turner":56,"Nathalie Brunelle":51,
+  "Mark Taylor":56,"Chris Kirk":67,"Wolfhart Hauser":71,"Sotirios Vahaviolos":77,
+  "Keith Williams":67,"Pierre Shoiry":66,"Didier Michaud-Daniel":62,"John Dionisio":72,
+  "Michael Burke":61,"Jacqueline Hinman":61,"Lee McIntire":66,"Fernando Basabe":61,
+  "Frankie Ng":56,"Charles Noall":61,"Richard Nelson":62,"Joan Amigo":56,
+  "David Gaboury":66,"Jon Carlson":66,"Joe Boyer":56,"George Pierson":72,
+  "Bill Siegel":61,"Rachel Brydon Jannetta":56,"Steve Vanderboom":61,
+  "Natalia Shuman":51,"Greg Kelly":56,"Bob Noonan":56,"Drew Jeter":51,
+  "Martin Richards":51,"Luke Goulding":51,"Ryan Robinson":46,"Matt Gorzkowicz":51,
+  "Jeff McDonald":56,"Alberto Grazi":51,"Todd Wintner":51,
+  "Alex Gregg-Smith":56,"Catherine Chen":51,"Marc Roussel":56,
+  "Matthieu Gondallier de Tugny":61,"Santiago Arias Duval":51,"Surachet Tanwongswal":56,
+  "Vincent Bourdil":51,"Khurram Majeed":51,"Egidijus Jokubauskas":56,
+  "Malcolm Reid":62,"Rafael Navazo":51,"Steven Du":51,"Teymur Abasov":56,
+  "Charles Ly Wa Hoi":56,"André Lacroix":66,"Colm Deasy":51,"Gregg Tiemann":56,
+  "Edward J. Prajzner":56,"Hani Hammad":46,"Gennaro D'Alterio":51,
+  "Benjamin Heraud":46,"Tal Pizzey":66,"Alex Dadakis":46,"Gitte Schjøtz":56,
+  "John Genovesi":67,"Weifang Zhou":56,"Joseph Sczurko":61,"Chris Peters":56,
+  "Richard Whitehead":57,"Sam Donelson":57,"Rick Sluiters":56,
+  "Matthew Hopkinson":46,"Heather Polinsky":51,"Alan Brookes":61,
+  "Melissa Pomales":51,"Mark Fallon":51,"Mario Azar":56,"Rich D'Amato":57,
+  "Bob Pragada":57,"Gord Johnston":56,"Dan Batrack":66,"Roger Argus":67,
+  "Carey Smith":57,"Thomas Bell":62,"Jim Giannopoulos":57,"Jens-Peter Saul":57,
+  "John Henderson":62,"Majdi Othman":57,"Peter Zeeb":57,"Scott Wallington":46,
+  "Ron Palmieri":62,"David Gockel":67,"Shawn Fiore":51,"Chris Hunter":51,
+  "Raj Arora":57,"Robert Seager":57,"Liz Porter":57,"Bernard Teufele":57,
+  "Cheryl Ginyard-Jones":51,"William Nugent":72,"Ken Gilmartin":57,
+  "Hassan Zahran":46,"John McQuillan":67,"Liling Cao":46,"Bradley Andrews":51,
+  "Neil Penhall":57,"Alan McKim":72,"Eric Gerstenberg":57,"Michael Battles":57,
+  "Jon Vander Ark":51,"Simon Parrington":46,"HP Nanda":57,"Jeff Laborsky":62,
+  "Nicholas Grasberger":57,"Edmond Coletta":52,"John Casella":77,
+  "Azeez Mohammed":57,"Chris LeMay":57,"Shawn Doherty":57,"Cindy Miller":62,
+  "Jeff Feeler":57,"David Tortorello":52,"John O'Connell":57,"Ed Genovese":52,
+  "Michael Rigg":57,"Richard Alario":67,"Russell Hochman":52,"Jeff Beswick":57,
+  "Marc Kaplan":57,"Upayan Sengupta":46,"Nigel Astell":57,"Lisa Fewins":46,
+  "Tom Barry":52,"Darren Billings":46,"Seth Goodman":46,"Ken Beyer":57,
+  "Bobby Toups":57,"Timothy Mooney":52,"Tom Kahl":62,"Mark Hall":57,
+  "Randy Yeager":57,"Kevin Walbridge":62,"Brad Herrin":47
+};
+function getAge(name){return AGES[name]||null}
+
 function stars(n){let s='';for(let i=0;i<5;i++) s+=`<span class="${i<n?'star-filled':'star-empty'}">★</span>`;return s}
 
-function stockClass(s){if(s==='N/A'||s.startsWith('N/A'))return 'na';return s.startsWith('-')?'neg':'pos'}
+function stockClass(s){if(!s||s==='N/A'||s.startsWith('N/A'))return 'na';return s.startsWith('-')?'neg':'pos'}
 
 function statusBadge(s){
-  const cls=s==='Current'?'status-current':'status-former';
-  return `<span class="status-badge ${cls}">${s}</span>`;
+  const norm=s.toLowerCase();
+  const cls=norm.startsWith('current')?'status-current':'status-former';
+  const label=norm.startsWith('current')?'Current':'Former';
+  return `<span class="status-badge ${cls}">${label}</span>`;
+}
+
+function liLink(url){
+  if(!url)return '<span style="color:#334155">—</span>';
+  return `<a class="li-link" href="${url}" target="_blank" rel="noopener">LinkedIn ↗</a>`;
 }
 
 function renderRows(rows){
   const tb=document.getElementById('tbody');
-  tb.innerHTML=rows.map(d=>`<tr>
-    <td class="rank">${d.rank}</td>
+  tb.innerHTML=rows.map((d,i)=>{const age=getAge(d.name);return`<tr>
+    <td class="rank">${i+1}</td>
     <td class="name">${d.name}</td>
+    <td style="text-align:center;color:var(--text-dim)">${age||'—'}</td>
     <td class="title-col">${d.title}</td>
     <td class="company">${d.company}</td>
     <td>${statusBadge(d.status)}</td>
-    <td class="revenue">$${d.revenue.toLocaleString()}</td>
-    <td class="employees">${d.employees.toLocaleString()}</td>
+    <td class="revenue">${d.revenue>0?'$'+d.revenue.toLocaleString():'—'}</td>
+    <td class="employees">${d.employees>0?d.employees.toLocaleString():'—'}</td>
     <td class="acq">${d.acquisitions}+</td>
     <td class="deals">${d.deals}</td>
     <td class="years">${d.years}</td>
@@ -244,8 +440,9 @@ function renderRows(rows){
     <td class="stars">${stars(d.score)}</td>
     <td class="ownership">${d.ownership}</td>
     <td class="stock ${stockClass(d.stock)}">${d.stock}</td>
-  </tr>`).join('');
-  document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${DATA.length}`;
+    <td class="li-link">${liLink(d.linkedin)}</td>
+  </tr>`}).join('');
+  document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${DEDUPED.length}`;
 }
 
 let sortCol=null, sortDir=1;
@@ -256,9 +453,13 @@ function getFiltered(){
   const ff=focusSel.value;
   const fo=ownSel.value;
   const fr=document.getElementById('filterRevenue').value;
-  return DATA.filter(d=>{
+  return DEDUPED.filter(d=>{
     if(q){const blob=(d.name+d.title+d.company+d.deals+d.focus.join(' ')+d.ownership+d.stock+d.status).toLowerCase();if(!blob.includes(q))return false}
-    if(fs&&d.status!==fs)return false;
+    if(fs){
+      const norm=d.status.toLowerCase();
+      if(fs==='Current'&&!norm.startsWith('current'))return false;
+      if(fs==='Former'&&!norm.startsWith('former'))return false;
+    }
     if(ff&&!d.focus.includes(ff))return false;
     if(fo&&!d.ownership.startsWith(fo))return false;
     if(fr){
@@ -278,7 +479,8 @@ function sortAndRender(){
   let rows=getFiltered();
   if(sortCol){
     rows.sort((a,b)=>{
-      let va=a[sortCol],vb=b[sortCol];
+      let va=sortCol==='age'?getAge(a.name)||0:a[sortCol];
+      let vb=sortCol==='age'?getAge(b.name)||0:b[sortCol];
       if(Array.isArray(va))va=va.join(',');
       if(Array.isArray(vb))vb=vb.join(',');
       if(typeof va==='string')return va.localeCompare(vb)*sortDir;
@@ -304,7 +506,7 @@ focusSel.addEventListener('change',sortAndRender);
 ownSel.addEventListener('change',sortAndRender);
 document.getElementById('filterRevenue').addEventListener('change',sortAndRender);
 
-renderRows(DATA);
+renderRows(DEDUPED);
 </script>
 </body>
 </html>
