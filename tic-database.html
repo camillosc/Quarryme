@@ -24,7 +24,7 @@ a:hover{text-decoration:underline}
 .controls .count{margin-left:auto;color:var(--text-dim);font-size:.82rem;white-space:nowrap}
 
 .table-wrap{overflow-x:auto;padding:0 1rem 2rem}
-table{width:100%;border-collapse:collapse;min-width:2000px;margin-top:.5rem}
+table{width:100%;border-collapse:collapse;min-width:2300px;margin-top:.5rem}
 thead{position:sticky;top:0;z-index:10}
 th{background:#162240;color:var(--gold);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;padding:.7rem .6rem;text-align:left;border-bottom:2px solid var(--gold);cursor:pointer;white-space:nowrap;user-select:none;transition:background .15s}
 th:hover{background:#1e3050}
@@ -61,6 +61,10 @@ tr:nth-child(even):hover{background:var(--hover)}
 .status-current{background:#166534;color:#bbf7d0}
 .status-former{background:#374151;color:#9ca3af}
 .li-link{font-size:.78rem;white-space:nowrap}
+.addr-col{font-size:.78rem;color:var(--text-dim);min-width:180px}
+.phone-col{font-size:.78rem;white-space:nowrap}
+.btn-export{background:var(--gold);color:#0a0f1e;border:none;padding:.45rem .9rem;border-radius:6px;font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+.btn-export:hover{background:var(--gold-dim)}
 
 .footer{text-align:center;padding:1.5rem;color:var(--text-dim);font-size:.78rem;border-top:1px solid var(--border)}
 
@@ -98,6 +102,7 @@ tr:nth-child(even):hover{background:var(--hover)}
     <option value="500">$500M–$1B</option>
     <option value="0">Under $500M</option>
   </select>
+  <button class="btn-export" onclick="exportCSV()">&#8595; Download to Excel</button>
   <span class="count" id="rowCount">Loading...</span>
 </div>
 
@@ -121,6 +126,8 @@ tr:nth-child(even):hover{background:var(--hover)}
   <th data-col="ownership" data-type="str">Ownership<span class="sort-icon"></span></th>
   <th data-col="stock" data-type="str">Stock Perf (Tenure)<span class="sort-icon"></span></th>
   <th data-col="linkedin" data-type="str">LinkedIn<span class="sort-icon"></span></th>
+  <th data-col="address" data-type="str">Company Address<span class="sort-icon"></span></th>
+  <th data-col="phone" data-type="str">Phone<span class="sort-icon"></span></th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -406,6 +413,57 @@ const AGES={
 };
 function getAge(name){return AGES[name]||null}
 
+const HQ={
+  "Eurofins Scientific":{address:"1 Rue Edmond Reuter, Dudelange 3555, Luxembourg",phone:"+352 26 29 11"},
+  "WSP Global":{address:"1600 René-Lévesque Blvd W, Montreal, QC H3H 1P9",phone:"+1 514 340-0046"},
+  "Bureau Veritas":{address:"Newtime Bldg, 40-52 Bd du Parc, 92200 Neuilly-sur-Seine, France",phone:"+33 1 55 24 70 00"},
+  "NV5 Global":{address:"200 S Park Rd, Suite 350, Hollywood, FL 33021",phone:"+1 954 495-2112"},
+  "AECOM":{address:"1999 Avenue of the Stars, Suite 2600, Los Angeles, CA 90067",phone:"+1 213 593-8000"},
+  "Montrose Environmental":{address:"5120 Shoreham Pl, Suite 280, San Diego, CA 92122",phone:"+1 858 495-2801"},
+  "Intertek Group":{address:"33 Cavendish Square, London W1G 0PS, UK",phone:"+44 20 7396 3400"},
+  "SGS SA":{address:"1 Place des Alpes, CH-1211 Geneva, Switzerland",phone:"+41 22 739 91 11"},
+  "UL Solutions":{address:"333 Pfingsten Rd, Northbrook, IL 60062",phone:"+1 847 272-8800"},
+  "Element Materials Technology":{address:"10 Lower Thames St, London EC3R 6AF, UK",phone:"+44 20 3510 0101"},
+  "Terracon":{address:"10841 S Ridgeview Rd, Olathe, KS 66061",phone:"+1 913 599-6886"},
+  "MISTRAS Group":{address:"195 Clarksville Rd, Princeton Junction, NJ 08550",phone:"+1 609 716-4000"},
+  "Kleinfelder":{address:"550 W C St, Suite 1200, San Diego, CA 92101",phone:"+1 619 615-1444"},
+  "Acuren":{address:"2727 N Loop W, Suite 200, Houston, TX 77008",phone:"+1 713 462-2003"},
+  "Braun Intertec":{address:"11001 Hampshire Ave S, Minneapolis, MN 55438",phone:"+1 952 995-2000"},
+  "Applus+":{address:"Campus UAB, Ronda de la Font del Carme, 08193 Bellaterra, Spain",phone:"+34 93 582 23 00"},
+  "NEOGEN Corp":{address:"620 Lesher Pl, Lansing, MI 48912",phone:"+1 517 372-9200"},
+  "Team Industrial Services":{address:"13131 Dairy Ashford, Suite 600, Sugar Land, TX 77478",phone:"+1 281 331-6154"},
+  "ALS Limited":{address:"Level 11, 41 McLaren St, North Sydney NSW 2060, Australia",phone:"+61 2 8016 6900"},
+  "Arcadis":{address:"Gustav Mahlerplein 3, 1082 MS Amsterdam, Netherlands",phone:"+31 20 201 3600"},
+  "CECO Environmental":{address:"4625 Red Bank Rd, Suite 200, Cincinnati, OH 45227",phone:"+1 513 458-2600"},
+  "GZA GeoEnvironmental":{address:"One Edgewater Dr, Suite 209, Norwood, MA 02062",phone:"+1 781 278-3700"},
+  "Geosyntec Consultants":{address:"1255 Roberts Blvd NW, Suite 200, Kennesaw, GA 30144",phone:"+1 678 794-1700"},
+  "TRC Companies":{address:"21 Griffin Rd N, Windsor, CT 06095",phone:"+1 860 298-9692"},
+  "SOCOTEC":{address:"29 Rue Médéric, 78110 Le Vésinet, France",phone:"+33 1 34 80 70 00"},
+  "Kiwa Group":{address:"Sir Winston Churchilllaan 273, 2288 EA Rijswijk, Netherlands",phone:"+31 70 414 44 00"},
+  "NSF International":{address:"789 N Dixboro Rd, Ann Arbor, MI 48105",phone:"+1 734 769-8010"},
+  "CSA Group":{address:"178 Rexdale Blvd, Toronto, ON M9W 1R3",phone:"+1 416 747-4000"},
+  "Waygate Technologies":{address:"721 Visions Dr, Skaneateles Falls, NY 13153",phone:"+1 315 554-2000"},
+  "Atlas Technical Consultants":{address:"13215 Bee Cave Pkwy, Suite B-300, Austin, TX 78738",phone:"+1 512 263-5521"}
+};
+DATA.forEach(d=>{const h=HQ[d.company]||{};d.address=h.address||'';d.phone=h.phone||'';});
+
+function exportCSV(){
+  const table=document.querySelector('table');
+  const rows=table.querySelectorAll('tr:not([style*="display: none"])');
+  let csv='';
+  rows.forEach(row=>{
+    const cols=row.querySelectorAll('th, td');
+    const rowData=Array.from(cols).map(c=>'"'+c.textContent.trim().replace(/"/g,'""')+'"');
+    csv+=rowData.join(',')+'\n';
+  });
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='ticc_executives.csv';
+  a.click();
+}
+
 function stars(n){let s='';for(let i=0;i<5;i++) s+=`<span class="${i<n?'star-filled':'star-empty'}">★</span>`;return s}
 
 function stockClass(s){if(!s||s==='N/A'||s.startsWith('N/A'))return 'na';return s.startsWith('-')?'neg':'pos'}
@@ -441,6 +499,8 @@ function renderRows(rows){
     <td class="ownership">${d.ownership}</td>
     <td class="stock ${stockClass(d.stock)}">${d.stock}</td>
     <td class="li-link">${liLink(d.linkedin)}</td>
+    <td class="addr-col">${d.address||''}</td>
+    <td class="phone-col">${d.phone||''}</td>
   </tr>`}).join('');
   document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${DEDUPED.length}`;
 }
