@@ -902,11 +902,26 @@ function renderPortfolioSummary(rows){
     <div class="card"><div class="card-val">${avgScore}</div><div class="card-title">Average Deal Score</div><div class="card-desc">Composite 1–100 weighted acquisition attractiveness</div></div>`;
 }
 
-function quarryMapLink(r){return'https://quarryme.com/?mine='+encodeURIComponent(r.msha);}
-function mshaLink(id){return'https://arlweb.msha.gov/drs/ASP/BasicMineInfo.asp?MINE_ID='+String(id).padStart(7,'0');}
-function statePermitLink(r){var dom={NY:'dec.ny.gov',NJ:'nj.gov/dep',PA:'dep.pa.gov',CT:'ct.gov/deep'}[r.state]||'';var q=dom?'site:'+dom+' "'+r.name+'"':'"'+r.name+'" '+r.state+' state mining permit';return'https://www.google.com/search?q='+encodeURIComponent(q);}
-function countyPermitLink(r){return'https://www.google.com/search?q='+encodeURIComponent('"'+r.name+'" '+r.county+' County '+r.state+' mining permit zoning');}
-function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink(r)}" target="_blank" rel="noopener" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" rel="noopener" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r)}" target="_blank" rel="noopener" title="${r.state} State Mining Permits">🏛</a><a href="${countyPermitLink(r)}" target="_blank" rel="noopener" title="${r.county} County Zoning/Permits">🔍</a></div>`;}
+function quarryMapLink(mshaId) {
+  return 'https://quarryme.com/?mine=' + String(mshaId).padStart(7,'0');
+}
+function mshaLink(mshaId) {
+  return 'https://www.msha.gov/mine-data-retrieval-system';
+}
+function statePermitLink(state, name) {
+  const enc = encodeURIComponent(name);
+  const urls = {
+    'NY': 'https://data.ny.gov/Energy-Environment/Mining-Permit-Information/w4mf-xzr3',
+    'NJ': 'https://www.nj.gov/dep/opra/online.html',
+    'PA': 'https://www.ahs.dep.pa.gov/eFACTSWeb/default.aspx',
+    'CT': 'https://portal.ct.gov/DEEP/Mining/Mining'
+  };
+  return urls[state] || '#';
+}
+function countyLink(name, county, state) {
+  return 'https://www.google.com/maps/search/' + encodeURIComponent(name + ' ' + county + ' County ' + state);
+}
+function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink(r.msha)}" target="_blank" rel="noopener" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" rel="noopener" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r.state,r.name)}" target="_blank" rel="noopener" title="${r.state} State Mining Permits">🏛</a><a href="${countyLink(r.name,r.county,r.state)}" target="_blank" rel="noopener" title="${r.county} County">🔍</a></div>`;}
 function renderCards(rows){
   const tc={1:'#2ecc71',2:'#d4a03c',3:'#3498db'};
   document.getElementById('acqCards').innerHTML=rows.map(r=>`<div class="acq-card-item">
