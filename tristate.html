@@ -107,6 +107,44 @@ footer a{color:var(--gold);text-decoration:none}
 .comm-sand{background:rgba(241,196,15,0.15);color:#f1c40f}
 .comm-stone{background:rgba(155,89,182,0.15);color:#bb86fc}
 #acqTable .note-cell{color:var(--muted);font-size:11px;max-width:180px;white-space:normal}
+/* Sticky left columns: Rank, Name, State */
+#acqTable th:nth-child(1),#acqTable td:nth-child(1){position:sticky;left:0;z-index:1;background:var(--bg)}
+#acqTable th:nth-child(2),#acqTable td:nth-child(2){position:sticky;left:54px;z-index:1;background:var(--bg)}
+#acqTable th:nth-child(3),#acqTable td:nth-child(3){position:sticky;left:228px;z-index:1;background:var(--bg)}
+#acqTable th:nth-child(1),#acqTable th:nth-child(2),#acqTable th:nth-child(3){background:var(--surface2);z-index:3}
+#acqTable tr:hover td:nth-child(1),#acqTable tr:hover td:nth-child(2),#acqTable tr:hover td:nth-child(3){background:var(--surface2)}
+/* Actions column icon buttons */
+.acq-actions{display:flex;gap:4px}
+.acq-actions a{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);text-decoration:none;font-size:14px;transition:border-color .15s}
+.acq-actions a:hover{border-color:var(--gold)}
+/* Mobile card view */
+#acqCards{display:none}
+.acq-card-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.acq-card-item .aci-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px}
+.acq-card-item .aci-name{font-weight:700;font-size:15px}
+.acq-card-item .aci-score{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.acq-card-item .aci-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.acq-card-item .aci-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13px;margin-bottom:10px}
+.acq-card-item .aci-grid span{color:var(--muted)}
+.acq-card-item .aci-grid b{color:var(--text)}
+.acq-card-item .aci-notes{font-size:12px;color:var(--muted);margin-bottom:10px}
+.acq-card-item .aci-links{display:flex;gap:6px;flex-wrap:wrap}
+.acq-card-item .aci-links a{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:12px;white-space:nowrap;transition:border-color .15s,color .15s}
+.acq-card-item .aci-links a:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:640px){
+  .acq-table-wrap{display:none}
+  #acqCards{display:block}
+  #acqPortfolioSummary{grid-template-columns:1fr 1fr!important}
+  .acq-filters{flex-direction:column;align-items:stretch}
+  .acq-filters label{margin-top:4px}
+  .acq-filters select,.acq-filters input[type=text]{width:100%}
+  .acq-filters .filter-count{margin-left:0}
+  #acq-targets h2{font-size:clamp(15px,5vw,24px)}
+}
+@media(max-width:380px){
+  #acqPortfolioSummary{grid-template-columns:1fr!important}
+  .acq-card-item .aci-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -468,6 +506,7 @@ footer a{color:var(--gold);text-decoration:none}
 <span id="filterCount" class="filter-count"></span>
 </div>
 
+<div id="acqCards"></div>
 <div class="acq-table-wrap">
 <table id="acqTable">
 <thead><tr>
@@ -493,6 +532,7 @@ footer a{color:var(--gold);text-decoration:none}
 <th title="Click to sort">Phone</th>
 <th title="Click to sort">MSHA ID</th>
 <th title="Click to sort">Notes</th>
+<th>Actions</th>
 </tr></thead>
 <tbody id="acqTbody"></tbody>
 </table>
@@ -859,6 +899,34 @@ function renderPortfolioSummary(rows){
     <div class="card"><div class="card-val">${avgScore}</div><div class="card-title">Average Deal Score</div><div class="card-desc">Composite 1–100 weighted acquisition attractiveness</div></div>`;
 }
 
+function quarryMapLink(n){return'https://quarryme.com/?q='+encodeURIComponent(n);}
+function mshaLink(id){return'https://www.msha.gov/mine-data-retrieval-system/mine-detail?mineId='+id;}
+function statePermitLink(s){return({NY:'https://www.dec.ny.gov/lands/5020.html',NJ:'https://www.nj.gov/dep/dmm/',PA:'https://www.dep.pa.gov/Business/Land/Mining/BureauofMiningPrograms/Pages/default.aspx',CT:'https://portal.ct.gov/DEEP/Mining/Mining'})[s]||'#';}
+function countyPermitLink(c,s){return'https://www.google.com/search?q='+encodeURIComponent(c+' County '+s+' zoning mining permit');}
+function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink(r.name)}" target="_blank" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r.state)}" target="_blank" title="${r.state} State Mining Permits">🏛</a><a href="${countyPermitLink(r.county,r.state)}" target="_blank" title="${r.county} County Zoning/Permits">🔍</a></div>`;}
+function renderCards(rows){
+  const tc={1:'#2ecc71',2:'#d4a03c',3:'#3498db'};
+  document.getElementById('acqCards').innerHTML=rows.map(r=>`<div class="acq-card-item">
+    <div class="aci-head"><div><div class="aci-name">#${r.rank} ${r.name}</div><div class="aci-sub">${r.county} County, ${r.state} &middot; ${r.commodity}</div></div><div class="aci-score" style="color:${r.dealScore>=70?'#2ecc71':r.dealScore>=50?'#d4a03c':'#e74c3c'}">${r.dealScore}</div></div>
+    <div class="aci-grid">
+      <div><span>Revenue</span> <b style="color:var(--green)">${r.revStr}</b></div>
+      <div><span>EBITDA</span> <b style="color:var(--green)">${fmtDollar(r.ebitda)}</b></div>
+      <div><span>Value @4×</span> <b style="color:var(--green)">${fmtDollar(r.val4x)}</b></div>
+      <div><span>Employees</span> <b>${r.emp}</b></div>
+      <div><span>NYC Dist.</span> <b>${r.mi} mi</b></div>
+      <div><span>Tier</span> <b style="color:${tc[r.tier.n]}">${r.tier.label}</b></div>
+      <div><span>Owner</span> <b>${r.owner}</b></div>
+      <div><span>Permit Risk</span> <b>${r.pr}</b></div>
+    </div>
+    <div class="aci-notes">${r.notes}</div>
+    <div class="aci-links">
+      <a href="${quarryMapLink(r.name)}" target="_blank">📍 QuarryMe</a>
+      <a href="${mshaLink(r.msha)}" target="_blank">📋 MSHA #${r.msha}</a>
+      <a href="${statePermitLink(r.state)}" target="_blank">🏛 ${r.state} Permits</a>
+      <a href="${countyPermitLink(r.county,r.state)}" target="_blank">🔍 County Zoning</a>
+    </div>
+  </div>`).join('');
+}
 function renderTable(){
   const stateF=document.getElementById('filterState').value;
   const commF=document.getElementById('filterComm').value;
@@ -878,8 +946,9 @@ function renderTable(){
     return av<bv?-sortDir:av>bv?sortDir:0;
   });
   renderPortfolioSummary(rows);
+  renderCards(rows);
   document.getElementById('filterCount').textContent=rows.length+' of '+ACQ_DATA.length+' targets';
-  const KEYS=['rank','name','state','county','commodity','owner','emp','prod','revStr','ebitda','val4x','revPerEmp','mi','rs','tier','pr','dealScore','unmet','contact','phone','msha','notes'];
+  const KEYS=['rank','name','state','county','commodity','owner','emp','prod','revStr','ebitda','val4x','revPerEmp','mi','rs','tier','pr','dealScore','unmet','contact','phone','msha','notes','_actions'];
   document.querySelectorAll('#acqTable th').forEach((th,i)=>{
     th.classList.remove('sort-asc','sort-desc');
     if(KEYS[i]===sortKey)th.classList.add(sortDir===1?'sort-asc':'sort-desc');
@@ -911,16 +980,18 @@ function renderTable(){
       <td style="color:var(--muted)">${r.phone}</td>
       <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px">${r.msha}</td>
       <td class="note-cell">${r.notes}</td>
+      <td>${actionsCell(r)}</td>
     </tr>`).join('');
 }
 
 function setSortKey(key){
+  if(!key||key[0]==='_')return;
   if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=key==='dealScore'?-1:1;}
   renderTable();
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  const KEYS=['rank','name','state','county','commodity','owner','emp','prod','revStr','ebitda','val4x','revPerEmp','mi','rs','tier','pr','dealScore','unmet','contact','phone','msha','notes'];
+  const KEYS=['rank','name','state','county','commodity','owner','emp','prod','revStr','ebitda','val4x','revPerEmp','mi','rs','tier','pr','dealScore','unmet','contact','phone','msha','notes','_actions'];
   document.querySelectorAll('#acqTable th').forEach((th,i)=>th.addEventListener('click',()=>setSortKey(KEYS[i])));
   document.getElementById('filterState').addEventListener('change',renderTable);
   document.getElementById('filterComm').addEventListener('change',renderTable);
