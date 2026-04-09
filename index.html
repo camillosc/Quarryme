@@ -715,6 +715,7 @@ async function getPermitInfo(state,lat,lng,mshaId){
   return "<a href='https://www.msha.gov/data-and-reports/mine-data-retrieval-system' target='_blank' style='color:#378ADD;font-size:10px'>Look up on MSHA \u2197</a>";
 }
 
+var _markerByMsha={};
 function mkM(d){
 
 
@@ -966,6 +967,7 @@ function mkM(d){
 
 
 
+ _markerByMsha[d[11]]=m;
  return m}
 
 
@@ -1412,7 +1414,18 @@ document.getElementById("br").onclick=function(){
 
 doFilter();
 
-
+// Deep-link: ?mine=MSHA_ID or #mine=MSHA_ID
+(function(){
+ var sp=new URLSearchParams(location.search);
+ var mineId=sp.get('mine')||(location.hash.match(/[#&]mine=([^&]+)/)||[])[1];
+ if(!mineId)return;
+ var d=D.find(function(x){return x[11]===mineId||x[11]===String(+mineId).padStart(7,'0');});
+ if(!d)return;
+ var m=_markerByMsha[d[11]];
+ if(!m)return;
+ map.setView([d[0],d[1]],15);
+ setTimeout(function(){cl.zoomToShowLayer(m,function(){m.openPopup();});},400);
+})();
 
 }
 
