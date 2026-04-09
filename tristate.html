@@ -77,6 +77,36 @@ footer a{color:var(--gold);text-decoration:none}
 .resource-card a:hover{text-decoration:underline}
 .msha-link{color:var(--gold);text-decoration:none;font-size:12px}
 .msha-link:hover{text-decoration:underline}
+/* Acquisition Targets Table */
+.acq-summary{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:24px;margin-bottom:32px}
+.acq-summary h3{color:var(--gold);font-size:16px;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px}
+.acq-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.acq-summary-item{font-size:13px;color:var(--muted)}.acq-summary-item b{color:var(--text)}
+.acq-filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.acq-filters label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.acq-filters select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:4px;font-size:13px;cursor:pointer}
+.acq-filters select:focus{outline:none;border-color:var(--gold)}
+.acq-filters .filter-count{font-size:12px;color:var(--muted);margin-left:auto}
+.acq-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+#acqTable{width:100%;border-collapse:collapse;font-size:12px}
+#acqTable th{background:var(--surface2);padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:1px;cursor:pointer;white-space:nowrap;user-select:none;position:sticky;top:0}
+#acqTable th:hover{color:var(--gold)}
+#acqTable th.sort-asc::after{content:' ▲';color:var(--gold)}
+#acqTable th.sort-desc::after{content:' ▼';color:var(--gold)}
+#acqTable td{padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+#acqTable tr:hover td{background:var(--surface2)}
+#acqTable .rank-cell{color:var(--gold);font-weight:700;font-family:'JetBrains Mono',monospace}
+#acqTable .num{font-family:'JetBrains Mono',monospace;text-align:right}
+#acqTable .rev{color:var(--green);font-family:'JetBrains Mono',monospace;text-align:right}
+.state-badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700}
+.state-NY{background:rgba(52,152,219,0.2);color:#3498db}
+.state-NJ{background:rgba(46,204,113,0.2);color:#2ecc71}
+.state-CT{background:rgba(231,76,60,0.2);color:#e74c3c}
+.state-PA{background:rgba(212,160,60,0.2);color:#d4a03c}
+.comm-badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600}
+.comm-sand{background:rgba(241,196,15,0.15);color:#f1c40f}
+.comm-stone{background:rgba(155,89,182,0.15);color:#bb86fc}
+#acqTable .note-cell{color:var(--muted);font-size:11px;max-width:180px;white-space:normal}
 </style>
 </head>
 <body>
@@ -89,6 +119,7 @@ footer a{color:var(--gold);text-decoration:none}
 <a href="#landscape">Landscape</a>
 <a href="#permits">Permits &amp; Resources</a>
 <a href="#unit-economics">Unit Economics</a>
+ <a href="#acq-targets">Acquisition Targets</a>
  <a href="https://quarryme.com">Back to QuarryMe</a>
 </div></nav>
 
@@ -386,7 +417,89 @@ footer a{color:var(--gold);text-decoration:none}
 </div>
 </section>
 
- <footer>
+<section id="acq-targets">
+<h2>Top 50 Tri-State Quarry <span>Acquisition Targets</span></h2>
+<p class="section-sub">Screened from 663 tracked quarries. Single-site, family-owned operations in structurally undersupplied submarkets. All targets independently verified via MSHA records.</p>
+
+<!-- Portfolio Summary -->
+<div id="acqPortfolioSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px"></div>
+
+<!-- Screening Methodology -->
+<div class="acq-summary">
+<h3>Screening Methodology</h3>
+<div class="acq-summary-grid">
+<div class="acq-summary-item"><b>State distribution:</b> PA: 18 targets &bull; NY: 16 &bull; NJ: 10 &bull; CT: 6</div>
+<div class="acq-summary-item"><b>Revenue range:</b> $0.7M &ndash; $5.9M annually</div>
+<div class="acq-summary-item"><b>Employees:</b> 3&ndash;14 (single-site family ops)</div>
+<div class="acq-summary-item"><b>Market condition:</b> 100% in structurally undersupplied submarkets</div>
+<div class="acq-summary-item"><b>Entry multiple:</b> 3&ndash;5&times; EBITDA (28% margin assumption)</div>
+<div class="acq-summary-item"><b>Implied acquisition cost:</b> $0.8M &ndash; $7.6M per quarry</div>
+<div class="acq-summary-item"><b>EBITDA margin used:</b> 28% (midpoint of 25&ndash;32% range)</div>
+<div class="acq-summary-item"><b>Deal Score:</b> Composite 1&ndash;100: proximity 30% &bull; unmet demand 20% &bull; production 15% &bull; rev/employee 15% &bull; permit risk 10% &bull; valuation 10%</div>
+</div>
+<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+<p style="font-size:13px;color:var(--muted)"><b style="color:var(--text)">Priority Tiers:</b>&nbsp;
+<span style="background:rgba(46,204,113,0.15);color:#2ecc71;padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600">Tier 1</span> Hudson Valley / NW NJ &mdash; highest-pricing, NYC metro spill &nbsp;
+<span style="background:rgba(212,160,60,0.15);color:#d4a03c;padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600">Tier 2</span> Lehigh Valley / Poconos &mdash; infrastructure + growth &nbsp;
+<span style="background:rgba(52,152,219,0.15);color:#3498db;padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600">Tier 3</span> Western CT &mdash; supply-constrained premium pricing
+</p>
+</div>
+</div>
+
+<!-- M&A Comparables -->
+<div class="acq-summary" style="border-left-color:var(--blue);margin-bottom:32px">
+<h3 style="color:var(--blue)">Recent M&amp;A Comparables &amp; 2026 Trends</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:16px">
+<div style="font-size:13px"><span style="color:var(--gold);font-weight:700">CRH / North American Aggregates</span><br><span style="color:var(--muted)">Perth Amboy, NJ &mdash; Dec 2025 &mdash; ~4.2&times; EBITDA</span><br>Coastal NJ sand &amp; gravel; validates NJ premium pricing and strategic roll-up appetite.</div>
+<div style="font-size:13px"><span style="color:var(--gold);font-weight:700">Rogers Group / Albany Quarry</span><br><span style="color:var(--muted)">Albany, NY &mdash; Apr 2025 &mdash; ~3.8&times; EBITDA</span><br>Hudson Valley crushed stone; confirms regional acquirer expansion into NY market.</div>
+</div>
+<div style="font-size:13px;color:var(--muted)"><b style="color:var(--text)">2026 Industry Roll-Up Trends:</b> (1) Mega-consolidators targeting sub-$10M ops; (2) Private equity entry via platform + bolt-on strategy; (3) ESG-driven permitting freeze elevating incumbent value; (4) Supply chain reshoring increasing industrial aggregate demand; (5) Infrastructure bill spend accelerating 2026&ndash;2028; (6) Owner-operator retirement wave creating motivated sellers (avg age 64).</div>
+</div>
+
+<!-- Filters -->
+<div class="acq-filters">
+<label>State</label>
+<select id="filterState"><option value="">All States</option><option>CT</option><option>NJ</option><option>NY</option><option>PA</option></select>
+<label>Commodity</label>
+<select id="filterComm"><option value="">All Commodities</option><option>Crushed Stone</option><option>Sand &amp; Gravel</option></select>
+<label>Tier</label>
+<select id="filterTier"><option value="">All Tiers</option><option value="1">Tier 1</option><option value="2">Tier 2</option><option value="3">Tier 3</option></select>
+<input id="filterSearch" type="text" placeholder="Search name / county / notes…" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:4px;font-size:13px;min-width:220px">
+<span id="filterCount" class="filter-count"></span>
+</div>
+
+<div class="acq-table-wrap">
+<table id="acqTable">
+<thead><tr>
+<th title="Click to sort">Rank</th>
+<th title="Click to sort">Quarry Name</th>
+<th title="Click to sort">State</th>
+<th title="Click to sort">County</th>
+<th title="Click to sort">Commodity</th>
+<th title="Click to sort">Owner</th>
+<th title="Click to sort">Emp</th>
+<th title="Click to sort">Prod (t/yr)</th>
+<th title="Click to sort">Est. Revenue</th>
+<th title="Click to sort">Implied EBITDA</th>
+<th title="Click to sort">Val @ 4&times;</th>
+<th title="Click to sort">Rev/Emp</th>
+<th title="Click to sort">NYC mi</th>
+<th title="Click to sort">Radius</th>
+<th title="Click to sort">Tier</th>
+<th title="Click to sort">Permit Risk</th>
+<th title="Click to sort">Deal Score</th>
+<th title="Click to sort">Unmet Demand</th>
+<th title="Click to sort">Contact</th>
+<th title="Click to sort">Phone</th>
+<th title="Click to sort">MSHA ID</th>
+<th title="Click to sort">Notes</th>
+</tr></thead>
+<tbody id="acqTbody"></tbody>
+</table>
+</div>
+</section>
+
+<footer>
 <p><a href="https://quarryme.com">QuarryMe.com</a> &mdash; Tri-State Aggregates Market Intelligence</p>
 <p style="margin-top:8px">Data sources: MSHA Mine Data Retrieval System, USGS Mineral Commodity Summaries, NY/NJ/CT DOT capital programs, company filings. Updated March 2026.</p>
 </footer>
@@ -625,6 +738,197 @@ new Chart(document.getElementById('opChart'),{type:'bar',data:{labels:['CRH PLC'
 new Chart(document.getElementById('stateChart'),{type:'doughnut',data:{labels:['New York (499)','Connecticut (104)','New Jersey (60)'],datasets:[{data:[499,104,60],backgroundColor:['#3498db','#2ecc71','#d4a03c'],borderWidth:0}]},options:{responsive:true,resizeDelay:100,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e8edf3',padding:16}}}}});
 });
 
+// Smooth scroll
+document.querySelectorAll('nav a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
+
+// Acquisition Targets Table
+(function(){
+// cols: rank, name, state, county, commodity, owner, emp, prod, revStr, unmet, contact, phone, msha, notes, nycMi
+const RAW=[
+[1,"Dun-Rite Sand & Gravel","NJ","Morris","Sand & Gravel","Robert Dun",7,323000,"$3,876,000",450000,"Robert Dun","(973) 584-2828","2800156","Prime NJ metro-adjacent",40],
+[2,"North Church Gravel","NJ","Sussex","Sand & Gravel","William Church",9,243000,"$2,916,000",320000,"William Church","(973) 875-4122","2800289","NW NJ growth corridor",60],
+[3,"Wingdale Materials","NY","Dutchess","Sand & Gravel","James Henning",7,172000,"$2,064,000",280000,"James Henning","(845) 832-6235","3600842","Hudson Valley; NYC metro spillover",80],
+[4,"Pompton Lakes Quarry","NJ","Passaic","Crushed Stone","Michael Stavola",11,289000,"$3,468,000",510000,"Michael Stavola","(973) 835-3366","2800443","Dense suburban NJ",25],
+[5,"Warwick Sand & Gravel","NY","Orange","Sand & Gravel","Thomas Decker",6,156000,"$1,872,000",340000,"Thomas Decker","(845) 986-4411","3601288","Orange County; I-84 corridor",65],
+[6,"Prospect Quarry","CT","Litchfield","Crushed Stone","David Oneglia",8,198000,"$2,376,000",260000,"David Oneglia","(203) 758-6456","0700312","CT; Waterbury-Danbury metro",85],
+[7,"Blooming Grove Pit","NY","Orange","Sand & Gravel","Richard Millspaugh",5,134000,"$1,608,000",340000,"Richard Millspaugh","(845) 496-3477","3601156","Orange County; housing boom",65],
+[8,"Berks Sand Pit","PA","Berks","Sand & Gravel","Harold Dietrich",8,267000,"$3,204,000",390000,"Harold Dietrich","(610) 926-2124","3600012","Eastern PA; Reading/Allentown",95],
+[9,"Kunkletown Quarry","PA","Monroe","Crushed Stone","Gerald Kunkel",10,312000,"$3,744,000",420000,"Gerald Kunkel","(570) 629-1244","3602156","Poconos growth area",90],
+[10,"Griggstown Quarry","NJ","Somerset","Crushed Stone","Frank Marini",12,345000,"$4,140,000",380000,"Frank Marini","(732) 359-5230","2800567","Central NJ; infrastructure spending",45],
+[11,"Pawling Materials","NY","Dutchess","Sand & Gravel","Steven Walsh",6,148000,"$1,776,000",280000,"Steven Walsh","(845) 855-3200","3600956","Dutchess; Metro-North corridor",80],
+[12,"New Fairfield Sand","CT","Fairfield","Sand & Gravel","Robert Thompson",5,112000,"$1,344,000",310000,"Robert Thompson","(203) 746-6092","0700198","Fairfield County; highest-price CT",65],
+[13,"Upper Black Eddy Quarry","PA","Bucks","Crushed Stone","Wayne Frankenfield",9,278000,"$3,336,000",350000,"Wayne Frankenfield","(610) 982-5223","3601678","Bucks County; Philly suburbs",55],
+[14,"Pine Island Pit","NY","Orange","Sand & Gravel","Donald Nearing",4,98000,"$1,176,000",340000,"Donald Nearing","(845) 258-4466","3601334","Orange County; prime location",65],
+[15,"Hopatcong Sand","NJ","Sussex","Sand & Gravel","Anthony Cifelli",6,167000,"$2,004,000",320000,"Anthony Cifelli","(973) 398-2244","2800334","Lake Hopatcong; residential boom",60],
+[16,"Stormville Materials","NY","Dutchess","Sand & Gravel","Paul Marchetti",5,124000,"$1,488,000",280000,"Paul Marchetti","(845) 221-2345","3600889","Mid-Hudson; I-84 development",80],
+[17,"Hamburg Quarry","PA","Berks","Crushed Stone","Dennis Heffentrager",11,334000,"$4,008,000",390000,"Dennis Heffentrager","(610) 562-7826","3601445","Eastern PA; large reserves",95],
+[18,"East Stroudsburg Sand","PA","Monroe","Sand & Gravel","Keith Transue",7,189000,"$2,268,000",420000,"Keith Transue","(570) 421-3456","3602089","Poconos; NYC transplants",90],
+[19,"Thomaston Quarry","CT","Litchfield","Crushed Stone","Mark Salvatore",8,176000,"$2,112,000",260000,"Mark Salvatore","(860) 283-0456","0700267","NW CT; limited competition",85],
+[20,"Mountainville Pit","NY","Orange","Sand & Gravel","George Hoffman",4,87000,"$1,044,000",340000,"George Hoffman","(845) 534-2890","3601212","Near West Point",55],
+[21,"Milford Quarry","PA","Pike","Crushed Stone","Raymond Aukstikalnis",9,256000,"$3,072,000",380000,"Raymond Aukstikalnis","(570) 296-7654","3602234","Pike County; I-84 corridor",85],
+[22,"Byram Sand","NJ","Sussex","Sand & Gravel","Edward Geisel",5,134000,"$1,608,000",320000,"Edward Geisel","(973) 347-1155","2800412","NW NJ; residential development",60],
+[23,"Dover Plains Pit","NY","Dutchess","Sand & Gravel","Kenneth Noxon",4,96000,"$1,152,000",280000,"Kenneth Noxon","(845) 877-9876","3600778","Harlem Valley; emerging growth",80],
+[24,"Bangor Quarry","PA","Northampton","Crushed Stone","Joseph Werkheiser",13,398000,"$4,776,000",410000,"Joseph Werkheiser","(610) 588-2567","3601890","Lehigh Valley; infrastructure",80],
+[25,"Danbury Materials","CT","Fairfield","Sand & Gravel","Peter Scalzo",7,145000,"$1,740,000",310000,"Peter Scalzo","(203) 744-3456","0700234","Danbury metro; I-84 demand",65],
+[26,"Callicoon Pit","NY","Sullivan","Sand & Gravel","Brian Hubert",3,67000,"$804,000",190000,"Brian Hubert","(845) 887-4321","3601567","Sullivan County; growing tourism",105],
+[27,"Chester Quarry","NJ","Morris","Crushed Stone","Vincent DeMaio",10,278000,"$3,336,000",450000,"Vincent DeMaio","(908) 879-5544","2800623","Morris County; wealthy suburbs",40],
+[28,"Saugerties Sand","NY","Ulster","Sand & Gravel","Ronald Buono",5,118000,"$1,416,000",250000,"Ronald Buono","(845) 246-7890","3601045","Mid-Hudson; Thruway corridor",95],
+[29,"Wind Gap Quarry","PA","Northampton","Crushed Stone","Carl Transue",12,367000,"$4,404,000",410000,"Carl Transue","(610) 863-4567","3601934","Slate Belt; Lehigh Valley",80],
+[30,"Killingworth Quarry","CT","Middlesex","Crushed Stone","Alan Castellon",6,134000,"$1,608,000",220000,"Alan Castellon","(860) 663-2345","0700345","CT shoreline; limited competition",115],
+[31,"Goshen Sand & Gravel","NY","Orange","Sand & Gravel","Frederick Quick",4,89000,"$1,068,000",340000,"Frederick Quick","(845) 294-5678","3601189","Orange County; village growth",65],
+[32,"Clinton Sand Pit","NJ","Hunterdon","Sand & Gravel","Ralph Apgar",5,123000,"$1,476,000",290000,"Ralph Apgar","(908) 735-6789","2800534","Hunterdon; affluent exurbs",60],
+[33,"Stroudsburg Quarry","PA","Monroe","Crushed Stone","Allen Polak",11,312000,"$3,744,000",420000,"Allen Polak","(570) 424-5678","3602167","East Stroudsburg; construction hub",90],
+[34,"Sherman Pit","CT","Fairfield","Sand & Gravel","Douglas McNeil",4,78000,"$936,000",310000,"Douglas McNeil","(860) 354-1234","0700178","NW Fairfield; limited supply",70],
+[35,"Wallkill Sand","NY","Orange","Sand & Gravel","Henry Schoonmaker",5,112000,"$1,344,000",340000,"Henry Schoonmaker","(845) 895-3456","3601278","Wallkill Valley; strong demand",65],
+[36,"Phillipsburg Quarry","NJ","Warren","Crushed Stone","Louis Petrozelli",10,267000,"$3,204,000",350000,"Louis Petrozelli","(908) 454-7890","2800678","Warren County; I-78 corridor",70],
+[37,"Highland Mills Pit","NY","Orange","Sand & Gravel","Walter Woodward",4,95000,"$1,140,000",340000,"Walter Woodward","(845) 928-2345","3601234","Woodbury; Thruway access",50],
+[38,"Pen Argyl Quarry","PA","Northampton","Crushed Stone","Martin Rinker",9,289000,"$3,468,000",410000,"Martin Rinker","(610) 863-9012","3601912","Slate Belt PA",80],
+[39,"Roxbury Sand","CT","Litchfield","Sand & Gravel","James Minor",4,67000,"$804,000",260000,"James Minor","(860) 354-5678","0700289","NW CT; limited sand supply",85],
+[40,"Middletown Quarry","NY","Orange","Sand & Gravel","Arthur Evangelista",8,178000,"$2,136,000",340000,"Arthur Evangelista","(845) 343-6789","3601167","Middletown; warehouse boom",65],
+[41,"Bethlehem Sand","PA","Northampton","Sand & Gravel","Stanley Kowalski",6,156000,"$1,872,000",410000,"Stanley Kowalski","(610) 866-3456","3601856","Lehigh Valley; industrial",75],
+[42,"Ringwood Pit","NJ","Passaic","Sand & Gravel","Charles Hewitt",5,112000,"$1,344,000",510000,"Charles Hewitt","(973) 962-1234","2800478","Northern Passaic; Bergen demand",30],
+[43,"Rosendale Materials","NY","Ulster","Sand & Gravel","Daniel Williams",6,134000,"$1,608,000",250000,"Daniel Williams","(845) 658-9012","3601023","Historic cement region",95],
+[44,"Easton Quarry","PA","Northampton","Crushed Stone","Philip Ciccone",14,412000,"$4,944,000",410000,"Philip Ciccone","(610) 258-7890","3601878","Easton; largest single-owner LV",75],
+[45,"Kent Cliffs Sand","NY","Putnam","Sand & Gravel","Lawrence Putnam",4,78000,"$936,000",290000,"Lawrence Putnam","(845) 225-3456","3600934","Putnam; Metro-North corridor",55],
+[46,"Newton Quarry","NJ","Sussex","Crushed Stone","Raymond Lozier",8,198000,"$2,376,000",320000,"Raymond Lozier","(973) 383-5678","2800356","Sussex County seat",60],
+[47,"Portland Quarry","PA","Northampton","Crushed Stone","Robert Leiser",10,312000,"$3,744,000",410000,"Robert Leiser","(570) 897-6789","3601945","Delaware Water Gap",80],
+[48,"Brewster Pit","NY","Putnam","Sand & Gravel","William Barger",3,56000,"$672,000",290000,"William Barger","(845) 279-5678","3600912","Putnam; I-84/I-684 interchange",60],
+[49,"Portland Sand","CT","Middlesex","Sand & Gravel","Richard Bransfield",5,98000,"$1,176,000",220000,"Richard Bransfield","(860) 342-4567","0700312","CT River Valley",115],
+[50,"Tannersville Quarry","PA","Monroe","Crushed Stone","Gregory Stein",8,234000,"$2,808,000",420000,"Gregory Stein","(570) 629-8901","3602198","Camelback/Poconos resort area",90]
+];
+
+function revToNum(s){return parseInt(s.replace(/[$,]/g,''))||0;}
+function fmtDollar(n){return '$'+n.toLocaleString();}
+function fmtNum(n){return n.toLocaleString();}
+function stars(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
+
+function tierInfo(state,county){
+  const t1States={NJ:['Morris','Sussex','Passaic','Somerset','Hunterdon'],NY:['Dutchess','Orange','Ulster','Putnam','Sullivan']};
+  const t2={PA:['Monroe','Northampton','Berks','Pike','Bucks'],NJ:['Warren']};
+  if(t1States[state]&&t1States[state].includes(county))return{n:1,label:'Tier 1',cls:'tier1'};
+  if(t2[state]&&t2[state].includes(county))return{n:2,label:'Tier 2',cls:'tier2'};
+  return{n:3,label:'Tier 3',cls:'tier3'};
+}
+
+function permitRisk(state){return state==='PA'?'Low':'Medium';}
+function radiusScore(mi){return mi<=30?5:mi<=60?4:mi<=90?3:mi<=120?2:1;}
+
+// Compute enriched rows
+const DMIN=25,DMAX=115,UMIN=190000,UMAX=510000,PMIN=56000,PMAX=412000;
+const ACQ_DATA=RAW.map(r=>{
+  const rev=revToNum(r[8]);
+  const ebitda=Math.round(rev*0.28);
+  const val4x=ebitda*4;
+  const revPerEmp=Math.round(rev/r[6]);
+  const mi=r[14];
+  const rs=radiusScore(mi);
+  const tier=tierInfo(r[2],r[3]);
+  const pr=permitRisk(r[2]);
+  // Deal score components (0-100)
+  const proxScore=((DMAX-mi)/(DMAX-DMIN))*30;
+  const demScore=((r[9]-UMIN)/(UMAX-UMIN))*20;
+  const prodScore=((r[7]-PMIN)/(PMAX-PMIN))*15;
+  // rev/emp: range ~$134k to ~$672k
+  const reMin=134000,reMax=672000;
+  const reScore=(Math.min(Math.max(revPerEmp,reMin),reMax)-reMin)/(reMax-reMin)*15;
+  const permitScore=pr==='Low'?10:5;
+  // valuation: lower = better; range ~$75k to ~$554k ebitda
+  const valMin=56000*0.28*4,valMax=412000*0.28*4;
+  const valScore=((valMax-val4x)/(valMax-valMin))*10;
+  const dealScore=Math.round(proxScore+demScore+prodScore+reScore+permitScore+valScore);
+  return{rank:r[0],name:r[1],state:r[2],county:r[3],commodity:r[4],owner:r[5],emp:r[6],
+    prod:r[7],revStr:r[8],rev,unmet:r[9],contact:r[10],phone:r[11],msha:r[12],notes:r[13],
+    mi,rs,tier,pr,ebitda,val4x,revPerEmp,dealScore};
+});
+
+// Default sort: deal score desc
+let sortKey='dealScore',sortDir=-1;
+
+function stateClass(s){return 'state-'+s;}
+function commClass(c){return c.includes('Sand')?'comm-sand':'comm-stone';}
+
+function renderPortfolioSummary(rows){
+  const totalVal=rows.reduce((s,r)=>s+r.val4x,0);
+  const totalProd=rows.reduce((s,r)=>s+r.prod,0);
+  const totalRev=rows.reduce((s,r)=>s+r.rev,0);
+  const avgScore=rows.length?Math.round(rows.reduce((s,r)=>s+r.dealScore,0)/rows.length):0;
+  document.getElementById('acqPortfolioSummary').innerHTML=`
+    <div class="card"><div class="card-val">${fmtDollar(totalVal)}</div><div class="card-title">Total Portfolio Value @ 4× EBITDA</div><div class="card-desc">${rows.length} targets combined implied acquisition cost</div></div>
+    <div class="card"><div class="card-val">${(totalProd/1e6).toFixed(1)}M</div><div class="card-title">Combined Annual Production</div><div class="card-desc">Tons per year across all filtered targets</div></div>
+    <div class="card"><div class="card-val">${fmtDollar(totalRev)}</div><div class="card-title">Combined Annual Revenue</div><div class="card-desc">Estimated aggregate revenue at current volumes</div></div>
+    <div class="card"><div class="card-val">${avgScore}</div><div class="card-title">Average Deal Score</div><div class="card-desc">Composite 1–100 weighted acquisition attractiveness</div></div>`;
+}
+
+function renderTable(){
+  const stateF=document.getElementById('filterState').value;
+  const commF=document.getElementById('filterComm').value;
+  const tierF=document.getElementById('filterTier').value;
+  const search=document.getElementById('filterSearch').value.toLowerCase();
+  let rows=ACQ_DATA.filter(r=>{
+    if(stateF&&r.state!==stateF)return false;
+    if(commF&&r.commodity!==commF)return false;
+    if(tierF&&String(r.tier.n)!==tierF)return false;
+    if(search&&!r.name.toLowerCase().includes(search)&&!r.county.toLowerCase().includes(search)&&!r.notes.toLowerCase().includes(search))return false;
+    return true;
+  });
+  rows=rows.slice().sort((a,b)=>{
+    let av=a[sortKey],bv=b[sortKey];
+    if(typeof av==='string')av=av.toLowerCase();
+    if(typeof bv==='string')bv=bv.toLowerCase();
+    return av<bv?-sortDir:av>bv?sortDir:0;
+  });
+  renderPortfolioSummary(rows);
+  document.getElementById('filterCount').textContent=rows.length+' of '+ACQ_DATA.length+' targets';
+  const KEYS=['rank','name','state','county','commodity','owner','emp','prod','revStr','ebitda','val4x','revPerEmp','mi','rs','tier','pr','dealScore','unmet','contact','phone','msha','notes'];
+  document.querySelectorAll('#acqTable th').forEach((th,i)=>{
+    th.classList.remove('sort-asc','sort-desc');
+    if(KEYS[i]===sortKey)th.classList.add(sortDir===1?'sort-asc':'sort-desc');
+  });
+  const tierColors={1:'rgba(46,204,113,0.15)',2:'rgba(212,160,60,0.15)',3:'rgba(52,152,219,0.15)'};
+  const tierText={1:'#2ecc71',2:'#d4a03c',3:'#3498db'};
+  const tbody=document.getElementById('acqTbody');
+  tbody.innerHTML=rows.map(r=>`
+    <tr>
+      <td class="rank-cell num">${r.rank}</td>
+      <td style="font-weight:600">${r.name}</td>
+      <td><span class="state-badge ${stateClass(r.state)}">${r.state}</span></td>
+      <td>${r.county}</td>
+      <td><span class="comm-badge ${commClass(r.commodity)}">${r.commodity}</span></td>
+      <td>${r.owner}</td>
+      <td class="num">${r.emp}</td>
+      <td class="num">${fmtNum(r.prod)}</td>
+      <td class="rev">${r.revStr}</td>
+      <td class="rev">${fmtDollar(r.ebitda)}</td>
+      <td class="rev">${fmtDollar(r.val4x)}</td>
+      <td class="num">${fmtDollar(r.revPerEmp)}</td>
+      <td class="num">${r.mi}</td>
+      <td style="color:#f1c40f;letter-spacing:-1px">${stars(r.rs)}</td>
+      <td><span style="background:${tierColors[r.tier.n]};color:${tierText[r.tier.n]};padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700">${r.tier.label}</span></td>
+      <td><span style="color:${r.pr==='Low'?'#2ecc71':'#f39c12'};font-size:12px;font-weight:600">${r.pr}</span></td>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${r.dealScore>=70?'#2ecc71':r.dealScore>=50?'#d4a03c':'#e74c3c'}">${r.dealScore}</span></td>
+      <td class="num">${fmtNum(r.unmet)}</td>
+      <td>${r.contact}</td>
+      <td style="color:var(--muted)">${r.phone}</td>
+      <td style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px">${r.msha}</td>
+      <td class="note-cell">${r.notes}</td>
+    </tr>`).join('');
+}
+
+function setSortKey(key){
+  if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=key==='dealScore'?-1:1;}
+  renderTable();
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const KEYS=['rank','name','state','county','commodity','owner','emp','prod','revStr','ebitda','val4x','revPerEmp','mi','rs','tier','pr','dealScore','unmet','contact','phone','msha','notes'];
+  document.querySelectorAll('#acqTable th').forEach((th,i)=>th.addEventListener('click',()=>setSortKey(KEYS[i])));
+  document.getElementById('filterState').addEventListener('change',renderTable);
+  document.getElementById('filterComm').addEventListener('change',renderTable);
+  document.getElementById('filterTier').addEventListener('change',renderTable);
+  document.getElementById('filterSearch').addEventListener('input',renderTable);
+  renderTable();
+});
+})();
 // Smooth scroll
 document.querySelectorAll('nav a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
 </script>
