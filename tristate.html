@@ -18,7 +18,7 @@ nav a{color:var(--muted);text-decoration:none;font-size:13px;text-transform:uppe
 nav a:hover,nav a.active{color:var(--gold)}
 nav .logo{color:var(--gold);font-weight:700;font-size:16px;margin-right:auto}
 .hero{padding:120px 20px 60px;text-align:center;background:linear-gradient(180deg,#0d1f38 0%,var(--bg) 100%)}
-.hero h1{font-size:clamp(20px,5vw,48px);font-weight:700;margin-bottom:8px;overflow-wrap:break-word;word-wrap:break-word;white-space:normal}
+.hero h1{font-size:clamp(20px,5vw,42px);font-weight:700;margin-bottom:8px;overflow-wrap:break-word;word-wrap:break-word;white-space:normal;max-width:100%;box-sizing:border-box}
 .hero h1 span{color:var(--gold)}
 .hero .sub{color:var(--muted);font-size:18px;margin-bottom:32px;letter-spacing:3px}
 .stats-row{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
@@ -26,7 +26,7 @@ nav .logo{color:var(--gold);font-weight:700;font-size:16px;margin-right:auto}
 .stat .val{font-size:36px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace}
 .stat .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 section{max-width:1200px;margin:0 auto;padding:60px 20px}
-section h2{font-size:clamp(16px,4vw,28px);font-weight:700;margin-bottom:8px;color:var(--text);overflow-wrap:break-word;word-wrap:break-word;white-space:normal}
+section h2{font-size:clamp(16px,4vw,28px);font-weight:700;margin-bottom:8px;color:var(--text);overflow-wrap:break-word;word-wrap:break-word;white-space:normal;max-width:100%;box-sizing:border-box}
 section h2 span{color:var(--gold)}
 section .section-sub{color:var(--muted);margin-bottom:32px;font-size:14px}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:32px}
@@ -137,9 +137,12 @@ footer a{color:var(--gold);text-decoration:none}
   #acqPortfolioSummary{grid-template-columns:1fr 1fr!important}
   .acq-filters{flex-direction:column;align-items:stretch}
   .acq-filters label{margin-top:4px}
-  .acq-filters select,.acq-filters input[type=text]{width:100%}
+  .acq-filters select,.acq-filters input[type=text]{width:100%;max-width:100%}
   .acq-filters .filter-count{margin-left:0}
-  #acq-targets h2{font-size:clamp(15px,5vw,24px)}
+}
+@media(max-width:600px){
+  .hero h1{font-size:clamp(16px,5vw,22px)}
+  section h2{font-size:clamp(14px,4.5vw,22px)}
 }
 @media(max-width:380px){
   #acqPortfolioSummary{grid-template-columns:1fr!important}
@@ -899,11 +902,11 @@ function renderPortfolioSummary(rows){
     <div class="card"><div class="card-val">${avgScore}</div><div class="card-title">Average Deal Score</div><div class="card-desc">Composite 1–100 weighted acquisition attractiveness</div></div>`;
 }
 
-function quarryMapLink(n){return'https://quarryme.com/?q='+encodeURIComponent(n);}
-function mshaLink(id){return'https://www.msha.gov/mine-data-retrieval-system/mine-detail?mineId='+id;}
+function quarryMapLink(){return'https://quarryme.com/';}
+function mshaLink(id){return'https://www.msha.gov/mine-data-retrieval-system/mine-detail?mineId='+String(id).padStart(7,'0');}
 function statePermitLink(s){return({NY:'https://www.dec.ny.gov/lands/5020.html',NJ:'https://www.nj.gov/dep/dmm/',PA:'https://www.dep.pa.gov/Business/Land/Mining/BureauofMiningPrograms/Pages/default.aspx',CT:'https://portal.ct.gov/DEEP/Mining/Mining'})[s]||'#';}
 function countyPermitLink(c,s){return'https://www.google.com/search?q='+encodeURIComponent(c+' County '+s+' zoning mining permit');}
-function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink(r.name)}" target="_blank" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r.state)}" target="_blank" title="${r.state} State Mining Permits">🏛</a><a href="${countyPermitLink(r.county,r.state)}" target="_blank" title="${r.county} County Zoning/Permits">🔍</a></div>`;}
+function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink()}" target="_blank" rel="noopener" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" rel="noopener" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r.state)}" target="_blank" rel="noopener" title="${r.state} State Mining Permits">🏛</a><a href="${countyPermitLink(r.county,r.state)}" target="_blank" rel="noopener" title="${r.county} County Zoning/Permits">🔍</a></div>`;}
 function renderCards(rows){
   const tc={1:'#2ecc71',2:'#d4a03c',3:'#3498db'};
   document.getElementById('acqCards').innerHTML=rows.map(r=>`<div class="acq-card-item">
@@ -920,10 +923,10 @@ function renderCards(rows){
     </div>
     <div class="aci-notes">${r.notes}</div>
     <div class="aci-links">
-      <a href="${quarryMapLink(r.name)}" target="_blank">📍 QuarryMe</a>
-      <a href="${mshaLink(r.msha)}" target="_blank">📋 MSHA #${r.msha}</a>
-      <a href="${statePermitLink(r.state)}" target="_blank">🏛 ${r.state} Permits</a>
-      <a href="${countyPermitLink(r.county,r.state)}" target="_blank">🔍 County Zoning</a>
+      <a href="${quarryMapLink()}" target="_blank" rel="noopener">📍 QuarryMe</a>
+      <a href="${mshaLink(r.msha)}" target="_blank" rel="noopener">📋 MSHA #${r.msha}</a>
+      <a href="${statePermitLink(r.state)}" target="_blank" rel="noopener">🏛 ${r.state} Permits</a>
+      <a href="${countyPermitLink(r.county,r.state)}" target="_blank" rel="noopener">🔍 County Zoning</a>
     </div>
   </div>`).join('');
 }
