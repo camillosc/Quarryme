@@ -12,12 +12,15 @@
 :root{--bg:#0a1628;--surface:#111d33;--surface2:#162440;--border:#1e3a5f;--text:#e8edf3;--muted:#8899aa;--gold:#d4a03c;--green:#2ecc71;--red:#e74c3c;--blue:#3498db}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
 .data{font-family:'JetBrains Mono','Courier New',monospace}
-nav{position:fixed;top:0;width:100%;background:rgba(10,22,40,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:1000;padding:12px 0}
-nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px;padding:0 20px;overflow-x:auto}
-nav a{color:var(--muted);text-decoration:none;font-size:13px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;transition:color .2s}
+nav{position:fixed;top:0;width:100%;background:rgba(10,22,40,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:1000;padding:6px 0}
+nav .inner{max-width:1200px;margin:0 auto;padding:0 20px}
+nav .nav-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+nav .nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-size:11px;text-transform:uppercase;letter-spacing:.7px;white-space:nowrap;transition:color .2s;padding:2px 6px;border-radius:3px}
 nav a:hover,nav a.active{color:var(--gold)}
-nav .logo{color:var(--gold);font-weight:700;font-size:16px;margin-right:auto}
-.hero{padding:120px 20px 60px;text-align:center;background:linear-gradient(180deg,#0d1f38 0%,var(--bg) 100%)}
+nav .logo{color:var(--gold);font-weight:700;font-size:15px}
+nav .back-link{font-size:11px;color:var(--muted);text-decoration:none}
+.hero{padding:95px 20px 60px;text-align:center;background:linear-gradient(180deg,#0d1f38 0%,var(--bg) 100%)}
 .hero h1{font-size:clamp(20px,5vw,42px);font-weight:700;margin-bottom:8px;overflow-wrap:break-word;word-wrap:break-word;white-space:normal;max-width:100%;box-sizing:border-box}
 .hero h1 span{color:var(--gold)}
 .hero .sub{color:var(--muted);font-size:18px;margin-bottom:32px;letter-spacing:3px}
@@ -131,16 +134,26 @@ footer a{color:var(--gold);text-decoration:none}
 .acq-card-item .aci-links{display:flex;gap:6px;flex-wrap:wrap}
 .acq-card-item .aci-links a{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:12px;white-space:nowrap;transition:border-color .15s,color .15s}
 .acq-card-item .aci-links a:hover{border-color:var(--gold);color:var(--gold)}
-/* Hide secondary columns on desktop so important ones fit in viewport */
-@media(min-width:641px){
-  #acqTable th:nth-child(10),#acqTable td:nth-child(10),
-  #acqTable th:nth-child(11),#acqTable td:nth-child(11),
-  #acqTable th:nth-child(12),#acqTable td:nth-child(12),
-  #acqTable th:nth-child(13),#acqTable td:nth-child(13),
-  #acqTable th:nth-child(14),#acqTable td:nth-child(14),
-  #acqTable th:nth-child(15),#acqTable td:nth-child(15),
-  #acqTable th:nth-child(16),#acqTable td:nth-child(16){display:none}
-}
+/* Core-only mode: show Rank(1) Name(2) State(3) County(4) Owner(6) Revenue(9) Deal Score(17) Actions(23) */
+#acqTable.core-only th:nth-child(5),#acqTable.core-only td:nth-child(5),
+#acqTable.core-only th:nth-child(7),#acqTable.core-only td:nth-child(7),
+#acqTable.core-only th:nth-child(8),#acqTable.core-only td:nth-child(8),
+#acqTable.core-only th:nth-child(10),#acqTable.core-only td:nth-child(10),
+#acqTable.core-only th:nth-child(11),#acqTable.core-only td:nth-child(11),
+#acqTable.core-only th:nth-child(12),#acqTable.core-only td:nth-child(12),
+#acqTable.core-only th:nth-child(13),#acqTable.core-only td:nth-child(13),
+#acqTable.core-only th:nth-child(14),#acqTable.core-only td:nth-child(14),
+#acqTable.core-only th:nth-child(15),#acqTable.core-only td:nth-child(15),
+#acqTable.core-only th:nth-child(16),#acqTable.core-only td:nth-child(16),
+#acqTable.core-only th:nth-child(18),#acqTable.core-only td:nth-child(18),
+#acqTable.core-only th:nth-child(19),#acqTable.core-only td:nth-child(19),
+#acqTable.core-only th:nth-child(20),#acqTable.core-only td:nth-child(20),
+#acqTable.core-only th:nth-child(21),#acqTable.core-only td:nth-child(21),
+#acqTable.core-only th:nth-child(22),#acqTable.core-only td:nth-child(22){display:none}
+.acq-col-toggle{background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:4px;font-size:12px;cursor:pointer;transition:border-color .2s,color .2s}
+.acq-col-toggle:hover{border-color:var(--gold);color:var(--text)}
+#backToTop{position:fixed;bottom:24px;right:24px;background:var(--gold);color:var(--bg);border:none;border-radius:50%;width:44px;height:44px;font-size:20px;font-weight:700;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,0.5)}
+#backToTop.visible{display:flex}
 @media(max-width:640px){
   .acq-table-wrap{display:none}
   #acqCards{display:block}
@@ -151,6 +164,7 @@ footer a{color:var(--gold);text-decoration:none}
   .acq-filters .filter-count{margin-left:0}
 }
 @media(max-width:600px){
+  .hero{padding-top:120px}
   .hero h1{font-size:clamp(16px,5vw,22px)}
   section h2{font-size:clamp(14px,4.5vw,22px)}
 }
@@ -162,16 +176,18 @@ footer a{color:var(--gold);text-decoration:none}
 </head>
 <body>
 <nav><div class="inner">
-<span class="logo">QuarryMe</span>
-<a href="#overview">Market Overview</a>
-<a href="#maps">Quarry Maps</a>
-<a href="#premium">Premium Locations</a>
+<div class="nav-top"><span class="logo">QuarryMe &mdash; Tri-State Deep Dive</span><a href="https://quarryme.com" class="back-link">&#8592; QuarryMe.com</a></div>
+<div class="nav-links">
+<a href="#overview">Market</a>
+<a href="#maps">Maps</a>
+<a href="#geology">Geology</a>
+<a href="#premium">Locations</a>
 <a href="#acquisitions">For Sale</a>
-<a href="#landscape">Landscape</a>
-<a href="#permits">Permits &amp; Resources</a>
-<a href="#unit-economics">Unit Economics</a>
- <a href="#acq-targets">Acquisition Targets</a>
- <a href="https://quarryme.com">Back to QuarryMe</a>
+<a href="#landscape">Operators</a>
+<a href="#permits">Permits</a>
+<a href="#unit-economics">Economics</a>
+<a href="#acq-targets">Targets</a>
+</div>
 </div></nav>
 
 <div class="hero">
@@ -507,6 +523,12 @@ footer a{color:var(--gold);text-decoration:none}
 <div style="font-size:13px;color:var(--muted)"><b style="color:var(--text)">2026 Industry Roll-Up Trends:</b> (1) Mega-consolidators targeting sub-$10M ops; (2) Private equity entry via platform + bolt-on strategy; (3) ESG-driven permitting freeze elevating incumbent value; (4) Supply chain reshoring increasing industrial aggregate demand; (5) Infrastructure bill spend accelerating 2026&ndash;2028; (6) Owner-operator retirement wave creating motivated sellers (avg age 64).</div>
 </div>
 
+<!-- Column toggle -->
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+<button class="acq-col-toggle" id="colToggle" onclick="toggleAcqCols()">Show all columns &#9660;</button>
+<span style="font-size:12px;color:var(--muted)">Showing core columns &mdash; Rank, Name, State, County, Owner, Revenue, Deal Score, Actions</span>
+</div>
+
 <!-- Filters -->
 <div class="acq-filters">
 <label>State</label>
@@ -521,7 +543,7 @@ footer a{color:var(--gold);text-decoration:none}
 
 <div id="acqCards"></div>
 <div class="acq-table-wrap">
-<table id="acqTable">
+<table id="acqTable" class="core-only">
 <thead><tr>
 <th title="Click to sort">Rank</th>
 <th title="Click to sort">Name</th>
@@ -539,7 +561,7 @@ footer a{color:var(--gold);text-decoration:none}
 <th title="Click to sort">Radius</th>
 <th title="Click to sort">Tier</th>
 <th title="Click to sort">Permit Risk</th>
-<th title="Click to sort">Score</th>
+<th title="Click to sort">Deal Score</th>
 <th title="Click to sort">Unmet Demand</th>
 <th title="Click to sort">Contact</th>
 <th title="Click to sort">Phone</th>
@@ -1030,6 +1052,21 @@ document.addEventListener('DOMContentLoaded',function(){
 })();
 // Smooth scroll
 document.querySelectorAll('nav a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
+
+// Back to top
+window.addEventListener('scroll',function(){document.getElementById('backToTop').classList.toggle('visible',window.scrollY>400);});
+
+// Column toggle
+var _acqCoreOnly=true;
+function toggleAcqCols(){
+  _acqCoreOnly=!_acqCoreOnly;
+  document.getElementById('acqTable').classList.toggle('core-only',_acqCoreOnly);
+  var btn=document.getElementById('colToggle');
+  var hint=btn.nextElementSibling;
+  if(_acqCoreOnly){btn.textContent='Show all columns \u25BC';hint.textContent='Showing core columns \u2014 Rank, Name, State, County, Owner, Revenue, Deal Score, Actions';}
+  else{btn.textContent='Show core columns \u25B2';hint.textContent='Showing all columns \u2014 scroll right for more';}
+}
 </script>
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8593;</button>
 </body>
  </html>
