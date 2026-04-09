@@ -89,7 +89,7 @@ footer a{color:var(--gold);text-decoration:none}
 .acq-filters .filter-count{font-size:12px;color:var(--muted);margin-left:auto}
 .acq-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
 #acqTable{width:100%;border-collapse:collapse;font-size:12px}
-#acqTable th{background:var(--surface2);padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:1px;cursor:pointer;white-space:nowrap;user-select:none;position:sticky;top:0}
+#acqTable th{background:var(--surface2);padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:1px;cursor:pointer;white-space:normal;user-select:none;position:sticky;top:0;min-width:50px}
 #acqTable th:hover{color:var(--gold)}
 #acqTable th.sort-asc::after{content:' ▲';color:var(--gold)}
 #acqTable th.sort-desc::after{content:' ▼';color:var(--gold)}
@@ -131,6 +131,16 @@ footer a{color:var(--gold);text-decoration:none}
 .acq-card-item .aci-links{display:flex;gap:6px;flex-wrap:wrap}
 .acq-card-item .aci-links a{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:4px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:12px;white-space:nowrap;transition:border-color .15s,color .15s}
 .acq-card-item .aci-links a:hover{border-color:var(--gold);color:var(--gold)}
+/* Hide secondary columns on desktop so important ones fit in viewport */
+@media(min-width:641px){
+  #acqTable th:nth-child(10),#acqTable td:nth-child(10),
+  #acqTable th:nth-child(11),#acqTable td:nth-child(11),
+  #acqTable th:nth-child(12),#acqTable td:nth-child(12),
+  #acqTable th:nth-child(13),#acqTable td:nth-child(13),
+  #acqTable th:nth-child(14),#acqTable td:nth-child(14),
+  #acqTable th:nth-child(15),#acqTable td:nth-child(15),
+  #acqTable th:nth-child(16),#acqTable td:nth-child(16){display:none}
+}
 @media(max-width:640px){
   .acq-table-wrap{display:none}
   #acqCards{display:block}
@@ -514,26 +524,26 @@ footer a{color:var(--gold);text-decoration:none}
 <table id="acqTable">
 <thead><tr>
 <th title="Click to sort">Rank</th>
-<th title="Click to sort">Quarry Name</th>
+<th title="Click to sort">Name</th>
 <th title="Click to sort">State</th>
 <th title="Click to sort">County</th>
 <th title="Click to sort">Commodity</th>
 <th title="Click to sort">Owner</th>
 <th title="Click to sort">Emp</th>
 <th title="Click to sort">Prod (t/yr)</th>
-<th title="Click to sort">Est. Revenue</th>
-<th title="Click to sort">Implied EBITDA</th>
-<th title="Click to sort">Val @ 4&times;</th>
+<th title="Click to sort">Revenue</th>
+<th title="Click to sort">EBITDA</th>
+<th title="Click to sort">Val@4x</th>
 <th title="Click to sort">Rev/Emp</th>
 <th title="Click to sort">NYC mi</th>
 <th title="Click to sort">Radius</th>
 <th title="Click to sort">Tier</th>
 <th title="Click to sort">Permit Risk</th>
-<th title="Click to sort">Deal Score</th>
+<th title="Click to sort">Score</th>
 <th title="Click to sort">Unmet Demand</th>
 <th title="Click to sort">Contact</th>
 <th title="Click to sort">Phone</th>
-<th title="Click to sort">MSHA ID</th>
+<th title="Click to sort">MSHA</th>
 <th title="Click to sort">Notes</th>
 <th>Actions</th>
 </tr></thead>
@@ -884,8 +894,8 @@ const ACQ_DATA=RAW.map(r=>{
     mi,rs,tier,pr,ebitda,val4x,revPerEmp,dealScore};
 });
 
-// Default sort: deal score desc
-let sortKey='dealScore',sortDir=-1;
+// Default sort: rank asc
+let sortKey='rank',sortDir=1;
 
 function stateClass(s){return 'state-'+s;}
 function commClass(c){return c.includes('Sand')?'comm-sand':'comm-stone';}
