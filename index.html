@@ -1414,15 +1414,17 @@ document.getElementById("br").onclick=function(){
 
 doFilter();
 
-setTimeout(function() {
-  var params = new URLSearchParams(window.location.search);
-  var mineId = params.get('mine');
-  if (mineId && window._markerByMsha && window._markerByMsha[mineId]) {
-    var m = window._markerByMsha[mineId];
-    map.setView(m.getLatLng(), 15);
-    setTimeout(function() { m.openPopup(); }, 500);
-  }
-}, 2000);
+setTimeout(function(){
+  var sp=new URLSearchParams(location.search);
+  var mineId=sp.get('mine')||(location.hash.match(/[#&]mine=([^&]+)/)||[])[1];
+  if(!mineId)return;
+  var d=D.find(function(x){return x[11]===mineId||x[11]===String(+mineId).padStart(7,'0');});
+  if(!d)return;
+  var m=_markerByMsha[d[11]];
+  if(!m)return;
+  map.setView([d[0],d[1]],15);
+  setTimeout(function(){cl.zoomToShowLayer(m,function(){m.openPopup();});},600);
+},800);
 
 }
 

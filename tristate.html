@@ -938,10 +938,10 @@ function renderCards(rows){
     </div>
     <div class="aci-notes">${r.notes}</div>
     <div class="aci-links">
-      <a href="${quarryMapLink(r)}" target="_blank" rel="noopener">📍 QuarryMe</a>
+      <a href="${quarryMapLink(r.msha)}" target="_blank" rel="noopener">📍 QuarryMe</a>
       <a href="${mshaLink(r.msha)}" target="_blank" rel="noopener">📋 MSHA #${r.msha}</a>
-      <a href="${statePermitLink(r)}" target="_blank" rel="noopener">🏛 ${r.state} Permits</a>
-      <a href="${countyPermitLink(r)}" target="_blank" rel="noopener">🔍 County Zoning</a>
+      <a href="${statePermitLink(r.state,r.name)}" target="_blank" rel="noopener">🏛 ${r.state} Permits</a>
+      <a href="${countyLink(r.name,r.county,r.state)}" target="_blank" rel="noopener">🔍 County Zoning</a>
     </div>
   </div>`).join('');
 }
