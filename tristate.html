@@ -903,7 +903,7 @@ function renderPortfolioSummary(rows){
 }
 
 function quarryMapLink(){return'https://quarryme.com/';}
-function mshaLink(id){return'https://www.msha.gov/mine-data-retrieval-system/mine-detail?mineId='+String(id).padStart(7,'0');}
+function mshaLink(id){return'https://www.msha.gov/data-and-reports/mine-data-retrieval-system';}
 function statePermitLink(s){return({NY:'https://www.dec.ny.gov/lands/5020.html',NJ:'https://www.nj.gov/dep/dmm/',PA:'https://www.dep.pa.gov/Business/Land/Mining/BureauofMiningPrograms/Pages/default.aspx',CT:'https://portal.ct.gov/DEEP/Mining/Mining'})[s]||'#';}
 function countyPermitLink(c,s){return'https://www.google.com/search?q='+encodeURIComponent(c+' County '+s+' zoning mining permit');}
 function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink()}" target="_blank" rel="noopener" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" rel="noopener" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r.state)}" target="_blank" rel="noopener" title="${r.state} State Mining Permits">🏛</a><a href="${countyPermitLink(r.county,r.state)}" target="_blank" rel="noopener" title="${r.county} County Zoning/Permits">🔍</a></div>`;}
