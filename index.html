@@ -1414,17 +1414,29 @@ document.getElementById("br").onclick=function(){
 
 doFilter();
 
-setTimeout(function(){
+(function(){
   var sp=new URLSearchParams(location.search);
   var mineId=sp.get('mine')||(location.hash.match(/[#&]mine=([^&]+)/)||[])[1];
   if(!mineId)return;
-  var d=D.find(function(x){return x[11]===mineId||x[11]===String(+mineId).padStart(7,'0');});
-  if(!d)return;
-  var m=_markerByMsha[d[11]];
-  if(!m)return;
-  map.setView([d[0],d[1]],15);
-  setTimeout(function(){cl.zoomToShowLayer(m,function(){m.openPopup();});},600);
-},800);
+  console.log('[deep-link] mine param:', mineId);
+  var mineIdPadded=String(+mineId).padStart(7,'0');
+  var d=D.find(function(x){return String(x[11])===String(mineId)||String(x[11])===mineIdPadded;});
+  if(!d){console.log('[deep-link] no data row found for mine='+mineId);return;}
+  console.log('[deep-link] found data row, d[11]='+d[11]);
+  var attempts=0;
+  var iv=setInterval(function(){
+    attempts++;
+    var keys=Object.keys(window._markerByMsha);
+    console.log('[deep-link] attempt '+attempts+', marker keys count='+keys.length+', looking for '+d[11]);
+    var m=window._markerByMsha[d[11]];
+    if(!m&&attempts<20){return;}
+    clearInterval(iv);
+    if(!m){console.log('[deep-link] marker not found after '+attempts+' attempts');return;}
+    console.log('[deep-link] marker found, zooming');
+    map.setView([d[0],d[1]],15);
+    setTimeout(function(){cl.zoomToShowLayer(m,function(){m.openPopup();});},600);
+  },500);
+})();
 
 }
 

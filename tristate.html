@@ -911,10 +911,10 @@ function mshaLink(mshaId) {
 function statePermitLink(state, name) {
   const enc = encodeURIComponent(name);
   const urls = {
-    'NY': 'https://data.ny.gov/Energy-Environment/Mining-Permit-Information/w4mf-xzr3',
+    'NY': 'https://www.dec.ny.gov/lands/5020.html',
     'NJ': 'https://www.nj.gov/dep/opra/online.html',
     'PA': 'https://www.ahs.dep.pa.gov/eFACTSWeb/default.aspx',
-    'CT': 'https://portal.ct.gov/DEEP/Mining/Mining'
+    'CT': 'https://portal.ct.gov/DEEP'
   };
   return urls[state] || '#';
 }
