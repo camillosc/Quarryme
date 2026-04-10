@@ -938,7 +938,7 @@ function quarryMapLink(mshaId) {
   return 'https://quarryme.com/?mine=' + String(mshaId).padStart(7,'0');
 }
 function mshaLink(mshaId) {
-  return 'https://www.msha.gov/mine-data-retrieval-system';
+  return 'https://quarryme.com/?mine=' + String(mshaId).padStart(7,'0');
 }
 function statePermitLink(state, name) {
   const enc = encodeURIComponent(name);
@@ -953,7 +953,7 @@ function statePermitLink(state, name) {
 function countyLink(name, county, state) {
   return 'https://www.google.com/maps/search/' + encodeURIComponent(name + ' ' + county + ' County ' + state);
 }
-function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink(r.msha)}" target="_blank" rel="noopener" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" rel="noopener" title="MSHA Mine Record #${r.msha}">📋</a><a href="${statePermitLink(r.state,r.name)}" target="_blank" rel="noopener" title="${r.state} State Mining Permits">🏛</a><a href="${countyLink(r.name,r.county,r.state)}" target="_blank" rel="noopener" title="${r.county} County">🔍</a></div>`;}
+function actionsCell(r){return`<div class="acq-actions"><a href="${quarryMapLink(r.msha)}" target="_blank" rel="noopener" title="View on QuarryMe Map">📍</a><a href="${mshaLink(r.msha)}" target="_blank" rel="noopener" title="View MSHA Data on Map">📋</a><a href="${statePermitLink(r.state,r.name)}" target="_blank" rel="noopener" title="${r.state} State Mining Permits">🏛</a><a href="${countyLink(r.name,r.county,r.state)}" target="_blank" rel="noopener" title="${r.county} County">🔍</a></div>`;}
 function renderCards(rows){
   const tc={1:'#2ecc71',2:'#d4a03c',3:'#3498db'};
   document.getElementById('acqCards').innerHTML=rows.map(r=>`<div class="acq-card-item">
