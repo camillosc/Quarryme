@@ -214,7 +214,15 @@ nav .nav-links a{font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:
 nav .nav-links a:hover{color:#d97b2a;}
 nav .nav-links a.active{color:#d97b2a;padding:4px 10px;border:1px solid #d97b2a;border-radius:3px;}
 
-@media(max-width:600px){nav .nav-links a,nav .nav-links a.active{font-size:11px!important;padding:4px 6px!important}nav .nav-links{gap:0.5rem!important}}</style>
+nav .short-label{display:none;}
+@media(max-width:600px){
+nav{padding:0 0.75rem;}
+nav .logo{font-size:0.9rem;}
+nav .nav-links a,nav .nav-links a.active{font-size:12px!important;padding:4px 6px!important;letter-spacing:0.04em!important;}
+nav .nav-links{gap:0.4rem!important;}
+nav .long-label{display:none;}
+nav .short-label{display:inline;}
+}</style>
 
 
 
@@ -226,7 +234,7 @@ nav .nav-links a.active{color:#d97b2a;padding:4px 10px;border:1px solid #d97b2a;
 
 
 
-<nav><a href="https://quarryme.com" class="logo">quarry<span>me</span>.com</a><ul class="nav-links"><li><a href="#" class="active">Map</a></li><li><a href="aggregates-guide.html">The Rock Guide</a></li><li><a href="tristate.html">Tri-State Deep Dive</a></li></ul></nav><div id="hdr"><h1>US Aggregate Quarries &mdash; Complete Interactive Map</h1><p>10,326 active &amp; intermittent operations &bull; MSHA data + SEC-calibrated production &amp; reserves for major producers</p></div>
+<nav><a href="https://quarryme.com" class="logo">quarry<span>me</span>.com</a><ul class="nav-links"><li><a href="#" class="active">Map</a></li><li><a href="aggregates-guide.html"><span class="long-label">The Rock Guide</span><span class="short-label">Guide</span></a></li><li><a href="tristate.html"><span class="long-label">Tri-State Deep Dive</span><span class="short-label">Tri-State</span></a></li></ul></nav><div id="hdr"><h1>US Aggregate Quarries &mdash; Complete Interactive Map</h1><p>10,326 active &amp; intermittent operations &bull; MSHA data + SEC-calibrated production &amp; reserves for major producers</p></div>
 
 
 
