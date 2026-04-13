@@ -595,6 +595,224 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* ─── MARKET BARS ─── */
+  .market-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+  .market-bar-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--granite-light);
+    min-width: 160px;
+    letter-spacing: 0.04em;
+  }
+  .market-bar-track {
+    flex: 1;
+    height: 18px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .market-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber), var(--amber-light));
+    border-radius: 3px;
+  }
+  .market-bar-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--amber);
+    min-width: 64px;
+    text-align: right;
+  }
+
+  /* ─── SEGMENT CARDS ─── */
+  .segment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .segment-card {
+    background: var(--quarry-mid);
+    border-radius: 8px;
+    padding: 1.8rem;
+    border-top: 4px solid var(--amber);
+  }
+  .segment-card.alt  { border-top-color: var(--slate-blue); }
+  .segment-card.alt2 { border-top-color: var(--sage); }
+  .segment-card.highlight { border-top-color: var(--iron-red); background: linear-gradient(135deg,#1e1018,#2a1520); }
+  .segment-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .segment-card.alt .segment-num  { color: var(--granite-light); }
+  .segment-card.alt2 .segment-num { color: #90c080; }
+  .segment-card.highlight .segment-num { color: #f08070; }
+  .segment-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: var(--limestone);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+  }
+  .segment-desc { font-size: 0.85rem; color: var(--granite-light); line-height: 1.5; }
+
+  /* ─── DRIVER CARDS ─── */
+  .driver-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .driver-card {
+    background: var(--warm-white);
+    border-radius: 8px;
+    padding: 1.8rem;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .driver-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+  .driver-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .driver-card h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.03em; margin-bottom: 0.5rem; color: var(--deep-quarry); }
+  .driver-card .driver-dollar { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--amber); margin-bottom: 0.5rem; }
+  .driver-card p { font-size: 0.85rem; color: var(--granite-mid); line-height: 1.5; }
+
+  /* ─── ECONOMICS CELLS ─── */
+  .econ-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+  .econ-cell {
+    background: var(--quarry-mid);
+    padding: 1.5rem;
+  }
+  .econ-cell.accent { background: linear-gradient(135deg, #1e3020, #2a4030); }
+  .econ-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--granite-light);
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+  }
+  .econ-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.1rem; color: var(--amber); line-height: 1; margin-bottom: 0.3rem; }
+  .econ-cell.accent .econ-val { color: #90c080; }
+  .econ-sub { font-size: 0.78rem; color: var(--granite-light); line-height: 1.4; }
+
+  /* ─── ROLL-UP TABLE ─── */
+  .rollup-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    font-size: 0.88rem;
+  }
+  .rollup-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: rgba(255,255,255,0.04);
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .rollup-table td {
+    padding: 0.8rem 1rem;
+    color: var(--granite-light);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .rollup-table tr:last-child td { border-bottom: none; }
+  .rollup-table tr.hl td { background: rgba(217,123,42,0.12); color: var(--limestone); font-weight: 600; }
+  .rollup-table .nc { font-family: 'Space Mono', monospace; color: var(--amber); }
+  .rollup-table .gc { font-family: 'Space Mono', monospace; color: #90c080; }
+
+  /* ─── VALUE PILLARS ─── */
+  .value-pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .value-pillar {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 1.8rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background 0.2s;
+  }
+  .value-pillar:hover { background: rgba(255,255,255,0.07); }
+  .pillar-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+  .value-pillar h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--amber); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+  .value-pillar ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .value-pillar ul li { font-size: 0.83rem; color: var(--granite-light); line-height: 1.4; display: flex; gap: 0.5rem; }
+  .value-pillar ul li::before { content: '→'; color: var(--amber); flex-shrink: 0; }
+
+  /* ─── PERMIT CARDS ─── */
+  .permit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .permit-card {
+    background: var(--deep-quarry);
+    border-radius: 8px;
+    padding: 1.8rem;
+    border-left: 4px solid var(--slate-blue);
+  }
+  .permit-card.federal { border-left-color: var(--amber); }
+  .permit-card.state   { border-left-color: var(--sage); }
+  .permit-card.local   { border-left-color: var(--iron-red); }
+  .permit-level {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--granite-light);
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+  }
+  .permit-card h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; color: var(--limestone); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+  .permit-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .permit-card ul li { font-size: 0.82rem; color: var(--granite-light); line-height: 1.45; display: flex; gap: 0.6rem; }
+  .permit-card ul li::before { content: '·'; color: var(--amber); flex-shrink: 0; }
+
+  /* ─── CRUSHER COMPARE ─── */
+  .crusher-compare {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .crusher-card {
+    background: var(--deep-quarry);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-top: 3px solid var(--amber);
+    text-align: center;
+  }
+  .crusher-card.cone-c  { border-top-color: var(--slate-blue); }
+  .crusher-card.impact-c { border-top-color: var(--sage); }
+  .crusher-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--limestone); letter-spacing: 0.05em; margin: 1rem 0 0.5rem; }
+  .crusher-stat { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--amber); margin-bottom: 1rem; }
+  .crusher-card.cone-c .crusher-stat { color: var(--granite-light); }
+  .crusher-card.impact-c .crusher-stat { color: #90c080; }
+  .crusher-pros { font-size: 0.82rem; color: var(--granite-light); line-height: 1.5; text-align: left; }
 </style>
 </head>
 <body>
@@ -753,6 +971,160 @@
     </div>
   </div>
 </div>
+
+<!-- ─── SECTION: MARKET OVERVIEW ─── -->
+<section id="market" style="background:var(--deep-quarry); color:var(--limestone);">
+  <div class="container">
+    <p class="section-label reveal">Industry Deep Dive · Market Overview</p>
+    <h2 class="section-title reveal" style="color:var(--limestone);">A $90B <span class="em">Fragmented</span> Giant</h2>
+    <p class="section-intro reveal">The U.S. aggregates industry is one of the most resilient, inflation-hedged, locally dominant businesses in America — and yet it remains almost entirely family-owned, deeply fragmented, and woefully undermanaged.</p>
+
+    <div class="two-col reveal">
+      <div>
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--limestone); margin-bottom:1.5rem;">Market at a Glance</h3>
+        <div class="market-bar-row">
+          <span class="market-bar-label">Total Market Size</span>
+          <div class="market-bar-track"><div class="market-bar-fill" style="width:92%;"></div></div>
+          <span class="market-bar-val">$90B+</span>
+        </div>
+        <div class="market-bar-row">
+          <span class="market-bar-label">Annual CAGR</span>
+          <div class="market-bar-track"><div class="market-bar-fill" style="width:60%; background:linear-gradient(90deg,var(--slate-blue),#4a80b0);"></div></div>
+          <span class="market-bar-val" style="color:var(--granite-light);">~6%</span>
+        </div>
+        <div class="market-bar-row">
+          <span class="market-bar-label">Quarries &amp; Sand Pits</span>
+          <div class="market-bar-track"><div class="market-bar-fill" style="width:98%; background:linear-gradient(90deg,#4a6741,#6a9060);"></div></div>
+          <span class="market-bar-val" style="color:#90c080;">9,800+</span>
+        </div>
+        <div class="market-bar-row">
+          <span class="market-bar-label">Total Companies</span>
+          <div class="market-bar-track"><div class="market-bar-fill" style="width:45%; background:linear-gradient(90deg,var(--iron-red),#d05040);"></div></div>
+          <span class="market-bar-val" style="color:#f08070;">~4,500</span>
+        </div>
+        <div class="market-bar-row">
+          <span class="market-bar-label">Single-Site Operators</span>
+          <div class="market-bar-track"><div class="market-bar-fill" style="width:65%;"></div></div>
+          <span class="market-bar-val">~3,000</span>
+        </div>
+        <div style="margin-top:2rem; padding:1.5rem; background:rgba(255,255,255,0.04); border-radius:6px; border-left:3px solid var(--amber);">
+          <div style="font-family:'Space Mono',monospace; font-size:0.63rem; letter-spacing:0.15em; color:var(--amber); margin-bottom:0.5rem; text-transform:uppercase;">Key Dynamic</div>
+          <p style="font-size:0.9rem; color:var(--granite-light); line-height:1.6;">The top 10 companies control <strong style="color:var(--limestone);">less than 5% of total operations</strong>. This is not an oligopoly — it's the most fragmented large industry in America. Every 30-mile radius is a separate local market with its own dominant supplier.</p>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--limestone); margin-bottom:1.5rem;">The Succession Crisis</h3>
+        <div style="background:linear-gradient(135deg,#3d1a2a,#4a2030); border-radius:10px; padding:2rem; margin-bottom:1.5rem;">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:5rem; color:#f08070; line-height:1; margin-bottom:0.3rem;">62</div>
+          <div style="font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--limestone); margin-bottom:0.8rem; font-style:italic;">Average age of building products owner</div>
+          <p style="font-size:0.88rem; color:rgba(240,200,192,0.85); line-height:1.6;">Two-thirds of small quarry operators are within a decade of retirement age with no identified successor. This is the quiet tidal wave reshaping the industry — and the primary driver of acquisition opportunity.</p>
+        </div>
+        <div style="background:linear-gradient(135deg,#1a2a3a,#1e3548); border-radius:10px; padding:1.8rem;">
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--amber); letter-spacing:0.05em; margin-bottom:0.5rem;">$1.2 TRILLION</div>
+          <div style="font-family:'DM Serif Display',serif; font-size:1rem; color:var(--limestone); margin-bottom:0.8rem; font-style:italic;">Infrastructure Investment &amp; Jobs Act (IIJA)</div>
+          <p style="font-size:0.85rem; color:var(--granite-light); line-height:1.5;">Signed in 2021, the IIJA is the largest infrastructure investment in U.S. history — and aggregates are the first material needed for every project it funds. This is a multi-decade structural tailwind with $550B earmarked for transportation infrastructure alone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION: INDUSTRY SEGMENTATION ─── -->
+<section id="segments" style="background:var(--quarry-mid); color:var(--limestone);">
+  <div class="container">
+    <p class="section-label reveal">Industry Deep Dive · Segmentation</p>
+    <h2 class="section-title reveal" style="color:var(--limestone);">Who's <span class="em">In</span> This Industry?</h2>
+    <p class="section-intro reveal">Understanding the competitive landscape means knowing the segments — crushed stone vs. sand &amp; gravel, large operators vs. single-site family businesses.</p>
+
+    <div class="segment-grid reveal">
+      <div class="segment-card">
+        <div class="segment-num">1,400</div>
+        <div class="segment-label">Crushed Stone Producers</div>
+        <div class="segment-desc">~3,500 quarries nationwide. Limestone and granite quarries requiring heavy capital equipment, blasting permits, and long reserve life. Higher barriers to entry, more stable economics, better pricing power.</div>
+        <div style="margin-top:1rem; font-family:'Space Mono',monospace; font-size:0.68rem; color:var(--amber);">Limestone · Granite · Trap Rock · Dolomite</div>
+      </div>
+      <div class="segment-card alt">
+        <div class="segment-num">3,100</div>
+        <div class="segment-label">Sand &amp; Gravel Producers</div>
+        <div class="segment-desc">6,300+ pits, typically alluvial — many family-run, lower capital intensity, highly local. Quality varies widely; proximity to construction markets is the dominant competitive factor.</div>
+        <div style="margin-top:1rem; font-family:'Space Mono',monospace; font-size:0.68rem; color:var(--granite-light);">River pits · Glacial deposits · Marine terrace</div>
+      </div>
+      <div class="segment-card alt2">
+        <div class="segment-num">3,000</div>
+        <div class="segment-label">Single-Site Operators</div>
+        <div class="segment-desc">Est. 65–70% of all operators. Family-owned, typically under $10M revenue, owner-operated management, no formal succession plan. Excellent operations, often undervalued at exit.</div>
+        <div style="margin-top:1rem; font-family:'Space Mono',monospace; font-size:0.68rem; color:#90c080;">&lt;$10M revenue · Owner-operated · Local monopoly</div>
+      </div>
+      <div class="segment-card highlight">
+        <div class="segment-num">2,000+</div>
+        <div class="segment-label">The Sweet Spot</div>
+        <div class="segment-desc">Estimated acquisition targets: $2–30M revenue, aging owner without identified successor, established customer base, permitted reserves, proven operations. This is where the platform opportunity lives.</div>
+        <div style="margin-top:1rem; font-family:'Space Mono',monospace; font-size:0.68rem; color:#f08070;">$2–30M rev · Aging owner · No successor · Proven ops</div>
+      </div>
+    </div>
+
+    <div class="illus-wrap reveal" style="margin-top:3rem;">
+      <svg width="700" height="205" viewBox="0 0 700 205" xmlns="http://www.w3.org/2000/svg">
+        <rect width="700" height="205" rx="10" fill="rgba(0,0,0,0.3)"/>
+        <text x="350" y="28" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="14" fill="rgba(255,255,255,0.7)" letter-spacing="3">U.S. AGGREGATES INDUSTRY STRUCTURE</text>
+        <!-- Tier 1 -->
+        <rect x="200" y="42" width="300" height="32" rx="4" fill="#b53a2a"/>
+        <text x="350" y="63" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="12" fill="white" letter-spacing="1">LARGE PUBLICS (Vulcan, Martin Marietta, CRH) — &lt;5% of sites</text>
+        <!-- Tier 2 -->
+        <rect x="110" y="80" width="480" height="32" rx="4" fill="#2e4d6b"/>
+        <text x="350" y="101" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="12" fill="white" letter-spacing="1">REGIONAL PRIVATES ($30M–$500M revenue) — ~15% of sites</text>
+        <!-- Tier 3 -->
+        <rect x="25" y="118" width="650" height="42" rx="4" fill="#4a6741"/>
+        <text x="350" y="136" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="12" fill="white" letter-spacing="1">SINGLE-SITE FAMILY OPERATORS — ~80% of sites</text>
+        <text x="350" y="151" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">$1M–$30M revenue · owner-operated · aging demographic · no succession plan</text>
+        <!-- Target arrow -->
+        <text x="683" y="143" font-family="'Bebas Neue', sans-serif" font-size="11" fill="var(--amber)" text-anchor="end">← ACQUISITION TARGET</text>
+        <text x="350" y="192" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="rgba(255,255,255,0.3)">Source: USGS Minerals Yearbook · MSHA · NSSGA Industry Survey · QuarryMe analysis</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION: KEY DEMAND DRIVERS ─── -->
+<section id="demand" style="background:var(--warm-white);">
+  <div class="container">
+    <p class="section-label reveal">Industry Deep Dive · Demand</p>
+    <h2 class="section-title reveal">Why Demand Is <span class="em">Structurally</span> Strong</h2>
+    <p class="section-intro reveal">Four converging macro forces are driving aggregate demand higher across every U.S. market — each multi-year in duration and each with aggregates at the foundation.</p>
+
+    <div class="driver-grid reveal">
+      <div class="driver-card">
+        <div class="driver-icon">🏗️</div>
+        <div class="driver-dollar">$550B · Federal Commitment</div>
+        <h4>Infrastructure Investment</h4>
+        <p>The IIJA allocates $550B in new federal spending on roads, bridges, transit, rail, ports, and broadband. Every project starts by moving aggregates. Most projects are in the early build-out phase — peak demand still ahead.</p>
+      </div>
+      <div class="driver-card">
+        <div class="driver-icon">🏭</div>
+        <div class="driver-dollar">100+ new mega-facilities</div>
+        <h4>Industrial Re-shoring</h4>
+        <p>Semiconductor fabs (TSMC, Intel), EV battery plants (Ford, GM, Panasonic), and chemical facilities are reshoring en masse. Each requires millions of tons of concrete and aggregates. This is a structural shift, not a cycle.</p>
+      </div>
+      <div class="driver-card">
+        <div class="driver-icon">🌆</div>
+        <div class="driver-dollar">Sunbelt population surge</div>
+        <h4>Urbanization</h4>
+        <p>Population growth in Texas, Florida, Arizona, Georgia, and the Carolinas continues at pace. Residential, commercial, and supporting infrastructure construction keeps aggregate demand elevated across every Sunbelt market.</p>
+      </div>
+      <div class="driver-card">
+        <div class="driver-icon">💻</div>
+        <div class="driver-dollar">$500B+ data center buildout</div>
+        <h4>AI Infrastructure</h4>
+        <p>Data centers require massive amounts of concrete — for foundations, cooling, and campus build-outs. Hyperscaler programs from Microsoft, Google, Amazon, and Meta are driving aggregate demand in otherwise slower markets.</p>
+      </div>
+    </div>
+
+    <div class="callout-strip reveal" style="margin-top:3rem; border-radius:8px;">
+      <div class="big-num">$1.2T</div>
+      <p>The Infrastructure Investment &amp; Jobs Act is the single largest driver of aggregate demand in U.S. history — and less than half deployed. With a 30–50 mile delivery radius, quarries closest to project sites capture the premium.</p>
+    </div>
+  </div>
+</section>
 
 <!-- ─── SECTION 2: HISTORY ─── -->
 <section id="history" class="dark-section">
@@ -1262,6 +1634,281 @@
   </div>
 </section>
 
+<!-- ─── SECTION: CRUSHER COMPARISON ─── -->
+<section id="crushers" style="background:var(--warm-white);">
+  <div class="container">
+    <p class="section-label reveal">Chapter 8B · Equipment</p>
+    <h2 class="section-title reveal">Jaw vs. Cone vs. <span class="em">Impact:</span> Crusher Guide</h2>
+    <p class="section-intro reveal">Every quarry operation hinges on its crushing equipment. The wrong crusher for the application costs money in wear, energy, and product quality. Here's how to read the hardware.</p>
+
+    <div class="crusher-compare reveal">
+      <!-- JAW CRUSHER -->
+      <div class="crusher-card">
+        <svg width="140" height="130" viewBox="0 0 140 130" xmlns="http://www.w3.org/2000/svg">
+          <rect width="140" height="130" rx="6" fill="#1e2a34"/>
+          <!-- Fixed jaw (left plate) -->
+          <path d="M25 15 L55 15 L70 95 L25 95 Z" fill="#4a5c68" stroke="#2e4050" stroke-width="1.5"/>
+          <!-- Moving jaw (right, angled) -->
+          <path d="M115 15 L85 15 L70 95 L115 95 Z" fill="#3a4c58" stroke="#2e4050" stroke-width="1.5"/>
+          <!-- Jaw teeth on fixed plate -->
+          <line x1="30" y1="25" x2="52" y2="25" stroke="#8fa3b0" stroke-width="2"/>
+          <line x1="33" y1="40" x2="53" y2="40" stroke="#8fa3b0" stroke-width="2"/>
+          <line x1="36" y1="55" x2="55" y2="55" stroke="#8fa3b0" stroke-width="2"/>
+          <line x1="40" y1="70" x2="57" y2="70" stroke="#8fa3b0" stroke-width="2"/>
+          <!-- Jaw teeth on moving plate -->
+          <line x1="88" y1="25" x2="110" y2="25" stroke="#8fa3b0" stroke-width="2"/>
+          <line x1="87" y1="40" x2="107" y2="40" stroke="#8fa3b0" stroke-width="2"/>
+          <line x1="85" y1="55" x2="104" y2="55" stroke="#8fa3b0" stroke-width="2"/>
+          <line x1="83" y1="70" x2="100" y2="70" stroke="#8fa3b0" stroke-width="2"/>
+          <!-- Rock being crushed -->
+          <ellipse cx="70" cy="45" rx="12" ry="10" fill="#6e8090" opacity="0.8"/>
+          <path d="M64 40 L72 48 L78 42" stroke="#4a5c68" stroke-width="1.5" fill="none"/>
+          <!-- Output arrow -->
+          <path d="M62 95 L62 115 L78 115 L78 95" fill="rgba(217,123,42,0.15)" stroke="var(--amber)" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="70" y="122" text-anchor="middle" font-family="'Space Mono',monospace" font-size="7" fill="var(--amber)">product</text>
+          <!-- Eccentric flywheel -->
+          <circle cx="70" cy="10" r="8" fill="#2e4050" stroke="#4a5c68" stroke-width="1.5"/>
+          <circle cx="73" cy="8" r="3" fill="#8fa3b0" opacity="0.5"/>
+        </svg>
+        <div class="crusher-title">Jaw Crusher</div>
+        <div class="crusher-stat">PRIMARY · 200–1,500 tph · Up to 60" feed</div>
+        <div class="crusher-pros">
+          <strong style="color:var(--limestone); display:block; margin-bottom:0.5rem;">Best for:</strong> Primary crushing of large, hard rock direct from the blast. Simple, robust, low operating cost. The workhorse for opening any new quarry operation.<br><br>
+          <strong style="color:var(--limestone); display:block; margin-bottom:0.3rem;">Key specs:</strong> Reduction ratio 4:1 to 7:1. Product is cubical but coarser. High capital cost but long service life. Wear jaw dies monthly in high-abrasion rock.
+        </div>
+      </div>
+
+      <!-- CONE CRUSHER -->
+      <div class="crusher-card cone-c">
+        <svg width="140" height="130" viewBox="0 0 140 130" xmlns="http://www.w3.org/2000/svg">
+          <rect width="140" height="130" rx="6" fill="#1e2a34"/>
+          <!-- Bowl liner (outer fixed) -->
+          <path d="M15 20 Q70 10 125 20 L110 85 Q70 90 30 85 Z" fill="#2e4d6b" stroke="#1e3450" stroke-width="1.5"/>
+          <!-- Mantle (inner rotating cone) -->
+          <path d="M40 30 Q70 22 100 30 L85 82 Q70 87 55 82 Z" fill="#1e3a5a" stroke="#2e5080" stroke-width="1.5"/>
+          <!-- Crushing chamber material -->
+          <ellipse cx="58" cy="48" rx="6" ry="5" fill="#6e8090" opacity="0.6"/>
+          <ellipse cx="82" cy="52" rx="5" ry="4" fill="#6e8090" opacity="0.6"/>
+          <ellipse cx="68" cy="62" rx="7" ry="5" fill="#6e8090" opacity="0.5"/>
+          <!-- Eccentric shaft -->
+          <line x1="70" y1="88" x2="70" y2="118" stroke="#8fa3b0" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="70" cy="118" r="7" fill="#2e4050" stroke="#4a5c68" stroke-width="1.5"/>
+          <!-- CSS gap indicator -->
+          <line x1="86" y1="78" x2="97" y2="78" stroke="var(--granite-light)" stroke-width="1" stroke-dasharray="2,2"/>
+          <text x="103" y="81" font-family="'Space Mono',monospace" font-size="7" fill="var(--granite-light)">CSS</text>
+          <!-- Rotation arrows -->
+          <path d="M50 105 Q60 98 70 105 Q80 112 90 105" stroke="rgba(140,180,210,0.4)" stroke-width="1.5" fill="none"/>
+        </svg>
+        <div class="crusher-title">Cone Crusher</div>
+        <div class="crusher-stat">SECONDARY/TERTIARY · 100–1,000 tph · Controlled CSS</div>
+        <div class="crusher-pros">
+          <strong style="color:var(--limestone); display:block; margin-bottom:0.5rem;">Best for:</strong> Secondary and tertiary crushing to controlled product sizes. The close-side setting (CSS) directly controls output size. Produces excellent cubical particles ideal for concrete and asphalt.<br><br>
+          <strong style="color:var(--limestone); display:block; margin-bottom:0.3rem;">Key specs:</strong> Reduction ratio 4:1 to 6:1. Higher operating cost than jaw, but far better product shape. Bowl liner and mantle are the primary wear items — replaced every 400–800 operating hours.
+        </div>
+      </div>
+
+      <!-- IMPACT CRUSHER -->
+      <div class="crusher-card impact-c">
+        <svg width="140" height="130" viewBox="0 0 140 130" xmlns="http://www.w3.org/2000/svg">
+          <rect width="140" height="130" rx="6" fill="#1e2a34"/>
+          <!-- Rotor -->
+          <circle cx="70" cy="55" r="32" fill="#2a3a28" stroke="#3a5030" stroke-width="1.5"/>
+          <!-- Rotor bars (blow bars) -->
+          <rect x="67" y="24" width="6" height="18" rx="2" fill="#90c080" transform="rotate(0 70 55)"/>
+          <rect x="67" y="24" width="6" height="18" rx="2" fill="#90c080" transform="rotate(90 70 55)"/>
+          <rect x="67" y="24" width="6" height="18" rx="2" fill="#90c080" transform="rotate(180 70 55)"/>
+          <rect x="67" y="24" width="6" height="18" rx="2" fill="#90c080" transform="rotate(270 70 55)"/>
+          <!-- Center shaft -->
+          <circle cx="70" cy="55" r="8" fill="#1a2a18" stroke="#4a6741" stroke-width="1.5"/>
+          <!-- Impact plates -->
+          <path d="M102 20 L118 20 L118 85 L105 90 Z" fill="#3a4e30" stroke="#4a6741" stroke-width="1"/>
+          <path d="M22 30 L38 30 L35 88 L18 82 Z" fill="#3a4e30" stroke="#4a6741" stroke-width="1"/>
+          <!-- Flying particles (impact effect) -->
+          <circle cx="92" cy="36" r="3" fill="#8fa3b0" opacity="0.7"/>
+          <circle cx="105" cy="42" r="2" fill="#8fa3b0" opacity="0.6"/>
+          <circle cx="48" cy="32" r="3" fill="#8fa3b0" opacity="0.7"/>
+          <circle cx="35" cy="44" r="2" fill="#8fa3b0" opacity="0.6"/>
+          <!-- Rotation arrow -->
+          <path d="M70 23 A32 32 0 0 1 102 55" stroke="rgba(144,192,128,0.5)" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+          <!-- Output chute -->
+          <path d="M35 92 L105 92 L110 118 L30 118 Z" fill="rgba(74,103,65,0.2)" stroke="#4a6741" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="70" y="110" text-anchor="middle" font-family="'Space Mono',monospace" font-size="7" fill="#90c080">product</text>
+        </svg>
+        <div class="crusher-title">Impact Crusher</div>
+        <div class="crusher-stat">PRIMARY/SECONDARY · 100–600 tph · High reduction ratio</div>
+        <div class="crusher-pros">
+          <strong style="color:var(--limestone); display:block; margin-bottom:0.5rem;">Best for:</strong> Soft to medium-hard rock (limestone especially). Very high reduction ratio in one pass — can take 20" rock to finished aggregate directly. Excellent cubicity and particle shape.<br><br>
+          <strong style="color:var(--limestone); display:block; margin-bottom:0.3rem;">Key specs:</strong> Reduction ratio up to 20:1. Low capital cost but highest wear cost of the three — blow bars and impact plates replaced frequently in abrasive rock. Not suitable for hard granite or trap rock.
+        </div>
+      </div>
+    </div>
+
+    <!-- Processing flow diagram enhanced -->
+    <div class="reveal" style="margin-top:3rem;">
+      <h3 style="font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:1.5rem; color:var(--deep-quarry);">Complete Processing Flow</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:0; align-items:center; justify-content:center;">
+        <!-- Steps as connected blocks -->
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--iron-red); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">💥</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Drill &amp;<br>Blast</div>
+        </div>
+        <div style="color:var(--amber); font-size:1.4rem; margin:0 0.3rem;">→</div>
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--slate-blue); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">🚛</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Load &amp;<br>Haul</div>
+        </div>
+        <div style="color:var(--amber); font-size:1.4rem; margin:0 0.3rem;">→</div>
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--amber); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">⚙️</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Primary<br>Crush</div>
+        </div>
+        <div style="color:var(--amber); font-size:1.4rem; margin:0 0.3rem;">→</div>
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--amber); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">🔩</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Secondary<br>Crush</div>
+        </div>
+        <div style="color:var(--amber); font-size:1.4rem; margin:0 0.3rem;">→</div>
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--sage); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">📊</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Screen &amp;<br>Sort</div>
+        </div>
+        <div style="color:var(--amber); font-size:1.4rem; margin:0 0.3rem;">→</div>
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--slate-blue); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">💧</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Wash<br>(optional)</div>
+        </div>
+        <div style="color:var(--amber); font-size:1.4rem; margin:0 0.3rem;">→</div>
+        <div style="text-align:center; padding:1rem 0.8rem; min-width:90px;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--quarry-mid); display:flex; align-items:center; justify-content:center; margin:0 auto 0.6rem; font-size:1.4rem;">⛰️</div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:0.05em; color:var(--deep-quarry);">Stockpile<br>&amp; Ship</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1.5rem; padding:1.5rem; background:var(--pale-amber); border-radius:8px;">
+        <div style="font-size:0.83rem; color:var(--granite-mid);"><strong style="color:var(--deep-quarry);">Throughput targets:</strong> Primary 400–600 tph · Secondary 300–500 tph · Tertiary circuit 200–350 tph</div>
+        <div style="font-size:0.83rem; color:var(--granite-mid);"><strong style="color:var(--deep-quarry);">Equipment costs:</strong> Jaw crusher $200K–$800K · Cone crusher $250K–$1.2M · Full plant $2M–$8M installed</div>
+        <div style="font-size:0.83rem; color:var(--granite-mid);"><strong style="color:var(--deep-quarry);">Wash plant add-on:</strong> $500K–$2M additional. Required for concrete-grade sand production and spec-critical washed stone.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION: PRODUCT GUIDE ─── -->
+<section id="products" style="background:var(--deep-quarry); color:var(--limestone);">
+  <div class="container">
+    <p class="section-label reveal">Chapter 9 · Product Specifications</p>
+    <h2 class="section-title reveal" style="color:var(--limestone);">What You're <span class="em">Actually</span> Buying</h2>
+    <p class="section-intro reveal">Aggregates aren't sold as generic "rock." Each product has a precise size designation, ASTM/AASHTO specification, and intended end use. Here's the field guide.</p>
+
+    <div class="illus-wrap reveal" style="margin-bottom:3rem;">
+      <!-- Aggregate size comparison SVG -->
+      <svg width="750" height="180" viewBox="0 0 750 180" xmlns="http://www.w3.org/2000/svg">
+        <rect width="750" height="180" rx="10" fill="rgba(0,0,0,0.4)"/>
+        <text x="375" y="22" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="14" fill="rgba(255,255,255,0.7)" letter-spacing="3">AGGREGATE SIZE COMPARISON (TO SCALE)</text>
+        <!-- Scale bar items, left to right small to large -->
+        <!-- Manufactured sand ~0.5mm -->
+        <circle cx="55" cy="110" r="3" fill="#d9a85a"/>
+        <text x="55" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">#10</text>
+        <text x="55" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">Mfg Sand</text>
+        <!-- #8 stone ~3/8" -->
+        <circle cx="130" cy="105" r="9" fill="#8fa3b0" stroke="#6e8090" stroke-width="1"/>
+        <text x="130" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">#8</text>
+        <text x="130" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">3/8"</text>
+        <!-- #67 stone ~3/4" -->
+        <circle cx="215" cy="98" r="16" fill="#7a8e9a" stroke="#5a6c78" stroke-width="1.5"/>
+        <text x="215" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">#67</text>
+        <text x="215" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">3/4"</text>
+        <!-- #57 stone ~1" -->
+        <circle cx="315" cy="92" r="22" fill="#6e8090" stroke="#4a5c68" stroke-width="1.5"/>
+        <text x="315" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">#57</text>
+        <text x="315" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">3/4"–1.5"</text>
+        <!-- #4 stone ~1.5" -->
+        <circle cx="425" cy="84" r="30" fill="#5e6e78" stroke="#3a4c58" stroke-width="1.5"/>
+        <text x="425" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">#4</text>
+        <text x="425" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">1.5"–2.5"</text>
+        <!-- #1 stone ~3" -->
+        <circle cx="545" cy="74" r="42" fill="#4e5e68" stroke="#2e3c48" stroke-width="1.5"/>
+        <text x="545" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">#1</text>
+        <text x="545" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">2"–4"</text>
+        <!-- Riprap -->
+        <ellipse cx="685" cy="80" rx="50" ry="44" fill="#3e4e58" stroke="#1e2e38" stroke-width="1.5"/>
+        <text x="685" y="135" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">RIPRAP</text>
+        <text x="685" y="148" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="8" fill="var(--granite-light)">6"–24"</text>
+        <!-- Arrow label -->
+        <line x1="30" y1="168" x2="720" y2="168" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <text x="375" y="165" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="9" fill="rgba(255,255,255,0.3)">→ increasing size</text>
+      </svg>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1px; background:rgba(255,255,255,0.08); border-radius:8px; overflow:hidden;" class="reveal">
+      <!-- Product rows -->
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">#57 Stone</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$11–16/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">¾" to 1½" · ASTM C33 #57</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">The workhorse of the industry. Used in drainage, concrete mix design, driveways, and backfill. The most widely specified size in the northeast U.S.</p>
+      </div>
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">#67 Stone</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$11–15/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">¾" nominal · ASTM C33 #67</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Structural concrete and asphalt base course. Slightly finer than #57 — preferred when tighter concrete workability is needed or pumped concrete is specified.</p>
+      </div>
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">#8 Stone</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$12–17/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">⅜" nominal · ASTM C33 #8</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Asphalt surface mixes, pipe bedding, and decorative uses. Finer particle — commands a price premium due to higher crushing cost and more careful sizing required.</p>
+      </div>
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">#1 Stone</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$9–13/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">2"–4" · AASHTO M43</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Railroad ballast, drainage layers, and heavy erosion control. Large, angular pieces — often quarried directly and minimally processed. High volume, lower margin.</p>
+      </div>
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">Dense Grade (DGA)</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$8–12/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">Crusher Run · AASHTO #21B</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Road base and sub-base. An unscreened blend of all sizes from the crusher — fines fill voids and lock particles together when compacted. The highest-volume product by tonnage for most quarries.</p>
+      </div>
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">Riprap</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$18–35/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">6"–24"+ · ASTM D6825</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Large armor stone for bank protection, shorelines, dam faces, and bridge abutments. Premium pricing — fewer tons, but high revenue per truck. Shore-side communities pay up for this.</p>
+      </div>
+      <div style="background:var(--quarry-mid); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--amber); letter-spacing:0.05em;">Screenings / Dust</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$6–10/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">Passes No.4 · Fine crusher product</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Fine dusty material from the crusher — used in asphalt mixes as manufactured sand, paver base, and path surfacing. Some quarries sell this as low-value by-product; others optimize for it.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,#1a2535,#1e3050); padding:1.4rem 1.6rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:#8ab8d8; letter-spacing:0.05em;">Mfg. Sand vs. Natural</span>
+          <span style="font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--granite-light);">$12–22/ton</span>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--granite-light); margin-bottom:0.5rem; opacity:0.7;">ASTM C33 Fine Aggregate</div>
+        <p style="font-size:0.83rem; color:var(--granite-light); line-height:1.5;">Manufactured sand (from crushing) is more angular than natural river sand — better bond in concrete, but may need washing to remove excess fines. As natural sand pits deplete, manufactured sand commands growing premium.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ─── SECTION 7: USES ─── -->
 <section id="uses" style="background:var(--deep-quarry); color:var(--limestone);">
   <div class="container">
@@ -1618,6 +2265,93 @@
   </div>
 </section>
 
+<!-- ─── SECTION: REGULATORY & PERMITTING ─── -->
+<section id="permitting" style="background:var(--warm-white);">
+  <div class="container">
+    <p class="section-label reveal">Chapter 6 · Regulatory Landscape</p>
+    <h2 class="section-title reveal">Permits: The <span class="em">Hidden Moat</span></h2>
+    <p class="section-intro reveal">Getting a new quarry permitted from scratch takes 5–10 years — sometimes longer. Every existing permitted site is therefore a scarce, hard-to-replicate asset. Regulatory complexity is a feature, not a bug, for incumbent operators.</p>
+
+    <div class="permit-grid reveal">
+      <div class="permit-card federal">
+        <div class="permit-level">Federal</div>
+        <h4>Federal Agencies</h4>
+        <ul>
+          <li>MSHA — Mine Safety &amp; Health Administration: the primary federal regulator. Every active mine inspected 2–4× per year. Part 46/48 training, MSHA ID, accident reporting, noise and silica monitoring.</li>
+          <li>EPA — Air quality (PM-10, PM-2.5, crystalline silica), Clean Water Act (NPDES stormwater), Section 404 wetland impacts require Army Corps coordination.</li>
+          <li>OSMRE — Office of Surface Mining Reclamation: reclamation bond requirements and surface disturbance rules for some operations.</li>
+          <li>Army Corps of Engineers — Section 404/10 permits for any work in or adjacent to navigable waters or wetlands.</li>
+        </ul>
+      </div>
+      <div class="permit-card state">
+        <div class="permit-level">State Level · Tri-State Region</div>
+        <h4>State Environmental Agencies</h4>
+        <ul>
+          <li>NY DEC — Mined land reclamation permits, SPDES stormwater permits, noise and dust operating conditions. Some permits require public comment periods of 30+ days.</li>
+          <li>NJ DEP — Among the strictest in the U.S. Highlands Act restrictions, freshwater wetlands permits, air quality operating permits, mandatory DEP pre-application meetings.</li>
+          <li>PA DEP — Non-coal surface mining permit, NPDES coverage, blasting notifications to DEP and neighbors within 1,000 ft, annual reporting.</li>
+          <li>CT DEEP — Earth materials permit, stormwater authorization, reclamation surety bond based on disturbed acreage.</li>
+        </ul>
+      </div>
+      <div class="permit-card local">
+        <div class="permit-level">Local / County / Municipal</div>
+        <h4>Local Permitting</h4>
+        <ul>
+          <li>Zoning approval — quarrying is typically a conditional use in rural/agricultural zones. Public hearings, neighbor notification mailings, traffic impact studies required.</li>
+          <li>Conditional Use Permit (CUP) — sets operating conditions: hours of operation, blasting time windows, designated truck routes, noise limits at property lines, required buffer distances.</li>
+          <li>Building permits — processing plant, conveyors, silos, truck scales, and site office construction all require local building department review.</li>
+          <li>Special exceptions — for sites near residential zones, wetland buffers, floodplains, or historic districts; neighbor opposition can trigger variance proceedings.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col reveal" style="margin-top:3rem; align-items:start;">
+      <div style="background:var(--deep-quarry); border-radius:10px; padding:2rem; color:var(--limestone);">
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:1.5rem; color:var(--limestone);">The 5–10 Year Permitting Timeline</h3>
+        <div class="timeline" style="margin-top:0;">
+          <div class="timeline-item">
+            <div class="timeline-year">Yr 1–2</div>
+            <h4 style="color:var(--limestone);">Geological Studies &amp; Site Selection</h4>
+            <p>Core drilling, reserve evaluation, quality testing, hydrogeological studies. Environmental baseline surveys for wetlands, endangered species, and cultural resources. All before a single application is filed.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Yr 2–4</div>
+            <h4 style="color:var(--limestone);">Regulatory Applications</h4>
+            <p>State mining permit applications, environmental impact studies, stormwater plans, reclamation bond posting, MSHA ID application, local zoning hearings. Agencies may take 12–18 months to respond.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Yr 3–6</div>
+            <h4 style="color:var(--limestone);">Appeals &amp; Litigation</h4>
+            <p>Neighbors file challenges. Environmental groups appeal permits. Local opposition triggers additional hearings. Legal costs mount. Projects can be delayed indefinitely — or permanently killed.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Yr 6–10+</div>
+            <h4 style="color:var(--limestone);">Final Approval &amp; Plant Construction</h4>
+            <p>After permits clear, 12–18 months of plant construction before first ton ships. Total timeline: typically 7–12 years from concept to production. Many proposals never make it to this stage.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="background:var(--pale-amber); border-radius:10px; padding:2rem; margin-bottom:1.5rem;">
+          <h3 style="font-family:'DM Serif Display',serif; font-size:1.3rem; margin-bottom:1rem; color:var(--deep-quarry);">Reclamation Requirements</h3>
+          <p style="font-size:0.9rem; color:var(--granite-mid); line-height:1.6; margin-bottom:1rem;">All modern operations post a reclamation bond — cash held by the state to fund land restoration if the operator defaults. Standard requirements:</p>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:0.7rem;">
+            <li style="font-size:0.87rem; color:var(--granite-mid); display:flex; gap:0.6rem;"><span style="color:var(--amber); font-weight:700;">→</span>Progressive reclamation — restore completed sections while still mining new ones</li>
+            <li style="font-size:0.87rem; color:var(--granite-mid); display:flex; gap:0.6rem;"><span style="color:var(--amber); font-weight:700;">→</span>Final slopes graded to stable angles (typically 3:1 or flatter)</li>
+            <li style="font-size:0.87rem; color:var(--granite-mid); display:flex; gap:0.6rem;"><span style="color:var(--amber); font-weight:700;">→</span>Revegetation with native species, erosion controls installed</li>
+            <li style="font-size:0.87rem; color:var(--granite-mid); display:flex; gap:0.6rem;"><span style="color:var(--amber); font-weight:700;">→</span>Groundwater monitoring wells maintained 2–5 years post-closure</li>
+            <li style="font-size:0.87rem; color:var(--granite-mid); display:flex; gap:0.6rem;"><span style="color:var(--amber); font-weight:700;">→</span>Many reclaimed quarries become lakes, parks, or wetland preserves</li>
+          </ul>
+        </div>
+        <div class="fact-box">
+          <div class="fact-label">The Scarcity Premium</div>
+          <p>In dense markets like New York's Tri-State region, there are effectively <strong>no viable greenfield quarry sites left to permit.</strong> Every ton must come from an existing operation or travel from farther away at higher cost. Permitted reserves are not just inventory — they are strategic moats that appreciate over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ─── SECTION 11: QUALITY CONTROL ─── -->
 <section id="qc" class="dark-section">
   <div class="container">
@@ -1683,6 +2417,334 @@
             <text x="160" y="150" text-anchor="middle" font-size="8" fill="#8fa3b0" font-family="'Space Mono', monospace">Shewhart Control Chart — gradation</text>
           </svg>
           <p style="font-size:0.8rem; color:var(--granite-mid); margin-top:1rem; line-height:1.5;">When a point drifts toward a control limit (shown in amber above), the plant investigates immediately — before producing out-of-spec material that would need to be rejected or quarantined.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION: UNIT ECONOMICS ─── -->
+<section id="economics" class="dark-section">
+  <div class="container">
+    <p class="section-label reveal">Investment Deep Dive · Unit Economics</p>
+    <h2 class="section-title reveal" style="color:var(--limestone);">The <span class="em">Numbers</span> Behind the Stone</h2>
+    <p class="section-intro reveal">Quarries look simple on the surface. They're not. But when the economics click — local monopoly, pricing power, inflation hedge, low customer concentration — they generate cash with remarkable predictability.</p>
+
+    <div class="econ-grid reveal">
+      <div class="econ-cell">
+        <div class="econ-label">Target Acquisition Revenue</div>
+        <div class="econ-val">$3–8M</div>
+        <div class="econ-sub">First acquisition target range. Small enough to be founder-sellable, large enough to anchor a platform with real cash flow.</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-label">Target EBITDA Margin</div>
+        <div class="econ-val">25–32%</div>
+        <div class="econ-sub">Well-run small quarries are highly cash generative. Margins compress when transport costs or fuel prices spike.</div>
+      </div>
+      <div class="econ-cell accent">
+        <div class="econ-label">Entry Multiple</div>
+        <div class="econ-val">3–5×</div>
+        <div class="econ-sub">EBITDA multiple at acquisition. Single-site sellers accept lower multiples — no banker, no auction, often motivated by age or succession.</div>
+      </div>
+      <div class="econ-cell accent">
+        <div class="econ-label">Platform Exit Multiple</div>
+        <div class="econ-val">10–16×</div>
+        <div class="econ-sub">Scaled multi-site platforms with management depth command dramatically higher multiples from strategic acquirers.</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-label">Price / Ton (National Avg)</div>
+        <div class="econ-val">~$12</div>
+        <div class="econ-sub">National average. Tri-State (NY/NJ/CT) commands $15–18/ton premium due to dense construction markets and delivery constraints.</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-label">Annual Price Escalation</div>
+        <div class="econ-val">4–6%</div>
+        <div class="econ-sub">Consistent annual price increases regardless of economic cycle — one of the most inflation-resistant commodities in construction for 30+ years.</div>
+      </div>
+      <div class="econ-cell">
+        <div class="econ-label">Local Delivery Radius</div>
+        <div class="econ-val">30–50 mi</div>
+        <div class="econ-sub">Transport economics create a natural local monopoly. Beyond ~50 miles, truck haul costs make most distant competitors uncompetitive on delivered price.</div>
+      </div>
+      <div class="econ-cell accent">
+        <div class="econ-label">EBITDA Margin Improvement</div>
+        <div class="econ-val">500–800 bps</div>
+        <div class="econ-sub">Achievable within 24 months through centralized procurement, fleet optimization, and professional management replacing owner-operator overhead.</div>
+      </div>
+    </div>
+
+    <div class="two-col reveal" style="margin-top:3rem;">
+      <div>
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--limestone); margin-bottom:1.5rem;">Why Quarries Print Cash</h3>
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="step-num">01</div>
+            <div class="step-content">
+              <h4 style="color:var(--limestone);">Local Monopoly Pricing</h4>
+              <p>Within a 30–50 mile radius, the nearest quarry typically wins on delivered price. No national competitor can undercut without a local operation. This is structural, not cyclical — it doesn't change with the economy.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">02</div>
+            <div class="step-content">
+              <h4 style="color:var(--limestone);">Inflation-Linked Revenue</h4>
+              <p>Aggregate prices have increased 4–6% annually for three decades straight — through recessions, wars, and financial crises. The product is inelastic, locally constrained, and always in demand.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">03</div>
+            <div class="step-content">
+              <h4 style="color:var(--limestone);">Inventory in the Ground</h4>
+              <p>Permitted reserves are assets — stone in the ground appreciates. A quarry with 30 years of reserves is worth far more than one with 5, and strategic acquirers pay significant premiums for reserve life.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="step-num">04</div>
+            <div class="step-content">
+              <h4 style="color:var(--limestone);">Low Customer Concentration</h4>
+              <p>Typically 50–200 customers — contractors, paving crews, ready-mix plants, municipalities. No single customer usually exceeds 15% of revenue. Diversified, sticky, repeat relationships built over decades.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.5rem; color:var(--limestone); margin-bottom:1.5rem;">Illustrative Single-Site P&amp;L</h3>
+        <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:1.5rem; font-family:'Space Mono',monospace; font-size:0.8rem; border:1px solid rgba(255,255,255,0.08); line-height:2;">
+          <div style="color:var(--amber); margin-bottom:0.8rem; letter-spacing:0.08em; font-size:0.72rem;">// ILLUSTRATIVE — 400K ton/yr quarry</div>
+          <div style="display:grid; grid-template-columns:1fr auto; gap:0 1rem; row-gap:0.1rem;">
+            <span style="color:var(--limestone); font-size:0.85rem;">Revenue (400K tons @ $13/ton)</span>
+            <span style="color:var(--limestone);">$5.2M</span>
+            <span style="color:var(--granite-light); font-size:0.75rem; padding-left:1rem;">— Blasting &amp; Explosives</span>
+            <span style="color:var(--granite-light);">(0.4M)</span>
+            <span style="color:var(--granite-light); font-size:0.75rem; padding-left:1rem;">— Diesel &amp; Equipment</span>
+            <span style="color:var(--granite-light);">(1.2M)</span>
+            <span style="color:var(--granite-light); font-size:0.75rem; padding-left:1rem;">— Labor</span>
+            <span style="color:var(--granite-light);">(1.1M)</span>
+            <span style="color:var(--granite-light); font-size:0.75rem; padding-left:1rem;">— Royalties &amp; Reclamation</span>
+            <span style="color:var(--granite-light);">(0.3M)</span>
+            <span style="color:var(--granite-light); font-size:0.75rem; padding-left:1rem;">— Maintenance &amp; Parts</span>
+            <span style="color:var(--granite-light);">(0.7M)</span>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.12); margin-top:0.8rem; padding-top:0.8rem; display:grid; grid-template-columns:1fr auto; gap:0 1rem; row-gap:0.3rem;">
+            <span style="color:var(--amber);">EBITDA</span>
+            <span style="color:var(--amber);">$1.5M</span>
+            <span style="color:var(--granite-light); font-size:0.75rem;">EBITDA Margin</span>
+            <span style="color:#90c080; font-size:0.75rem;">28.8%</span>
+            <span style="color:var(--granite-light); font-size:0.75rem;">Entry Price (4.5× EBITDA)</span>
+            <span style="color:var(--limestone); font-size:0.75rem;">~$6.75M</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION: VALUE CREATION ─── -->
+<section id="value-creation" style="background:var(--quarry-mid); color:var(--limestone);">
+  <div class="container">
+    <p class="section-label reveal">Investment Deep Dive · Value Creation</p>
+    <h2 class="section-title reveal" style="color:var(--limestone);">The <span class="em">Value Creation</span> Framework</h2>
+    <p class="section-intro reveal">Buying an underperforming family quarry is only the start. Real value comes from systematic improvement — pricing discipline, procurement leverage, and professional management replacing the owner-operator model.</p>
+
+    <div class="value-pillars reveal">
+      <div class="value-pillar">
+        <div class="pillar-icon">📈</div>
+        <h4>Revenue Growth</h4>
+        <ul>
+          <li>Pricing discipline — systematic 4–6% annual increases, eliminate legacy volume discounts</li>
+          <li>Product mix — shift toward higher-margin specialty sizes, washed stone, and manufactured sand</li>
+          <li>IIJA capture — dedicated BD targeting DOT and federal-funded infrastructure projects</li>
+          <li>Geographic reach — serve adjacent markets via sister-quarry inventory and shared trucks</li>
+          <li>Vertical integration — some platforms layer in ready-mix concrete operations</li>
+        </ul>
+      </div>
+      <div class="value-pillar">
+        <div class="pillar-icon">⚙️</div>
+        <h4>Margin Expansion</h4>
+        <ul>
+          <li>Centralized procurement — fuel, explosives, crusher wear parts, tires at portfolio volume</li>
+          <li>Fleet optimization — right-size haul truck count, extend equipment life with PM programs</li>
+          <li>Shared back-office — accounting, HR, safety compliance, MSHA reporting across all sites</li>
+          <li>Plant utilization — maximize tons per hour through uptime tracking and process optimization</li>
+          <li>Target: 500–800 bps EBITDA margin expansion within 24 months of acquisition</li>
+        </ul>
+      </div>
+      <div class="value-pillar">
+        <div class="pillar-icon">🏛️</div>
+        <h4>Strategic Asset Value</h4>
+        <ul>
+          <li>Permitted reserves appreciate — each ton in the ground becomes more valuable as new sites disappear</li>
+          <li>Natural moat — 7–12 year lead time for any new entrant to reach production</li>
+          <li>Inflation hedge — aggregate prices +4–6%/yr for 30+ consecutive years, no exception</li>
+          <li>Multiple expansion — single site at 3–5× EBITDA; 10-site platform at 10–16× EBITDA</li>
+          <li>Strategic buyer universe — Vulcan, Martin Marietta, CRH, and large regionals are active</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EBITDA bridge waterfall -->
+    <div class="illus-wrap reveal" style="margin-top:3rem;">
+      <svg width="720" height="230" viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg">
+        <rect width="720" height="230" rx="10" fill="rgba(0,0,0,0.3)"/>
+        <text x="360" y="26" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="14" fill="rgba(255,255,255,0.7)" letter-spacing="3">ILLUSTRATIVE EBITDA MARGIN BRIDGE — ACQUISITION → YEAR 2</text>
+        <!-- Base bar -->
+        <rect x="45" y="105" width="85" height="75" fill="#2e4d6b"/>
+        <text x="87" y="99" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="var(--granite-light)">At close</text>
+        <text x="87" y="200" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="18" fill="var(--granite-light)">22%</text>
+        <!-- Pricing uplift -->
+        <rect x="175" y="83" width="75" height="22" fill="#4a6741"/>
+        <line x1="175" y1="105" x2="250" y2="105" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="212" y="78" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="#90c080">+2%</text>
+        <text x="212" y="200" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.5)">Pricing</text>
+        <!-- Procurement uplift -->
+        <rect x="295" y="65" width="75" height="18" fill="#4a6741"/>
+        <line x1="295" y1="83" x2="370" y2="83" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="332" y="60" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="#90c080">+2%</text>
+        <text x="332" y="200" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.5)">Procurement</text>
+        <!-- Back office -->
+        <rect x="415" y="50" width="75" height="15" fill="#4a6741"/>
+        <line x1="415" y1="65" x2="490" y2="65" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="452" y="44" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="#90c080">+1.5%</text>
+        <text x="452" y="200" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.5)">Back-office</text>
+        <!-- Plant ops -->
+        <rect x="535" y="38" width="75" height="12" fill="#4a6741"/>
+        <line x1="535" y1="50" x2="610" y2="50" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="572" y="32" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="#90c080">+1%</text>
+        <text x="572" y="200" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.5)">Plant ops</text>
+        <!-- Final total bar -->
+        <rect x="635" y="38" width="70" height="142" fill="var(--amber)" opacity="0.85"/>
+        <text x="670" y="32" text-anchor="middle" font-family="'Space Mono', monospace" font-size="9" fill="var(--amber)">Year 2</text>
+        <text x="670" y="200" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="18" fill="var(--amber)">28–32%</text>
+        <!-- Baseline -->
+        <line x1="40" y1="183" x2="710" y2="183" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        <text x="360" y="220" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.3)">Illustrative only — actual improvement varies by site</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION: ROLL-UP ECONOMICS ─── -->
+<section id="rollup" class="dark-section">
+  <div class="container">
+    <p class="section-label reveal">Investment Deep Dive · Platform Strategy</p>
+    <h2 class="section-title reveal" style="color:var(--limestone);">Building the <span class="em">Platform:</span> Roll-Up Economics</h2>
+    <p class="section-intro reveal">The aggregates roll-up follows a proven playbook: acquire undervalued, locally dominant businesses at low entry multiples, apply operational improvements, and exit to a strategic buyer at a significant multiple premium.</p>
+
+    <div class="reveal" style="overflow-x:auto;">
+      <table class="rollup-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Timeline</th>
+            <th>Active Sites</th>
+            <th>Revenue</th>
+            <th>EBITDA</th>
+            <th>Cumul. Equity In</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--limestone);">Platform Launch</strong></td>
+            <td>Year 1</td>
+            <td class="nc">2</td>
+            <td class="nc">$8M</td>
+            <td class="nc">$1.5M</td>
+            <td class="nc">$12–15M</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--limestone);">Build Phase I</strong></td>
+            <td>Year 2–3</td>
+            <td class="nc">5–6</td>
+            <td class="nc">$40M</td>
+            <td class="nc">$9M</td>
+            <td class="nc">$25–30M</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--limestone);">Build Phase II</strong></td>
+            <td>Year 3–5</td>
+            <td class="nc">8–10</td>
+            <td class="nc">$80M+</td>
+            <td class="nc">$18M</td>
+            <td class="nc">$35–45M</td>
+          </tr>
+          <tr class="hl">
+            <td><strong>Exit Ready</strong></td>
+            <td>Year 5–6</td>
+            <td class="nc">10–12</td>
+            <td class="nc">$100M+</td>
+            <td class="nc">$25M+</td>
+            <td class="nc">$40–50M</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col reveal" style="margin-top:3rem;">
+      <div style="background:rgba(255,255,255,0.04); border-radius:10px; padding:2rem; border:1px solid rgba(255,255,255,0.08);">
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--limestone); margin-bottom:1.5rem;">Illustrative Returns</h3>
+        <div style="font-family:'Space Mono',monospace; font-size:0.8rem; display:flex; flex-direction:column; gap:0;">
+          <div style="display:grid; grid-template-columns:1fr auto; gap:0 1.5rem; line-height:2.2;">
+            <span style="color:var(--granite-light);">Equity Deployed</span>
+            <span style="color:var(--limestone);">~$30M</span>
+            <span style="color:var(--granite-light);">Exit EBITDA</span>
+            <span style="color:var(--amber);">$25M+</span>
+            <span style="color:var(--granite-light);">Exit Multiple (strategic)</span>
+            <span style="color:var(--amber);">12× EBITDA</span>
+            <span style="color:var(--granite-light);">Gross Enterprise Value</span>
+            <span style="color:var(--limestone);">$300M+</span>
+            <span style="color:var(--granite-light);">Less: Net Debt (est.)</span>
+            <span style="color:var(--granite-light);">(90M)</span>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.12); margin-top:0.5rem; padding-top:0.8rem; display:grid; grid-template-columns:1fr auto; gap:0 1.5rem; line-height:2.5;">
+            <span style="color:var(--amber); font-size:0.9rem;">Equity Value at Exit</span>
+            <span style="color:var(--amber); font-size:0.9rem;">$200M+</span>
+            <span style="color:#90c080; font-size:1rem;">Illustrative MOIC</span>
+            <span style="color:#90c080; font-size:1rem;">5–7×</span>
+          </div>
+          <div style="margin-top:1rem; font-size:0.72rem; color:var(--granite-mid); font-family:'DM Sans',sans-serif; font-style:italic;">For illustrative purposes only. Actual results will vary based on acquisition prices, operational performance, and exit conditions.</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--limestone); margin-bottom:1.5rem;">Revenue Build-Up</h3>
+        <svg width="340" height="210" viewBox="0 0 340 210" xmlns="http://www.w3.org/2000/svg" style="background:rgba(0,0,0,0.3); border-radius:8px; display:block;">
+          <!-- Axes -->
+          <line x1="38" y1="15" x2="38" y2="170" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <line x1="38" y1="170" x2="325" y2="170" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <!-- Bars -->
+          <rect x="52"  y="158" width="32" height="12"  fill="#2e4d6b"/>
+          <rect x="107" y="146" width="32" height="24"  fill="#2e4d6b" opacity="0.85"/>
+          <rect x="162" y="115" width="32" height="55"  fill="#2e4d6b" opacity="0.9"/>
+          <rect x="217" y="80"  width="32" height="90"  fill="var(--amber)" opacity="0.7"/>
+          <rect x="272" y="45"  width="32" height="125" fill="var(--amber)" opacity="0.9"/>
+          <!-- X labels -->
+          <text x="68"  y="188" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--granite-light)">Y1</text>
+          <text x="123" y="188" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--granite-light)">Y2</text>
+          <text x="178" y="188" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--granite-light)">Y3</text>
+          <text x="233" y="188" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">Y4</text>
+          <text x="288" y="188" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="var(--amber)">Y5</text>
+          <!-- Value labels -->
+          <text x="68"  y="154" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="9"  fill="var(--granite-light)">$8M</text>
+          <text x="123" y="142" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="9"  fill="var(--granite-light)">$20M</text>
+          <text x="178" y="111" text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="9"  fill="var(--granite-light)">$40M</text>
+          <text x="233" y="76"  text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="10" fill="var(--amber)">$70M</text>
+          <text x="288" y="41"  text-anchor="middle" font-family="'Bebas Neue', sans-serif" font-size="10" fill="var(--amber)">$100M</text>
+          <!-- CAGR line -->
+          <path d="M68 154 Q178 110 288 48" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="4,3" fill="none"/>
+          <text x="185" y="95" font-family="'Bebas Neue', sans-serif" font-size="13" fill="var(--amber)">~55% CAGR</text>
+          <text x="180" y="202" text-anchor="middle" font-family="'Space Mono', monospace" font-size="8" fill="rgba(255,255,255,0.25)">Illustrative revenue build ($M)</text>
+        </svg>
+        <div style="margin-top:1.5rem; padding:1.2rem; background:rgba(217,123,42,0.1); border-radius:6px; border:1px solid rgba(217,123,42,0.2);">
+          <div style="font-family:'Space Mono',monospace; font-size:0.68rem; color:var(--amber); margin-bottom:0.6rem; letter-spacing:0.1em;">KEY PLATFORM METRICS</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem 1rem; font-size:0.82rem;">
+            <span style="color:var(--granite-light);">Revenue CAGR</span>
+            <span style="color:var(--amber); font-family:'Space Mono',monospace;">~55%</span>
+            <span style="color:var(--granite-light);">EBITDA CAGR</span>
+            <span style="color:var(--amber); font-family:'Space Mono',monospace;">~75%</span>
+            <span style="color:var(--granite-light);">Entry Multiple</span>
+            <span style="color:var(--granite-light); font-family:'Space Mono',monospace;">3–5× EBITDA</span>
+            <span style="color:var(--granite-light);">Exit Multiple</span>
+            <span style="color:#90c080; font-family:'Space Mono',monospace;">10–16× EBITDA</span>
+          </div>
         </div>
       </div>
     </div>
