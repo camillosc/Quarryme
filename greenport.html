@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenport Vacation Rentals — Jul 2-5, 2026</title>
+    <style>
+        :root {
+            --bg: #f3f6fb;
+            --card: #ffffff;
+            --text: #1a202c;
+            --muted: #64748b;
+            --accent: #2563eb;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --green-border: #86efac;
+            --shadow: 0 2px 12px rgba(0,0,0,0.07);
+            --radius: 14px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; }
+
+        /* ── HEADER ── */
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 60%, #3b82c4 100%);
+            color: #fff;
+            padding: 48px 24px 40px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; }
+        .hero .sub { font-size: 16px; opacity: 0.85; margin-top: 8px; font-weight: 400; }
+        .hero .stats {
+            display: flex; justify-content: center; gap: 32px; margin-top: 24px; flex-wrap: wrap;
+        }
+        .hero .stat { text-align: center; }
+        .hero .stat-val { font-size: 24px; font-weight: 700; }
+        .hero .stat-lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.7; }
+
+        /* ── BEST VALUE BANNER ── */
+        .best-banner {
+            background: linear-gradient(90deg, #065f46, #16a34a);
+            color: #fff;
+            text-align: center;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .best-banner span { opacity: 0.8; font-weight: 400; }
+
+        /* ── SORT BAR ── */
+        .sort-bar {
+            max-width: 1320px; margin: 24px auto 0; padding: 0 20px;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .sort-bar label { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .sort-bar select {
+            padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1;
+            font-size: 14px; background: #fff; cursor: pointer;
+        }
+        .filter-btn {
+            padding: 7px 16px; border-radius: 20px; border: 1px solid #cbd5e1;
+            font-size: 13px; background: #fff; cursor: pointer; font-weight: 500; transition: all 0.15s;
+        }
+        .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* ── GRID ── */
+        .grid {
+            max-width: 1320px; margin: 20px auto 48px; padding: 0 20px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+        }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex; flex-direction: column;
+            position: relative;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+
+        /* pool highlight */
+        .card.has-pool { border: 2px solid var(--green-border); }
+        .card.has-pool .pool-badge-corner {
+            position: absolute; top: 14px; left: 14px; z-index: 3;
+            background: var(--green); color: #fff; font-size: 11px; font-weight: 700;
+            padding: 4px 12px; border-radius: 20px; letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .card:not(.has-pool) .pool-badge-corner { display: none; }
+
+        /* best value ribbon */
+        .card.best-value .best-ribbon {
+            position: absolute; top: 14px; right: 14px; z-index: 3;
+            background: linear-gradient(135deg, #16a34a, #15803d); color: #fff;
+            font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px;
+            letter-spacing: 0.3px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            animation: glow 2.5s infinite;
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 2px 6px rgba(22,163,74,0.3); }
+            50% { box-shadow: 0 2px 16px rgba(22,163,74,0.5); }
+        }
+        .card:not(.best-value) .best-ribbon { display: none; }
+
+        /* photos */
+        .photos {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px;
+            height: 200px; overflow: hidden; position: relative;
+        }
+        .photos img {
+            width: 100%; height: 200px; object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .photos img:hover { transform: scale(1.05); }
+
+        /* card body */
+        .card-body { padding: 20px 22px 22px; flex: 1; display: flex; flex-direction: column; }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+        .card-name { font-size: 18px; font-weight: 700; color: #1e3a5f; line-height: 1.3; }
+        .card-location { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+        .price-block { text-align: right; white-space: nowrap; }
+        .price-night { font-size: 22px; font-weight: 800; color: var(--accent); }
+        .price-total { font-size: 11px; color: var(--muted); }
+
+        /* source + rating row */
+        .meta-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .source-badge {
+            display: inline-block; padding: 3px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+        }
+        .source-vrbo { background: #e0e7ff; color: #3730a3; }
+        .source-airbnb { background: #ffe4e6; color: #be123c; }
+        .rating { font-size: 13px; font-weight: 600; color: #f59e0b; }
+        .review-count { font-size: 12px; color: var(--muted); }
+
+        /* specs row */
+        .specs {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;
+        }
+        .spec {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #f1f5f9; padding: 5px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; color: #334155;
+        }
+        .spec svg { width: 14px; height: 14px; fill: #64748b; flex-shrink: 0; }
+        .spec.pool-yes { background: #dcfce7; color: #166534; }
+        .spec.pool-yes svg { fill: #166534; }
+        .spec.hot-yes { background: #fef3c7; color: #92400e; }
+        .spec.hot-yes svg { fill: #92400e; }
+        .spec.no { background: #f8fafc; color: #cbd5e1; }
+
+        /* amenities */
+        .amenities { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; flex: 1; }
+        .amenity-tag {
+            display: inline-block; background: #f8fafc; border: 1px solid #e2e8f0;
+            padding: 3px 10px; border-radius: 6px; font-size: 11px; color: #475569;
+        }
+
+        /* CTA button */
+        .cta {
+            display: block; text-align: center; padding: 12px;
+            background: var(--accent); color: #fff; text-decoration: none;
+            border-radius: 10px; font-weight: 700; font-size: 14px;
+            transition: background 0.15s;
+        }
+        .cta:hover { background: #1d4ed8; }
+        .cta-vrbo { background: #3730a3; }
+        .cta-vrbo:hover { background: #312e81; }
+        .cta-airbnb { background: #e11d48; }
+        .cta-airbnb:hover { background: #be123c; }
+
+        /* ── FOOTER ── */
+        .footer {
+            text-align: center; padding: 24px; font-size: 12px; color: var(--muted);
+            border-top: 1px solid #e2e8f0; background: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hero">
+    <h1>Greenport Rentals</h1>
+    <p class="sub">Jul 2 – 5, 2026 &middot; 3 nights &middot; North Fork, Long Island</p>
+    <div class="stats">
+        <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">Listings</div></div>
+        <div class="stat"><div class="stat-val">$1,168</div><div class="stat-lbl">Lowest / Night</div></div>
+        <div class="stat"><div class="stat-val">$3,006</div><div class="stat-lbl">Highest / Night</div></div>
+        <div class="stat"><div class="stat-val">5</div><div class="stat-lbl">Have Pools</div></div>
+    </div>
+</div>
+
+<div class="best-banner">
+    Best Value: Historic House Getaway &mdash; $1,608/nt &middot; 6 BR &middot; Pool + Hot Tub &middot; 9.6/10
+    <span>&middot; Most bedrooms at the second-lowest price</span>
+</div>
+
+<!-- SORT / FILTER BAR -->
+<div class="sort-bar">
+    <label>Sort by:</label>
+    <select id="sortSelect" onchange="sortCards()">
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="beds-desc">Bedrooms: Most</option>
+        <option value="guests-desc">Guests: Most</option>
+        <option value="rating-desc">Rating: Best</option>
+    </select>
+    <button class="filter-btn" id="filterPool" onclick="togglePoolFilter()">Pool Only</button>
+</div>
+
+<!-- CARDS GRID -->
+<div class="grid" id="grid">
+
+    <!-- ========== CARD 7: Greenport Village Cottage ========== -->
+    <div class="card" data-price="1168" data-beds="4" data-guests="8" data-rating="10.0" data-pool="no">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6NDkzNDc1ODg=/original/a4723ef5-9085-4b49-8133-1035fd08b5d0.jpeg" alt="Greenport Village Cottage">
+            <img src="https://a0.muscache.com/im/pictures/miso/Hosting-49347588/original/cd8af623-1612-4af3-81af-e1abf547d41e.jpeg" alt="Greenport Village Cottage interior">
+            <img src="https://a0.muscache.com/im/pictures/miso/Hosting-49347588/original/b4e5695f-68ae-460e-8595-2cfdf6caa25a.jpeg" alt="Greenport Village Cottage kitchen">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Greenport Village Cottage</div><div class="card-location">Greenport, NY (Village)</div></div>
+                <div class="price-block"><div class="price-night">$1,168</div><div class="price-total">$3,504 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-airbnb">Airbnb</span>
+                <span class="rating">&#9733; 5.0/5</span>
+                <span class="review-count">(17 reviews) &middot; Guest Favorite</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>4 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>4 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>8 guests</span>
+                <span class="spec no"><svg viewBox="0 0 24 24"><path d="M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.19-.64-.36-.22-.59-.36-1.14-.36v-2c1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM12 4c-3.31 0-6 2.69-6 6 0 2.97 2.16 5.43 5 5.91V18h2v-2.09c2.84-.48 5-2.94 5-5.91 0-3.31-2.69-6-6-6z"/></svg>No Pool</span>
+                <span class="spec no">No Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">AC</span><span class="amenity-tag">Kitchen</span><span class="amenity-tag">WiFi</span><span class="amenity-tag">Washer</span><span class="amenity-tag">Parking</span><span class="amenity-tag">Streaming TV</span><span class="amenity-tag">BBQ</span><span class="amenity-tag">Beach Access</span><span class="amenity-tag">Walkable to Village</span>
+            </div>
+            <a class="cta cta-airbnb" href="https://www.airbnb.com/rooms/49347588" target="_blank">View on Airbnb &rarr;</a>
+        </div>
+    </div>
+
+    <!-- ========== CARD 1: Historic House Getaway ========== -->
+    <div class="card has-pool best-value" data-price="1608" data-beds="6" data-guests="9" data-rating="9.6" data-pool="yes">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://media.vrbo.com/lodging/36000000/35040000/35037700/35037604/bc698802.jpg" alt="Historic House Getaway exterior">
+            <img src="https://media.vrbo.com/lodging/36000000/35040000/35037700/35037604/7dfc3af5.jpg" alt="Historic House Getaway kitchen">
+            <img src="https://media.vrbo.com/lodging/36000000/35040000/35037700/35037604/a2a9dc3f.jpg" alt="Historic House Getaway interior">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Historic House Getaway</div><div class="card-location">Peconic, NY</div></div>
+                <div class="price-block"><div class="price-night">$1,608</div><div class="price-total">$4,825 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-vrbo">Vrbo</span>
+                <span class="rating">&#9733; 9.6/10</span>
+                <span class="review-count">(139 reviews) &middot; Exceptional</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>6 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>3.5 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>9 guests</span>
+                <span class="spec pool-yes"><svg viewBox="0 0 24 24"><path d="M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.19-.64-.36-.22-.59-.36-1.14-.36v-2c1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM12 4c-3.31 0-6 2.69-6 6 0 2.97 2.16 5.43 5 5.91V18h2v-2.09c2.84-.48 5-2.94 5-5.91 0-3.31-2.69-6-6-6z"/></svg>Heated Pool</span>
+                <span class="spec hot-yes">Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">Heated Pool</span><span class="amenity-tag">Hot Tub</span><span class="amenity-tag">AC</span><span class="amenity-tag">Kitchen</span><span class="amenity-tag">Washer</span><span class="amenity-tag">Parking</span><span class="amenity-tag">Fireplace</span><span class="amenity-tag">3000 sqft</span>
+            </div>
+            <a class="cta cta-vrbo" href="https://www.vrbo.com/485852" target="_blank">View on Vrbo &rarr;</a>
+        </div>
+    </div>
+
+    <!-- ========== CARD 2: Modern Home in Greenport ========== -->
+    <div class="card" data-price="1691" data-beds="2" data-guests="5" data-rating="10.0" data-pool="no">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://media.vrbo.com/lodging/114000000/113880000/113873000/113872917/061c7f94.jpg" alt="Modern Home Greenport exterior">
+            <img src="https://media.vrbo.com/lodging/114000000/113880000/113873000/113872917/96d38fec.jpg" alt="Modern Home Greenport dining">
+            <img src="https://media.vrbo.com/lodging/114000000/113880000/113873000/113872917/b9c30e06.jpg" alt="Modern Home Greenport living">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Modern Home in Greenport</div><div class="card-location">Greenport, NY</div></div>
+                <div class="price-block"><div class="price-night">$1,691</div><div class="price-total">$5,073 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-vrbo">Vrbo</span>
+                <span class="rating">&#9733; 10/10</span>
+                <span class="review-count">(1 review) &middot; Exceptional</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>2 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>1.5 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>5 guests</span>
+                <span class="spec no">No Pool</span>
+                <span class="spec no">No Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">AC</span><span class="amenity-tag">Kitchen</span><span class="amenity-tag">WiFi</span><span class="amenity-tag">Washer</span><span class="amenity-tag">Parking</span><span class="amenity-tag">Pet-Friendly</span><span class="amenity-tag">Gas Grill</span><span class="amenity-tag">Fenced Yard</span>
+            </div>
+            <a class="cta cta-vrbo" href="https://www.vrbo.com/20124631ha" target="_blank">View on Vrbo &rarr;</a>
+        </div>
+    </div>
+
+    <!-- ========== CARD 6: Perfect North Fork Home ========== -->
+    <div class="card has-pool" data-price="2092" data-beds="4" data-guests="10" data-rating="9.82" data-pool="yes">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1157491694488587444/original/81ea0f01-3637-40bf-8704-3ced9ececbf3.jpeg" alt="North Fork Home pool">
+            <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1157491694488587444/original/06b3b4f0-5c8e-4bc7-adaa-9ab95c42aa58.jpeg" alt="North Fork Home interior">
+            <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1157491694488587444/original/64b71dc7-d9fa-4eb6-a346-e1f99d21bbb9.jpeg" alt="North Fork Home kitchen">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Perfect North Fork Home w/ Saltwater Heated Pool</div><div class="card-location">Southold, NY</div></div>
+                <div class="price-block"><div class="price-night">$2,092</div><div class="price-total">$6,277 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-airbnb">Airbnb</span>
+                <span class="rating">&#9733; 4.91/5</span>
+                <span class="review-count">(11 reviews) &middot; Guest Favorite</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>4 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>3.5 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>10 guests</span>
+                <span class="spec pool-yes"><svg viewBox="0 0 24 24"><path d="M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.19-.64-.36-.22-.59-.36-1.14-.36v-2c1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM12 4c-3.31 0-6 2.69-6 6 0 2.97 2.16 5.43 5 5.91V18h2v-2.09c2.84-.48 5-2.94 5-5.91 0-3.31-2.69-6-6-6z"/></svg>Heated Saltwater Pool</span>
+                <span class="spec no">No Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">Heated Saltwater Pool</span><span class="amenity-tag">AC</span><span class="amenity-tag">Kitchen</span><span class="amenity-tag">WiFi</span><span class="amenity-tag">Parking</span><span class="amenity-tag">Outdoor Kitchen</span><span class="amenity-tag">Firepit</span><span class="amenity-tag">Patio</span>
+            </div>
+            <a class="cta cta-airbnb" href="https://www.airbnb.com/rooms/1157491694488587444" target="_blank">View on Airbnb &rarr;</a>
+        </div>
+    </div>
+
+    <!-- ========== CARD 3: Restored Farmhouse ========== -->
+    <div class="card has-pool" data-price="2273" data-beds="4" data-guests="6" data-rating="10.0" data-pool="yes">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://media.vrbo.com/lodging/127000000/126570000/126562900/126562859/ca5fc953.jpg" alt="Restored Farmhouse pool">
+            <img src="https://media.vrbo.com/lodging/127000000/126570000/126562900/126562859/0b0af018.jpg" alt="Restored Farmhouse exterior">
+            <img src="https://media.vrbo.com/lodging/127000000/126570000/126562900/126562859/c9009c05.jpg" alt="Restored Farmhouse interior">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Restored Farmhouse on the North Fork</div><div class="card-location">East Marion, NY</div></div>
+                <div class="price-block"><div class="price-night">$2,273</div><div class="price-total">$6,818 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-vrbo">Vrbo</span>
+                <span class="rating">&#9733; 10/10</span>
+                <span class="review-count">(108 reviews) &middot; Exceptional</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>4 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>3 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>6 guests</span>
+                <span class="spec pool-yes"><svg viewBox="0 0 24 24"><path d="M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.19-.64-.36-.22-.59-.36-1.14-.36v-2c1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM12 4c-3.31 0-6 2.69-6 6 0 2.97 2.16 5.43 5 5.91V18h2v-2.09c2.84-.48 5-2.94 5-5.91 0-3.31-2.69-6-6-6z"/></svg>Heated Pool</span>
+                <span class="spec no">No Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">Heated Pool</span><span class="amenity-tag">AC</span><span class="amenity-tag">WiFi</span><span class="amenity-tag">Washer/Dryer</span><span class="amenity-tag">Pet-Friendly</span><span class="amenity-tag">BBQ</span><span class="amenity-tag">1+ Acre</span><span class="amenity-tag">Hammock</span>
+            </div>
+            <a class="cta cta-vrbo" href="https://www.vrbo.com/5110742" target="_blank">View on Vrbo &rarr;</a>
+        </div>
+    </div>
+
+    <!-- ========== CARD 4: Private Beach & Pool Farmhouse ========== -->
+    <div class="card has-pool" data-price="2362" data-beds="4" data-guests="8" data-rating="10.0" data-pool="yes">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://media.vrbo.com/lodging/78000000/77150000/77143900/77143896/660b38d4.jpg" alt="Private Beach Farmhouse kitchen">
+            <img src="https://media.vrbo.com/lodging/78000000/77150000/77143900/77143896/85368cb5.jpg" alt="Private Beach Farmhouse bedroom">
+            <img src="https://media.vrbo.com/lodging/78000000/77150000/77143900/77143896/cc8b5c04.jpg" alt="Private Beach Farmhouse bath">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Private Beach & Pool Farmhouse</div><div class="card-location">Orient, NY</div></div>
+                <div class="price-block"><div class="price-night">$2,362</div><div class="price-total">$7,085 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-vrbo">Vrbo</span>
+                <span class="rating">&#9733; 10/10</span>
+                <span class="review-count">(5 reviews) &middot; Exceptional</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>4 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>4.5 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>8 guests</span>
+                <span class="spec pool-yes"><svg viewBox="0 0 24 24"><path d="M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.19-.64-.36-.22-.59-.36-1.14-.36v-2c1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM12 4c-3.31 0-6 2.69-6 6 0 2.97 2.16 5.43 5 5.91V18h2v-2.09c2.84-.48 5-2.94 5-5.91 0-3.31-2.69-6-6-6z"/></svg>Private Pool</span>
+                <span class="spec hot-yes">Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">Private Pool</span><span class="amenity-tag">Hot Tub</span><span class="amenity-tag">Private Beach</span><span class="amenity-tag">Chef's Kitchen</span><span class="amenity-tag">AC</span><span class="amenity-tag">WiFi</span><span class="amenity-tag">Fenced Yard</span><span class="amenity-tag">New Build</span>
+            </div>
+            <a class="cta cta-vrbo" href="https://www.vrbo.com/2765008" target="_blank">View on Vrbo &rarr;</a>
+        </div>
+    </div>
+
+    <!-- ========== CARD 5: Modern Farmhouse Estate ========== -->
+    <div class="card has-pool" data-price="3006" data-beds="4" data-guests="10" data-rating="10.0" data-pool="yes">
+        <div class="pool-badge-corner">POOL</div>
+        <div class="best-ribbon">BEST VALUE</div>
+        <div class="photos">
+            <img src="https://media.vrbo.com/lodging/92000000/91440000/91434000/91433933/310682f2.jpg" alt="Modern Farmhouse Estate pool">
+            <img src="https://media.vrbo.com/lodging/92000000/91440000/91434000/91433933/c2daf1a0.jpg" alt="Modern Farmhouse Estate living">
+            <img src="https://media.vrbo.com/lodging/92000000/91440000/91434000/91433933/981992bf.jpg" alt="Modern Farmhouse Estate interior">
+        </div>
+        <div class="card-body">
+            <div class="card-top">
+                <div><div class="card-name">Modern Farmhouse Private Estate</div><div class="card-location">Southold / Greenport, NY</div></div>
+                <div class="price-block"><div class="price-night">$3,006</div><div class="price-total">$9,019 / 3 nts</div></div>
+            </div>
+            <div class="meta-row">
+                <span class="source-badge source-vrbo">Vrbo</span>
+                <span class="rating">&#9733; 10/10</span>
+                <span class="review-count">(3 reviews) &middot; Exceptional</span>
+            </div>
+            <div class="specs">
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V7H1v10h2v-3h18v3h2V11c0-2.21-1.79-4-4-4z"/></svg>4 BR</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M7 7c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v5H7V7zm-4 7h18v3H3v-3zm1 5h16v1H4v-1z"/></svg>6 BA</span>
+                <span class="spec"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>10 guests</span>
+                <span class="spec pool-yes"><svg viewBox="0 0 24 24"><path d="M22 21c-1.11 0-1.73-.37-2.18-.64-.37-.22-.6-.36-1.15-.36s-.78.13-1.15.36c-.46.27-1.07.64-2.18.64s-1.73-.37-2.18-.64c-.37-.22-.6-.36-1.15-.36-.56 0-.78.13-1.15.36-.46.27-1.08.64-2.19.64-1.11 0-1.73-.37-2.19-.64-.36-.22-.59-.36-1.14-.36v-2c1.11 0 1.73.37 2.18.64.37.22.6.36 1.15.36.56 0 .78-.13 1.15-.36.46-.27 1.08-.64 2.19-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36s.78-.13 1.15-.36c.45-.27 1.07-.64 2.18-.64s1.73.37 2.18.64c.37.22.6.36 1.15.36v2zM12 4c-3.31 0-6 2.69-6 6 0 2.97 2.16 5.43 5 5.91V18h2v-2.09c2.84-.48 5-2.94 5-5.91 0-3.31-2.69-6-6-6z"/></svg>Heated Pool (40x20)</span>
+                <span class="spec no">No Hot Tub</span>
+            </div>
+            <div class="amenities">
+                <span class="amenity-tag">Heated Pool (40x20)</span><span class="amenity-tag">AC</span><span class="amenity-tag">Kitchen</span><span class="amenity-tag">WiFi</span><span class="amenity-tag">Washer/Dryer</span><span class="amenity-tag">BBQ</span><span class="amenity-tag">6.5 Acres</span><span class="amenity-tag">Media Room</span>
+            </div>
+            <a class="cta cta-vrbo" href="https://www.vrbo.com/3262977" target="_blank">View on Vrbo &rarr;</a>
+        </div>
+    </div>
+
+</div><!-- /grid -->
+
+<!-- FOOTER -->
+<div class="footer">
+    Data collected April 13, 2026 &middot; Prices for Jul 2–5, 2026 (3 nights, all fees included) &middot; Sorted by price ascending by default
+</div>
+
+<script>
+function sortCards() {
+    const grid = document.getElementById('grid');
+    const sel = document.getElementById('sortSelect').value;
+    const cards = Array.from(grid.querySelectorAll('.card'));
+
+    cards.sort((a, b) => {
+        switch (sel) {
+            case 'price-asc':  return +a.dataset.price - +b.dataset.price;
+            case 'price-desc': return +b.dataset.price - +a.dataset.price;
+            case 'beds-desc':  return +b.dataset.beds - +a.dataset.beds;
+            case 'guests-desc':return +b.dataset.guests - +a.dataset.guests;
+            case 'rating-desc':return +b.dataset.rating - +a.dataset.rating;
+            default: return 0;
+        }
+    });
+    cards.forEach(c => grid.appendChild(c));
+}
+
+let poolOnly = false;
+function togglePoolFilter() {
+    poolOnly = !poolOnly;
+    document.getElementById('filterPool').classList.toggle('active', poolOnly);
+    document.querySelectorAll('#grid .card').forEach(c => {
+        if (poolOnly && c.dataset.pool === 'no') {
+            c.style.display = 'none';
+        } else {
+            c.style.display = '';
+        }
+    });
+}
+
+// initial sort
+sortCards();
+</script>
+</body>
+</html>
