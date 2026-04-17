@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elliott Investment Management - Board &amp; CEO Appointment Database</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0e17; color: #e0e0e0; }
+
+  .header {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0d1b2a 100%);
+    border-bottom: 2px solid #1e90ff;
+    padding: 30px 40px;
+    text-align: center;
+  }
+  .header h1 { font-size: 2em; color: #fff; letter-spacing: 1px; }
+  .header .subtitle { color: #8899aa; margin-top: 8px; font-size: 0.95em; }
+  .header .stats-bar {
+    display: flex; justify-content: center; gap: 40px; margin-top: 20px; flex-wrap: wrap;
+  }
+  .stat-box {
+    background: rgba(30,144,255,0.1); border: 1px solid rgba(30,144,255,0.3);
+    border-radius: 8px; padding: 12px 24px; text-align: center; min-width: 140px;
+  }
+  .stat-box .num { font-size: 1.8em; font-weight: 700; color: #1e90ff; }
+  .stat-box .label { font-size: 0.75em; color: #8899aa; text-transform: uppercase; letter-spacing: 1px; }
+
+  .controls {
+    display: flex; gap: 12px; padding: 20px 40px; flex-wrap: wrap;
+    background: #0d1220; border-bottom: 1px solid #1a2540;
+    align-items: center;
+  }
+  .controls input, .controls select {
+    background: #141c2e; border: 1px solid #2a3a5c; color: #e0e0e0;
+    padding: 10px 14px; border-radius: 6px; font-size: 0.9em;
+  }
+  .controls input:focus, .controls select:focus { outline: none; border-color: #1e90ff; }
+  .controls input[type="text"] { flex: 1; min-width: 250px; }
+  .controls select { min-width: 160px; }
+  .controls .btn {
+    background: #1e90ff; color: #fff; border: none; padding: 10px 20px;
+    border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9em;
+  }
+  .controls .btn:hover { background: #3aa0ff; }
+  .controls .btn.secondary { background: #2a3a5c; }
+  .controls .btn.secondary:hover { background: #3a4a6c; }
+
+  .table-wrapper {
+    overflow-x: auto; padding: 0 20px 40px;
+  }
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 0; font-size: 0.85em;
+  }
+  thead th {
+    background: #141c2e; color: #8899aa; padding: 14px 12px;
+    text-align: left; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.5px; font-size: 0.8em; border-bottom: 2px solid #1e90ff;
+    cursor: pointer; user-select: none; white-space: nowrap;
+    position: sticky; top: 0; z-index: 10;
+  }
+  thead th:hover { color: #1e90ff; }
+  thead th .sort-icon { margin-left: 4px; font-size: 0.8em; }
+  tbody tr { border-bottom: 1px solid #1a2540; transition: background 0.2s; }
+  tbody tr:hover { background: rgba(30,144,255,0.05); }
+  tbody td { padding: 12px; vertical-align: top; line-height: 1.5; }
+
+  .role-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.78em; font-weight: 600; white-space: nowrap;
+  }
+  .role-ceo { background: rgba(255,165,0,0.15); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
+  .role-board { background: rgba(30,144,255,0.15); color: #1e90ff; border: 1px solid rgba(30,144,255,0.3); }
+  .role-chairman { background: rgba(148,103,189,0.15); color: #9467bd; border: 1px solid rgba(148,103,189,0.3); }
+  .role-coo { background: rgba(44,160,44,0.15); color: #2ca02c; border: 1px solid rgba(44,160,44,0.3); }
+  .role-elliott { background: rgba(255,69,0,0.15); color: #ff4500; border: 1px solid rgba(255,69,0,0.3); }
+
+  .status-active { color: #2ecc71; font-weight: 600; }
+  .status-former { color: #95a5a6; }
+  .status-departed { color: #e74c3c; }
+
+  .perf-positive { color: #2ecc71; font-weight: 600; }
+  .perf-negative { color: #e74c3c; font-weight: 600; }
+  .perf-na { color: #555; }
+
+  .company-tag {
+    display: inline-block; background: rgba(30,144,255,0.08);
+    border: 1px solid rgba(30,144,255,0.2); border-radius: 4px;
+    padding: 1px 8px; font-weight: 600; color: #7fb3e0;
+  }
+
+  .source-link { color: #1e90ff; text-decoration: none; font-size: 0.8em; }
+  .source-link:hover { text-decoration: underline; }
+
+  .bg-text { color: #667; font-size: 0.88em; line-height: 1.5; max-width: 300px; }
+  .small-text { font-size: 0.82em; color: #889; }
+
+  .footer {
+    text-align: center; padding: 30px; color: #445; font-size: 0.8em;
+    border-top: 1px solid #1a2540;
+  }
+
+  .tabs {
+    display: flex; gap: 0; padding: 0 40px; background: #0d1220;
+  }
+  .tab {
+    padding: 12px 24px; cursor: pointer; color: #667;
+    border-bottom: 2px solid transparent; font-weight: 600; font-size: 0.9em;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: #aab; }
+  .tab.active { color: #1e90ff; border-bottom-color: #1e90ff; }
+
+  .campaign-cards {
+    display: none; padding: 20px 40px; gap: 16px; flex-wrap: wrap;
+  }
+  .campaign-cards.visible { display: flex; }
+  .campaign-card {
+    background: #141c2e; border: 1px solid #2a3a5c; border-radius: 8px;
+    padding: 16px 20px; min-width: 280px; flex: 1; max-width: 400px;
+  }
+  .campaign-card h3 { color: #1e90ff; margin-bottom: 6px; }
+  .campaign-card .year { color: #667; font-size: 0.85em; }
+  .campaign-card .seats { color: #2ecc71; font-weight: 600; margin-top: 8px; }
+  .campaign-card .outcome { color: #aab; font-size: 0.85em; margin-top: 4px; }
+
+  @media (max-width: 768px) {
+    .controls { padding: 12px; }
+    .header { padding: 20px; }
+    .header h1 { font-size: 1.4em; }
+    table { font-size: 0.75em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Elliott Investment Management</h1>
+  <div class="subtitle">Board Member &amp; CEO Appointment Database &mdash; Activist Campaigns Tracker</div>
+  <div class="subtitle" style="color:#556; font-size:0.8em; margin-top:4px;">Formerly Elliott Management Corporation &middot; Founded by Paul Singer</div>
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-box"><div class="num" id="totalPersons">0</div><div class="label">Total Appointees</div></div>
+    <div class="stat-box"><div class="num" id="totalCompanies">0</div><div class="label">Companies</div></div>
+    <div class="stat-box"><div class="num" id="totalActive">0</div><div class="label">Active</div></div>
+    <div class="stat-box"><div class="num" id="totalCEOs">0</div><div class="label">CEO Changes</div></div>
+    <div class="stat-box"><div class="num" id="totalBoardSeats">0</div><div class="label">Board Seats Won</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('table')">Database Table</div>
+  <div class="tab" onclick="showTab('campaigns')">Campaign Overview</div>
+</div>
+
+<div class="controls" id="tableControls">
+  <input type="text" id="searchInput" placeholder="Search by name, company, role, background..." oninput="filterTable()">
+  <select id="companyFilter" onchange="filterTable()"><option value="">All Companies</option></select>
+  <select id="roleFilter" onchange="filterTable()">
+    <option value="">All Roles</option>
+    <option value="CEO">CEO</option>
+    <option value="Board Director">Board Director</option>
+    <option value="Chairman">Chairman</option>
+    <option value="COO">COO</option>
+    <option value="Elliott Partner">Elliott Partner on Board</option>
+  </select>
+  <select id="statusFilter" onchange="filterTable()">
+    <option value="">All Status</option>
+    <option value="Active">Active</option>
+    <option value="Former">Former</option>
+  </select>
+  <button class="btn secondary" onclick="resetFilters()">Reset</button>
+  <button class="btn" onclick="exportCSV()">Export CSV</button>
+</div>
+
+<div class="table-wrapper" id="tableView">
+  <table>
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Name <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(1)">Company <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(2)">Role <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(3)">Appointed <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(4)">Departed <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(5)">Status <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(6)">Background</th>
+        <th onclick="sortTable(7)">Education</th>
+        <th onclick="sortTable(8)">Campaign Year</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<div class="campaign-cards" id="campaignView"></div>
+
+<div class="footer">
+  Elliott Investment Management Board &amp; CEO Appointment Database &mdash; Research compiled April 2026<br>
+  Data sourced from SEC filings, press releases, and financial news reporting.
+</div>
+
+<script>
+const DATA = [
+  // SOUTHWEST AIRLINES (2024)
+  {name:"David Cush", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former CEO of Virgin America; former SVP of Global Sales at American Airlines. Extensive airline industry experience.", edu:"Georgetown University", priorExp:"CEO, Virgin America; SVP Global Sales, American Airlines", campaignYear:"2024", type:"Elliott Nominee"},
+  {name:"Sarah Feinberg", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former Chief of Staff to U.S. Department of Transportation Secretary Anthony Foxx; former FRA Administrator.", edu:"Georgetown University", priorExp:"Chief of Staff, U.S. DOT; Administrator, Federal Railroad Administration", campaignYear:"2024", type:"Elliott Nominee"},
+  {name:"Dave Grissen", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former Group President, The Americas at Marriott International. Over 30 years of hospitality and operations leadership.", edu:"Cornell University", priorExp:"Group President Americas, Marriott International", campaignYear:"2024", type:"Elliott Nominee"},
+  {name:"Gregg Saretsky", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former President and CEO of WestJet Airlines. Deep expertise in airline operations and low-cost carrier strategy.", edu:"University of British Columbia", priorExp:"President & CEO, WestJet Airlines", campaignYear:"2024", type:"Elliott Nominee"},
+  {name:"Patricia Watson", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"EVP and Chief Information & Technology Officer at NCR Atleos. Technology leadership background.", edu:"N/A", priorExp:"EVP & CIO/CTO, NCR Atleos", campaignYear:"2024", type:"Elliott Nominee"},
+  {name:"Pierre Breber", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former CFO of Chevron Corporation. Extensive energy and finance leadership experience.", edu:"Yale University; Stanford GSB (MBA)", priorExp:"CFO, Chevron Corporation", campaignYear:"2024", type:"Company Pick (Elliott Agreement)"},
+
+  // PHILLIPS 66 (2024-2025)
+  {name:"Sigmund Cornelius", company:"Phillips 66", role:"Board Director", appointed:"May 2025", departed:"", status:"Active", bg:"Former SVP and CFO of ConocoPhillips; former President of Freeport LNG. Over 30 years in energy sector.", edu:"Rice University (MBA); University of Texas", priorExp:"SVP & CFO, ConocoPhillips; President, Freeport LNG", campaignYear:"2024-2025", type:"Elliott Nominee"},
+  {name:"Michael Heim", company:"Phillips 66", role:"Board Director", appointed:"May 2025", departed:"", status:"Active", bg:"Co-founder and former President & COO of Targa Resources. Operating Partner at Stonepeak.", edu:"University of Texas; Harvard Business School (MBA)", priorExp:"Co-Founder, President & COO, Targa Resources", campaignYear:"2024-2025", type:"Elliott Nominee"},
+
+  // TWITTER (2020)
+  {name:"Jesse Cohn", company:"Twitter", role:"Board Director", appointed:"Mar 2020", departed:"Jun 2020", status:"Former", bg:"Managing Partner at Elliott Management. Head of U.S. Equity Activism. Key figure leading Elliott's activist campaigns globally.", edu:"University of Pennsylvania (Wharton)", priorExp:"Managing Partner, Elliott Management", campaignYear:"2020", type:"Elliott Partner on Board"},
+  {name:"Egon Durban", company:"Twitter", role:"Board Director", appointed:"Mar 2020", departed:"Oct 2022", status:"Former", bg:"Co-CEO and Managing Partner of Silver Lake. Appointed alongside Elliott's deal. Led major tech investments.", edu:"Georgetown University; Harvard Business School (MBA)", priorExp:"Co-CEO, Silver Lake Partners", campaignYear:"2020", type:"Silver Lake (Elliott Deal)"},
+
+  // eBAY (2019)
+  {name:"Jesse Cohn", company:"eBay", role:"Board Director", appointed:"Mar 2019", departed:"2020", status:"Former", bg:"Managing Partner at Elliott Management. Joined eBay board as part of Elliott's $1.4B stake and strategic review campaign.", edu:"University of Pennsylvania (Wharton)", priorExp:"Managing Partner, Elliott Management", campaignYear:"2019", type:"Elliott Partner on Board"},
+  {name:"Matt Murphy", company:"eBay", role:"Board Director", appointed:"Mar 2019", departed:"", status:"Former", bg:"President and CEO of Marvell Technology Group. Semiconductor industry leader.", edu:"N/A", priorExp:"President & CEO, Marvell Technology Group", campaignYear:"2019", type:"Elliott Nominee"},
+
+  // STARBUCKS (2024) - CEO Change
+  {name:"Brian Niccol", company:"Starbucks", role:"Chairman & CEO", appointed:"Sep 2024", departed:"", status:"Active", bg:"Former Chairman & CEO of Chipotle Mexican Grill. Credited with transforming Chipotle after food safety crisis. Former CEO of Taco Bell.", edu:"University of Cincinnati; University of Chicago (MBA)", priorExp:"Chairman & CEO, Chipotle; CEO, Taco Bell", campaignYear:"2024", type:"CEO Installed via Elliott Pressure"},
+
+  // HONEYWELL (2024-2025)
+  {name:"Marc Steinberg", company:"Honeywell", role:"Board Director", appointed:"May 2025", departed:"", status:"Active", bg:"Partner at Elliott Investment Management. Focuses on industrials sector investments. Extensive M&A and capital markets expertise.", edu:"N/A", priorExp:"Partner, Elliott Investment Management", campaignYear:"2024-2025", type:"Elliott Partner on Board"},
+
+  // ETSY (2024)
+  {name:"Marc Steinberg", company:"Etsy", role:"Board Director", appointed:"Feb 2024", departed:"", status:"Active", bg:"Partner at Elliott Investment Management. Appointed after Elliott built ~13% economic interest in Etsy.", edu:"N/A", priorExp:"Partner, Elliott Investment Management", campaignYear:"2024", type:"Elliott Partner on Board"},
+
+  // PINTEREST (2022)
+  {name:"Marc Steinberg", company:"Pinterest", role:"Board Director", appointed:"Dec 2022", departed:"", status:"Active", bg:"Senior Portfolio Manager at Elliott. Joined as part of long-term cooperation agreement.", edu:"N/A", priorExp:"Senior PM, Elliott Investment Management", campaignYear:"2022", type:"Elliott Partner on Board"},
+
+  // MATCH GROUP (2024)
+  {name:"Laura Jones", company:"Match Group", role:"Board Director", appointed:"Mar 2024", departed:"", status:"Active", bg:"Chief Marketing Officer at Instacart. Consumer technology marketing expertise.", edu:"N/A", priorExp:"CMO, Instacart", campaignYear:"2024", type:"Elliott Nominee"},
+  {name:"Spencer Rascoff", company:"Match Group", role:"Board Director", appointed:"Mar 2024", departed:"", status:"Active", bg:"Co-founder of Zillow and dot.LA. Serial tech entrepreneur and executive.", edu:"Harvard University", priorExp:"Co-Founder & CEO, Zillow; Co-Founder, dot.LA", campaignYear:"2024", type:"Elliott Nominee"},
+
+  // MARATHON PETROLEUM (2019)
+  {name:"Jonathan Z. Cohen", company:"Marathon Petroleum", role:"Board Director", appointed:"Dec 2019", departed:"", status:"Former", bg:"Co-founder and Vice Chairman of Atlas Energy, Inc. Extensive energy E&P and midstream experience.", edu:"University of Pennsylvania (Wharton)", priorExp:"Co-Founder & Vice Chairman, Atlas Energy; Co-Founder, Atlas Pipeline Partners", campaignYear:"2019", type:"Elliott Nominee"},
+
+  // ARCONIC (2017-2019)
+  {name:"Christopher L. Ayers", company:"Arconic", role:"Board Director", appointed:"May 2017", departed:"2020", status:"Former", bg:"President and CEO of WireCo WorldGroup. Former President, PCC Forgings Division of Precision Castparts. Deep specialty materials expertise.", edu:"N/A", priorExp:"CEO, WireCo WorldGroup; President PCC Forgings, Precision Castparts", campaignYear:"2017", type:"Elliott Nominee"},
+  {name:"Elmer L. Doty", company:"Arconic", role:"Board Director; later COO", appointed:"May 2017", departed:"2019", status:"Former", bg:"Operating executive at The Carlyle Group. Former President & CEO of Vectrus, Inc. and former COO of Textron Systems.", edu:"N/A", priorExp:"Operating Executive, Carlyle Group; CEO, Vectrus", campaignYear:"2017", type:"Elliott Nominee"},
+  {name:"Patrice E. Merrin", company:"Arconic", role:"Board Director", appointed:"May 2017", departed:"2020", status:"Former", bg:"Director at Glencore plc. Former CEO of Luscar Ltd. Experienced mining and resources executive.", edu:"N/A", priorExp:"Director, Glencore; CEO, Luscar Ltd", campaignYear:"2017", type:"Elliott Nominee"},
+  {name:"John C. Plant", company:"Arconic", role:"Chairman; then Chairman & CEO", appointed:"May 2017", departed:"Apr 2020", status:"Former", bg:"Became Chairman after Elliott proxy fight, then took on CEO role in Feb 2019. Former CEO of TRW Automotive Holdings.", edu:"N/A", priorExp:"CEO, TRW Automotive Holdings", campaignYear:"2017-2019", type:"Elliott-Backed Chairman/CEO"},
+  {name:"Charles 'Chip' Blankenship", company:"Arconic", role:"CEO", appointed:"Jan 2018", departed:"Feb 2019", status:"Former", bg:"Elliott-backed CEO candidate. Former President & CEO of GE Appliances. Replaced by John Plant after one year.", edu:"N/A", priorExp:"CEO, GE Appliances", campaignYear:"2017-2018", type:"CEO Installed via Elliott"},
+
+  // HESS CORPORATION (2013)
+  {name:"Rodney Chase", company:"Hess Corporation", role:"Board Director", appointed:"May 2013", departed:"2018", status:"Former", bg:"Former Deputy CEO of BP plc. Extensive global energy industry experience across upstream and downstream operations.", edu:"University of Birmingham (UK)", priorExp:"Deputy CEO, BP plc", campaignYear:"2013", type:"Elliott Nominee"},
+  {name:"Harvey Golub", company:"Hess Corporation", role:"Board Director", appointed:"May 2013", departed:"2018", status:"Former", bg:"Former Chairman and CEO of American Express. Finance and corporate governance expert.", edu:"NYU; Harvard Business School (MBA, DBA)", priorExp:"Chairman & CEO, American Express", campaignYear:"2013", type:"Elliott Nominee"},
+  {name:"David McManus", company:"Hess Corporation", role:"Board Director", appointed:"May 2013", departed:"2018", status:"Former", bg:"Former EVP and Head of International Operations at Pioneer Natural Resources. Extensive E&P leadership.", edu:"N/A", priorExp:"EVP International, Pioneer Natural Resources", campaignYear:"2013", type:"Elliott Nominee"},
+
+  // GOODYEAR (2023)
+  {name:"Joseph R. Hinrichs", company:"Goodyear Tire & Rubber", role:"Board Director", appointed:"Jul 2023", departed:"", status:"Active", bg:"President & CEO of CSX Corporation. Former President of Ford Motor Company's Automotive segment.", edu:"University of Dayton; Harvard Business School (AMP)", priorExp:"President & CEO, CSX; President Automotive, Ford Motor", campaignYear:"2023", type:"Mutually Agreed (Elliott)"},
+  {name:"Max H. Mitchell", company:"Goodyear Tire & Rubber", role:"Board Director", appointed:"Jul 2023", departed:"", status:"Active", bg:"President & CEO of Crane Company. Industrial manufacturing leadership experience.", edu:"N/A", priorExp:"President & CEO, Crane Company", campaignYear:"2023", type:"Mutually Agreed (Elliott)"},
+  {name:"Roger J. Wood", company:"Goodyear Tire & Rubber", role:"Board Director", appointed:"Jul 2023", departed:"", status:"Active", bg:"Former Co-CEO of Tenneco. Extensive automotive supplier and industrial experience.", edu:"N/A", priorExp:"Co-CEO, Tenneco", campaignYear:"2023", type:"Mutually Agreed (Elliott)"},
+
+  // CROWN CASTLE (2023-2024)
+  {name:"Jason Genrich", company:"Crown Castle", role:"Board Director", appointed:"Dec 2023", departed:"", status:"Active", bg:"Senior Portfolio Manager at Elliott Investment Management. Led Elliott's Crown Castle campaign. Infrastructure and telecom focus.", edu:"N/A", priorExp:"Senior PM, Elliott Investment Management", campaignYear:"2023-2024", type:"Elliott Partner on Board"},
+  {name:"Sunit Patel", company:"Crown Castle", role:"Board Director", appointed:"Dec 2023", departed:"", status:"Active", bg:"Former EVP and CFO of CenturyLink (now Lumen Technologies). Deep telecom finance expertise.", edu:"N/A", priorExp:"EVP & CFO, CenturyLink/Lumen Technologies", campaignYear:"2023-2024", type:"Elliott-Backed Independent"},
+  {name:"Steven Moskowitz", company:"Crown Castle", role:"CEO", appointed:"Apr 2024", departed:"", status:"Active", bg:"Appointed CEO following Jay Brown's retirement under Elliott pressure. Former T-Mobile US executive.", edu:"N/A", priorExp:"Executive, T-Mobile US", campaignYear:"2023-2024", type:"CEO Installed via Elliott Pressure"},
+
+  // NRG ENERGY (2023)
+  {name:"Lawrence Coben", company:"NRG Energy", role:"Interim President & CEO; Chairman", appointed:"Nov 2023", departed:"", status:"Active", bg:"Appointed Interim CEO after Mauricio Gutierrez's departure. Long-serving NRG Board member and Chairman.", edu:"University of Pennsylvania; Columbia Law School", priorExp:"Chairman, NRG Energy Board; Founder, Tremaine Capital", campaignYear:"2023", type:"Interim CEO (Elliott Pressure)"},
+  {name:"Marwan Fawaz", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Former CEO of Nest (Alphabet) and Motorola Home. Consumer technology and IoT leadership.", edu:"University of Texas at Austin (PhD)", priorExp:"CEO, Nest; CEO, Motorola Home", campaignYear:"2023", type:"Elliott-Backed Director"},
+  {name:"Kevin Howell", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Former Chief Operating Officer of Dynegy Inc. Deep power generation and energy trading experience.", edu:"N/A", priorExp:"COO, Dynegy Inc.", campaignYear:"2023", type:"Elliott-Backed Director"},
+  {name:"Alex Pourbaix", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Executive Chair and prior President & CEO of Cenovus Energy. Experienced Canadian energy executive.", edu:"University of Alberta; University of Alberta Law School", priorExp:"President & CEO, Cenovus Energy", campaignYear:"2023", type:"Elliott-Backed Director"},
+  {name:"Marcie Zlotnik", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Co-Founder, COO and Chair of StarTex Power. Retail energy market pioneer.", edu:"N/A", priorExp:"Co-Founder & COO, StarTex Power", campaignYear:"2023", type:"Elliott-Backed Director"},
+
+  // DUKE ENERGY (2021)
+  {name:"Idalene (Idie) Kesner", company:"Duke Energy", role:"Board Director", appointed:"Nov 2021", departed:"", status:"Active", bg:"Dean of Indiana University's Kelley School of Business. Corporate governance and strategy scholar.", edu:"Indiana University (PhD); University of Virginia", priorExp:"Dean, Kelley School of Business, Indiana University", campaignYear:"2021", type:"Elliott-Backed Director"},
+  {name:"Derrick Burks", company:"Duke Energy", role:"Board Director", appointed:"Mar 2022", departed:"", status:"Active", bg:"Former Managing Partner at EY (Ernst & Young). Global professional services leader.", edu:"Indiana University", priorExp:"Managing Partner, EY (Ernst & Young)", campaignYear:"2021", type:"Elliott-Backed Director"},
+
+  // CARDINAL HEALTH (2022)
+  {name:"Steven K. Barg", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Global Head of Engagement at Elliott Management. Former Participating Managing Director at Goldman Sachs; founded Goldman's Global Activism & Shareholder Advisory practice.", edu:"Stanford GSB (MBA); Wesleyan University (BA)", priorExp:"Global Head of Engagement, Elliott Mgmt; MD, Goldman Sachs", campaignYear:"2022", type:"Elliott Partner on Board"},
+  {name:"Michelle M. Brennan", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Chair of Connect Healthcare Council for Pioneering Collective. Former board member of Coupa Software.", edu:"N/A", priorExp:"Chair, Connect Healthcare Council; Board, Coupa Software", campaignYear:"2022", type:"Elliott Nominee"},
+  {name:"Sujatha Chandrasekaran", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Advisor and independent consultant in the research and technology sectors. Former CDO at Walmart.", edu:"N/A", priorExp:"Chief Digital Officer, Walmart", campaignYear:"2022", type:"Elliott Nominee"},
+  {name:"Christine A. Mundkur", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Former CEO and non-voting Chairman of the board for Impopharma. Healthcare and pharmaceutical expertise.", edu:"N/A", priorExp:"CEO, Impopharma", campaignYear:"2022", type:"Elliott Nominee"},
+
+  // SUNCOR ENERGY (2022)
+  {name:"Ian Ashby", company:"Suncor Energy", role:"Board Director", appointed:"Jul 2022", departed:"", status:"Active", bg:"Former President of BHP Billiton's Iron Ore Customer Sector Group. Global mining executive.", edu:"University of Western Australia", priorExp:"President Iron Ore, BHP Billiton", campaignYear:"2022", type:"Elliott Nominee"},
+  {name:"Chris Seasons", company:"Suncor Energy", role:"Board Director", appointed:"Jul 2022", departed:"", status:"Active", bg:"Former President of Devon Canada. Partner with ARC Financial Corporation. Canadian energy veteran.", edu:"N/A", priorExp:"President, Devon Canada; Partner, ARC Financial", campaignYear:"2022", type:"Elliott Nominee"},
+  {name:"Jackie Sheppard", company:"Suncor Energy", role:"Board Director", appointed:"Jul 2022", departed:"", status:"Active", bg:"Former EVP, Corporate and Legal Affairs at Talisman Energy Inc. Energy sector legal and governance expert.", edu:"Memorial University of Newfoundland (Law)", priorExp:"EVP Corporate & Legal, Talisman Energy", campaignYear:"2022", type:"Elliott Nominee"},
+
+  // JOHNSON CONTROLS (2024)
+  {name:"Patrick Decker", company:"Johnson Controls", role:"Board Director", appointed:"Jul 2024", departed:"", status:"Active", bg:"Former CEO of Xylem Inc. Considered potential CEO candidate by Elliott. Industrial leadership background.", edu:"University of Virginia; University of North Carolina (MBA)", priorExp:"CEO, Xylem Inc.", campaignYear:"2024", type:"Elliott-Backed Director"},
+
+  // PEABODY ENERGY (2020)
+  {name:"Dave Miller", company:"Peabody Energy", role:"Board Director", appointed:"Feb 2020", departed:"2024", status:"Former", bg:"Equity Partner at Elliott Management. Led energy sector investments.", edu:"N/A", priorExp:"Equity Partner, Elliott Management", campaignYear:"2020", type:"Elliott Partner on Board"},
+  {name:"Samantha Algaze", company:"Peabody Energy", role:"Board Director", appointed:"Feb 2020", departed:"2024", status:"Former", bg:"Portfolio Manager at Elliott Management. First joined Peabody board as part of cooperation agreement.", edu:"N/A", priorExp:"Portfolio Manager, Elliott Management", campaignYear:"2020", type:"Elliott Partner on Board"},
+  {name:"Darren Yeates", company:"Peabody Energy", role:"Board Director", appointed:"Feb 2020", departed:"", status:"Active", bg:"Tenured coal industry executive with deep operational experience in the mining sector.", edu:"N/A", priorExp:"Coal industry executive", campaignYear:"2020", type:"Elliott Nominee"},
+
+  // EVERGY (2020)
+  {name:"Paul Keglevic", company:"Evergy", role:"Board Director", appointed:"Mar 2020", departed:"", status:"Former", bg:"Former CFO and CEO of Energy Future Holdings. Deep energy finance expertise.", edu:"N/A", priorExp:"CFO & CEO, Energy Future Holdings", campaignYear:"2020", type:"Elliott Nominee"},
+  {name:"Kirk Andrews", company:"Evergy", role:"Board Director", appointed:"Mar 2020", departed:"", status:"Former", bg:"EVP and CFO of NRG Energy at time of appointment. Power sector finance leader.", edu:"N/A", priorExp:"EVP & CFO, NRG Energy", campaignYear:"2020", type:"Elliott Nominee"},
+
+  // ALCOA (2016)
+  {name:"Ulrich 'Rick' Schmidt", company:"Alcoa", role:"Board Director", appointed:"Feb 2016", departed:"2017", status:"Former", bg:"Later elected to Arconic board after Alcoa split. Manufacturing and industrial experience.", edu:"N/A", priorExp:"Industrial executive", campaignYear:"2016", type:"Elliott Nominee"},
+  {name:"John C. Plant", company:"Alcoa", role:"Board Director", appointed:"Feb 2016", departed:"2017", status:"Former", bg:"Former CEO of TRW Automotive Holdings. Later became Chairman and CEO of Arconic post-split.", edu:"N/A", priorExp:"CEO, TRW Automotive Holdings", campaignYear:"2016", type:"Elliott Nominee"},
+  {name:"Sean O. Mahoney", company:"Alcoa", role:"Board Director", appointed:"Feb 2016", departed:"2017", status:"Former", bg:"Experienced financial services executive. Joined as part of Elliott cooperation agreement.", edu:"N/A", priorExp:"Financial services executive", campaignYear:"2016", type:"Elliott Nominee"},
+
+  // EMC CORPORATION (2015)
+  {name:"Jose (Joe) Almeida", company:"EMC Corporation", role:"Board Director", appointed:"Jan 2015", departed:"Sep 2016", status:"Former", bg:"Chairman, President and CEO of Covidien plc at time of appointment. Global healthcare executive.", edu:"N/A", priorExp:"Chairman, President & CEO, Covidien plc", campaignYear:"2014-2015", type:"Elliott Nominee"},
+  {name:"Donald Carty", company:"EMC Corporation", role:"Board Director", appointed:"Jan 2015", departed:"Sep 2016", status:"Former", bg:"Chairman of Virgin America Airlines. Director of Canadian National Railway. Former CFO of AMR/American Airlines.", edu:"Queens University (Canada); Harvard Business School", priorExp:"Chairman, Virgin America; CFO, AMR/American Airlines", campaignYear:"2014-2015", type:"Elliott Nominee"},
+
+  // CITRIX SYSTEMS (2015-2022)
+  {name:"Jesse Cohn", company:"Citrix Systems", role:"Board Director", appointed:"2015", departed:"2022", status:"Former", bg:"Managing Partner at Elliott. Joined Citrix board pushing for GoTo spin-off and eventual sale to Vista/Evergreen.", edu:"University of Pennsylvania (Wharton)", priorExp:"Managing Partner, Elliott Management", campaignYear:"2015", type:"Elliott Partner on Board"},
+
+  // NORWEGIAN CRUISE LINE (2026)
+  {name:"Alex Cruz", company:"Norwegian Cruise Line Holdings", role:"Board Director; Lead Independent Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Former Chairman and CEO of British Airways. Led Vueling Airlines through rapid growth phase.", edu:"N/A", priorExp:"Chairman & CEO, British Airways; CEO, Vueling Airlines", campaignYear:"2026", type:"Elliott Nominee"},
+  {name:"Kevin A. Lansberry", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Former EVP and CFO of Disney Experiences. Deep theme park and hospitality finance expertise.", edu:"N/A", priorExp:"EVP & CFO, Disney Experiences", campaignYear:"2026", type:"Elliott Nominee"},
+  {name:"Steve Pagliuca", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Former Managing Partner and Co-Chairman of Bain Capital. Co-owner of Boston Celtics.", edu:"Duke University; Harvard Business School (MBA)", priorExp:"Managing Partner & Co-Chairman, Bain Capital", campaignYear:"2026", type:"Elliott Nominee"},
+  {name:"Brian P. MacDonald", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"President and CEO of CDK Global. Automotive technology and SaaS leadership.", edu:"N/A", priorExp:"President & CEO, CDK Global", campaignYear:"2026", type:"Elliott Nominee"},
+  {name:"Jonathan Z. Cohen", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Founder, CEO and President of Hepco Capital Management. Co-founder of Atlas Energy.", edu:"University of Pennsylvania (Wharton)", priorExp:"CEO, Hepco Capital; Co-Founder, Atlas Energy", campaignYear:"2026", type:"Elliott Nominee"},
+
+  // PULTEGROUP (2016)
+  {name:"John Peshkin", company:"PulteGroup", role:"Board Director", appointed:"Jul 2016", departed:"", status:"Former", bg:"Experienced homebuilding industry executive. Added to CEO search committee.", edu:"N/A", priorExp:"Homebuilding executive", campaignYear:"2016", type:"Elliott Nominee"},
+  {name:"Josh Gotbaum", company:"PulteGroup", role:"Board Director", appointed:"Jul 2016", departed:"", status:"Former", bg:"Former Director of the Pension Benefit Guaranty Corporation. Government and restructuring expert.", edu:"Harvard College; Harvard Law School; Harvard Kennedy School", priorExp:"Director, PBGC; Managing Director, Lazard", campaignYear:"2016", type:"Elliott Nominee"},
+
+  // AT&T (2019-2020)
+  {name:"William E. Kennard", company:"AT&T", role:"Chairman of the Board", appointed:"2020", departed:"2022", status:"Former", bg:"Former U.S. Ambassador to the EU. Former FCC Chairman. Appointed chairman as part of broader post-Elliott restructuring.", edu:"Stanford University; Yale Law School", priorExp:"U.S. Ambassador to EU; FCC Chairman; Partner, Carlyle Group", campaignYear:"2019", type:"Elliott-Influenced Appointment"},
+
+  // ATHENAHEALTH (2018)
+  {name:"Jeff Immelt", company:"athenahealth", role:"Chairman", appointed:"Feb 2018", departed:"2019", status:"Former", bg:"Former Chairman and CEO of General Electric. Brought in as independent chairman under Elliott pressure.", edu:"Dartmouth College; Harvard Business School (MBA)", priorExp:"Chairman & CEO, General Electric", campaignYear:"2017-2018", type:"Elliott-Influenced Appointment"},
+];
+
+// Campaigns overview data
+const CAMPAIGNS = [
+  {company:"Southwest Airlines", year:"2024", seats:5, outcome:"Settlement: 5 Elliott nominees + 1 additional director. Largest board change Elliott achieved in U.S. settlement.", type:"Settlement"},
+  {company:"Phillips 66", year:"2024-2025", seats:2, outcome:"Proxy fight: 2 of 4 Elliott nominees elected. First time Elliott went to full shareholder vote in U.S.", type:"Proxy Vote"},
+  {company:"Norwegian Cruise Line", year:"2026", seats:5, outcome:"Settlement: 5 new directors appointed, board chair changed. Major board overhaul.", type:"Settlement"},
+  {company:"Honeywell", year:"2024-2025", seats:1, outcome:"Elliott partner Marc Steinberg appointed to board. Company pursuing aerospace spin-off.", type:"Settlement"},
+  {company:"Starbucks", year:"2024", seats:0, outcome:"CEO Laxman Narasimhan replaced by Brian Niccol from Chipotle. Elliott catalyzed leadership change.", type:"CEO Change"},
+  {company:"Match Group", year:"2024", seats:2, outcome:"Two new directors (Jones, Rascoff) appointed after constructive dialogue.", type:"Settlement"},
+  {company:"Etsy", year:"2024", seats:1, outcome:"Elliott partner Marc Steinberg appointed to board. ~13% economic interest.", type:"Settlement"},
+  {company:"Johnson Controls", year:"2024", seats:1, outcome:"CEO George Oliver retired. Patrick Decker (former Xylem CEO) appointed to board.", type:"CEO Change + Board"},
+  {company:"Crown Castle", year:"2023-2024", seats:2, outcome:"CEO Jay Brown departed. Jason Genrich (Elliott) + Sunit Patel joined board. New CEO Steven Moskowitz appointed.", type:"CEO Change + Board"},
+  {company:"NRG Energy", year:"2023", seats:4, outcome:"CEO Mauricio Gutierrez ousted. Four new independent directors appointed.", type:"CEO Change + Board"},
+  {company:"Goodyear Tire & Rubber", year:"2023", seats:3, outcome:"Three mutually agreed directors appointed. Strategic and Operational Review Committee formed.", type:"Settlement"},
+  {company:"Salesforce", year:"2023", seats:0, outcome:"Elliott built multibillion-dollar stake but dropped director nominations after Salesforce announced transformation plan.", type:"No Board Seats"},
+  {company:"Pinterest", year:"2022", seats:1, outcome:"Elliott partner Marc Steinberg appointed to board via long-term cooperation agreement.", type:"Settlement"},
+  {company:"Cardinal Health", year:"2022", seats:4, outcome:"Four directors including Elliott's Steven Barg appointed via cooperation agreement.", type:"Settlement"},
+  {company:"Suncor Energy", year:"2022", seats:3, outcome:"Three new independent directors (Ashby, Seasons, Sheppard) appointed.", type:"Settlement"},
+  {company:"Twitter", year:"2020", seats:1, outcome:"Jesse Cohn (Elliott) + Egon Durban (Silver Lake) joined board. Jack Dorsey remained CEO. Company later sold to Elon Musk.", type:"Settlement"},
+  {company:"Peabody Energy", year:"2020", seats:3, outcome:"Two Elliott employees (Miller, Algaze) + one industry expert (Yeates) appointed.", type:"Settlement"},
+  {company:"Evergy", year:"2020", seats:2, outcome:"Two new independent directors (Keglevic, Andrews) appointed.", type:"Settlement"},
+  {company:"AT&T", year:"2019", seats:0, outcome:"No direct board seats but influenced board changes. William Kennard became Chairman. CEO/Chair roles separated.", type:"Influenced Changes"},
+  {company:"eBay", year:"2019", seats:2, outcome:"Jesse Cohn + Matt Murphy joined board. CEO Devin Wenig later resigned. StubHub and Classifieds divested.", type:"Settlement"},
+  {company:"Marathon Petroleum", year:"2019", seats:1, outcome:"Jonathan Z. Cohen appointed. Elliott pushed for Speedway spin-off (completed 2020).", type:"Settlement"},
+  {company:"athenahealth", year:"2017-2018", seats:0, outcome:"Jeff Immelt added as chairman. Company ultimately sold to Elliott affiliate Evergreen Coast Capital + Veritas for $5.7B.", type:"Take-Private"},
+  {company:"Arconic", year:"2017-2019", seats:3, outcome:"Three Elliott nominees elected (Ayers, Doty, Merrin). CEO changed from Kleinfeld to Blankenship to Plant.", type:"Proxy Fight + CEO Changes"},
+  {company:"Hess Corporation", year:"2013", seats:3, outcome:"Three Elliott nominees (Chase, Golub, McManus) joined. Nine total new independent directors out of 14.", type:"Settlement"},
+  {company:"Alcoa", year:"2016", seats:3, outcome:"Three Elliott nominees (Schmidt, Plant, Mahoney) appointed. Company later split into Alcoa/Arconic.", type:"Settlement"},
+  {company:"EMC Corporation", year:"2014-2015", seats:2, outcome:"Two new directors (Almeida, Carty) added. Company sold to Dell for $67B in 2016.", type:"Settlement + Sale"},
+  {company:"Citrix Systems", year:"2015-2022", seats:1, outcome:"Jesse Cohn joined board. GoTo unit spun off. Company taken private by Vista/Evergreen in 2022.", type:"Settlement + Take-Private"},
+  {company:"PulteGroup", year:"2016", seats:2, outcome:"Two new directors added (Peshkin, Gotbaum). $1.5B in share buybacks and operational changes.", type:"Settlement"},
+  {company:"Duke Energy", year:"2021", seats:2, outcome:"Two independent directors (Kesner, Burks) appointed via cooperation agreement.", type:"Settlement"},
+  {company:"Texas Instruments", year:"2024", seats:0, outcome:"$2.5B stake. Focused on capital allocation changes rather than board seats. Company adopted flexible capex framework.", type:"No Board Seats"},
+  {company:"Lululemon", year:"2025", seats:0, outcome:"$1B+ stake. Pushing CEO change, supporting Jane Nielsen as candidate. Campaign ongoing.", type:"Ongoing"},
+  {company:"PepsiCo", year:"2025", seats:0, outcome:"$4B stake. Pushed for cost cuts and strategic changes. Company reached agreement with Elliott.", type:"Settlement (No Seats)"},
+];
+
+function init() {
+  renderTable(DATA);
+  populateCompanyFilter();
+  updateStats();
+  renderCampaigns();
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = data.map(d => {
+    const roleClass = d.role.includes('CEO') ? 'role-ceo' :
+                      d.role.includes('Chairman') ? 'role-chairman' :
+                      d.role.includes('COO') ? 'role-coo' :
+                      d.type.includes('Elliott Partner') ? 'role-elliott' : 'role-board';
+    const statusClass = d.status === 'Active' ? 'status-active' : 'status-former';
+    return `<tr data-company="${d.company}" data-role="${d.role}" data-status="${d.status}" data-type="${d.type}">
+      <td><strong>${d.name}</strong><br><span class="small-text">${d.type}</span></td>
+      <td><span class="company-tag">${d.company}</span></td>
+      <td><span class="role-badge ${roleClass}">${d.role}</span></td>
+      <td>${d.appointed}</td>
+      <td>${d.departed || '&mdash;'}</td>
+      <td><span class="${statusClass}">${d.status}</span></td>
+      <td class="bg-text">${d.bg}</td>
+      <td class="small-text">${d.edu}</td>
+      <td>${d.campaignYear}</td>
+    </tr>`;
+  }).join('');
+}
+
+function populateCompanyFilter() {
+  const companies = [...new Set(DATA.map(d => d.company))].sort();
+  const sel = document.getElementById('companyFilter');
+  companies.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+function updateStats() {
+  document.getElementById('totalPersons').textContent = DATA.length;
+  document.getElementById('totalCompanies').textContent = new Set(DATA.map(d=>d.company)).size;
+  document.getElementById('totalActive').textContent = DATA.filter(d=>d.status==='Active').length;
+  document.getElementById('totalCEOs').textContent = DATA.filter(d=>d.role.includes('CEO')).length;
+  document.getElementById('totalBoardSeats').textContent = CAMPAIGNS.reduce((s,c)=>s+c.seats,0);
+}
+
+function filterTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const company = document.getElementById('companyFilter').value;
+  const role = document.getElementById('roleFilter').value;
+  const status = document.getElementById('statusFilter').value;
+
+  const filtered = DATA.filter(d => {
+    const matchSearch = !search ||
+      d.name.toLowerCase().includes(search) ||
+      d.company.toLowerCase().includes(search) ||
+      d.role.toLowerCase().includes(search) ||
+      d.bg.toLowerCase().includes(search) ||
+      d.type.toLowerCase().includes(search) ||
+      d.edu.toLowerCase().includes(search) ||
+      d.priorExp.toLowerCase().includes(search);
+    const matchCompany = !company || d.company === company;
+    const matchRole = !role ||
+      (role === 'CEO' && d.role.includes('CEO')) ||
+      (role === 'Board Director' && d.role.includes('Board Director')) ||
+      (role === 'Chairman' && d.role.includes('Chairman')) ||
+      (role === 'COO' && d.role.includes('COO')) ||
+      (role === 'Elliott Partner' && d.type.includes('Elliott Partner'));
+    const matchStatus = !status || d.status === status;
+    return matchSearch && matchCompany && matchRole && matchStatus;
+  });
+  renderTable(filtered);
+}
+
+function resetFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('companyFilter').value = '';
+  document.getElementById('roleFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  renderTable(DATA);
+}
+
+function sortTable(colIndex) {
+  const tbody = document.getElementById('tableBody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const keys = ['name','company','role','appointed','departed','status','bg','edu','campaignYear'];
+  const key = keys[colIndex];
+
+  const dir = tbody.dataset.sortDir === 'asc' ? 'desc' : 'asc';
+  tbody.dataset.sortDir = dir;
+
+  const sortedData = [...DATA].sort((a,b) => {
+    const va = (a[key]||'').toLowerCase();
+    const vb = (b[key]||'').toLowerCase();
+    return dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  renderTable(sortedData);
+}
+
+function renderCampaigns() {
+  const container = document.getElementById('campaignView');
+  container.innerHTML = CAMPAIGNS.map(c => `
+    <div class="campaign-card">
+      <h3>${c.company}</h3>
+      <div class="year">${c.year} &middot; ${c.type}</div>
+      <div class="seats">${c.seats} board seat${c.seats!==1?'s':''} won</div>
+      <div class="outcome">${c.outcome}</div>
+    </div>
+  `).join('');
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'table') {
+    document.querySelectorAll('.tab')[0].classList.add('active');
+    document.getElementById('tableView').style.display = '';
+    document.getElementById('tableControls').style.display = '';
+    document.getElementById('campaignView').classList.remove('visible');
+  } else {
+    document.querySelectorAll('.tab')[1].classList.add('active');
+    document.getElementById('tableView').style.display = 'none';
+    document.getElementById('tableControls').style.display = 'none';
+    document.getElementById('campaignView').classList.add('visible');
+  }
+}
+
+function exportCSV() {
+  const headers = ['Name','Company','Role','Appointed','Departed','Status','Background','Education','Prior Experience','Campaign Year','Appointment Type'];
+  const rows = DATA.map(d => [d.name,d.company,d.role,d.appointed,d.departed,d.status,d.bg,d.edu,d.priorExp,d.campaignYear,d.type].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+  const csv = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'Elliott_Board_Database.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
