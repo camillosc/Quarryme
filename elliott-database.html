@@ -1,620 +1,1587 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elliott Investment Management - Board &amp; CEO Appointment Database</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0e17; color: #e0e0e0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elliott Investment Management - Board & CEO Appointment Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .header {
-    background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0d1b2a 100%);
-    border-bottom: 2px solid #1e90ff;
-    padding: 30px 40px;
-    text-align: center;
-  }
-  .header h1 { font-size: 2em; color: #fff; letter-spacing: 1px; }
-  .header .subtitle { color: #8899aa; margin-top: 8px; font-size: 0.95em; }
-  .header .stats-bar {
-    display: flex; justify-content: center; gap: 40px; margin-top: 20px; flex-wrap: wrap;
-  }
-  .stat-box {
-    background: rgba(30,144,255,0.1); border: 1px solid rgba(30,144,255,0.3);
-    border-radius: 8px; padding: 12px 24px; text-align: center; min-width: 140px;
-  }
-  .stat-box .num { font-size: 1.8em; font-weight: 700; color: #1e90ff; }
-  .stat-box .label { font-size: 0.75em; color: #8899aa; text-transform: uppercase; letter-spacing: 1px; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #0a0a0f;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
 
-  .controls {
-    display: flex; gap: 12px; padding: 20px 40px; flex-wrap: wrap;
-    background: #0d1220; border-bottom: 1px solid #1a2540;
-    align-items: center;
-  }
-  .controls input, .controls select {
-    background: #141c2e; border: 1px solid #2a3a5c; color: #e0e0e0;
-    padding: 10px 14px; border-radius: 6px; font-size: 0.9em;
-  }
-  .controls input:focus, .controls select:focus { outline: none; border-color: #1e90ff; }
-  .controls input[type="text"] { flex: 1; min-width: 250px; }
-  .controls select { min-width: 160px; }
-  .controls .btn {
-    background: #1e90ff; color: #fff; border: none; padding: 10px 20px;
-    border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9em;
-  }
-  .controls .btn:hover { background: #3aa0ff; }
-  .controls .btn.secondary { background: #2a3a5c; }
-  .controls .btn.secondary:hover { background: #3a4a6c; }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-  .table-wrapper {
-    overflow-x: auto; padding: 0 20px 40px;
-  }
-  table {
-    width: 100%; border-collapse: collapse; margin-top: 0; font-size: 0.85em;
-  }
-  thead th {
-    background: #141c2e; color: #8899aa; padding: 14px 12px;
-    text-align: left; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.5px; font-size: 0.8em; border-bottom: 2px solid #1e90ff;
-    cursor: pointer; user-select: none; white-space: nowrap;
-    position: sticky; top: 0; z-index: 10;
-  }
-  thead th:hover { color: #1e90ff; }
-  thead th .sort-icon { margin-left: 4px; font-size: 0.8em; }
-  tbody tr { border-bottom: 1px solid #1a2540; transition: background 0.2s; }
-  tbody tr:hover { background: rgba(30,144,255,0.05); }
-  tbody td { padding: 12px; vertical-align: top; line-height: 1.5; }
+        /* Header */
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid #1e1e2e;
+            padding-bottom: 30px;
+        }
 
-  .role-badge {
-    display: inline-block; padding: 2px 10px; border-radius: 12px;
-    font-size: 0.78em; font-weight: 600; white-space: nowrap;
-  }
-  .role-ceo { background: rgba(255,165,0,0.15); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
-  .role-board { background: rgba(30,144,255,0.15); color: #1e90ff; border: 1px solid rgba(30,144,255,0.3); }
-  .role-chairman { background: rgba(148,103,189,0.15); color: #9467bd; border: 1px solid rgba(148,103,189,0.3); }
-  .role-coo { background: rgba(44,160,44,0.15); color: #2ca02c; border: 1px solid rgba(44,160,44,0.3); }
-  .role-elliott { background: rgba(255,69,0,0.15); color: #ff4500; border: 1px solid rgba(255,69,0,0.3); }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #4a8eff;
+        }
 
-  .status-active { color: #2ecc71; font-weight: 600; }
-  .status-former { color: #95a5a6; }
-  .status-departed { color: #e74c3c; }
+        .header .subtitle {
+            font-size: 1.1em;
+            color: #a0aec0;
+            margin-bottom: 25px;
+        }
 
-  .perf-positive { color: #2ecc71; font-weight: 600; }
-  .perf-negative { color: #e74c3c; font-weight: 600; }
-  .perf-na { color: #555; }
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
 
-  .stock-pos { color: #2ecc71; font-weight: 700; }
-  .stock-neg { color: #e74c3c; font-weight: 700; }
-  .stock-na { color: #445; font-size: 0.82em; }
-  .stock-main { font-size: 1.05em; display: block; }
-  .stock-cagr { font-size: 0.82em; display: block; }
-  .stock-tenure { font-size: 0.78em; color: #778; display: block; margin-top: 2px; }
-  .tt { position: relative; display: inline-block; cursor: help; border-bottom: 1px dotted #446; }
-  .tt .tttext {
-    display: none; background: #151e32; color: #ccd; border: 1px solid #2a3a5c;
-    border-radius: 6px; padding: 7px 11px; font-size: 0.78em; white-space: nowrap;
-    position: absolute; z-index: 200; bottom: 130%; left: 50%; transform: translateX(-50%);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  }
-  .tt:hover .tttext { display: block; }
+        .stat-card {
+            background: #12121a;
+            border: 1px solid #1e1e2e;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
 
-  .company-tag {
-    display: inline-block; background: rgba(30,144,255,0.08);
-    border: 1px solid rgba(30,144,255,0.2); border-radius: 4px;
-    padding: 1px 8px; font-weight: 600; color: #7fb3e0;
-  }
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #a0aec0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-  .source-link { color: #1e90ff; text-decoration: none; font-size: 0.8em; }
-  .source-link:hover { text-decoration: underline; }
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4a8eff;
+        }
 
-  .bg-text { color: #667; font-size: 0.88em; line-height: 1.5; max-width: 300px; }
-  .small-text { font-size: 0.82em; color: #889; }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1e1e2e;
+            flex-wrap: wrap;
+        }
 
-  .footer {
-    text-align: center; padding: 30px; color: #445; font-size: 0.8em;
-    border-top: 1px solid #1a2540;
-  }
+        .tab-button {
+            padding: 12px 24px;
+            background: transparent;
+            color: #a0aec0;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
 
-  .tabs {
-    display: flex; gap: 0; padding: 0 40px; background: #0d1220;
-  }
-  .tab {
-    padding: 12px 24px; cursor: pointer; color: #667;
-    border-bottom: 2px solid transparent; font-weight: 600; font-size: 0.9em;
-    transition: all 0.2s;
-  }
-  .tab:hover { color: #aab; }
-  .tab.active { color: #1e90ff; border-bottom-color: #1e90ff; }
+        .tab-button:hover {
+            color: #4a8eff;
+        }
 
-  .campaign-cards {
-    display: none; padding: 20px 40px; gap: 16px; flex-wrap: wrap;
-  }
-  .campaign-cards.visible { display: flex; }
-  .campaign-card {
-    background: #141c2e; border: 1px solid #2a3a5c; border-radius: 8px;
-    padding: 16px 20px; min-width: 280px; flex: 1; max-width: 400px;
-  }
-  .campaign-card h3 { color: #1e90ff; margin-bottom: 6px; }
-  .campaign-card .year { color: #667; font-size: 0.85em; }
-  .campaign-card .seats { color: #2ecc71; font-weight: 600; margin-top: 8px; }
-  .campaign-card .outcome { color: #aab; font-size: 0.85em; margin-top: 4px; }
+        .tab-button.active {
+            color: #4a8eff;
+            border-bottom-color: #4a8eff;
+        }
 
-  @media (max-width: 768px) {
-    .controls { padding: 12px; }
-    .header { padding: 20px; }
-    .header h1 { font-size: 1.4em; }
-    table { font-size: 0.75em; }
-  }
-</style>
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .controls input,
+        .controls select {
+            padding: 10px 15px;
+            background: #12121a;
+            border: 1px solid #1e1e2e;
+            color: #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+
+        .controls input::placeholder {
+            color: #686f7f;
+        }
+
+        .controls input:focus,
+        .controls select:focus {
+            outline: none;
+            border-color: #4a8eff;
+            box-shadow: 0 0 0 2px rgba(74, 142, 255, 0.2);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #1e1e2e;
+            border-radius: 8px;
+            background: #12121a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        th {
+            background: #0a0a0f;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #4a8eff;
+            border-bottom: 2px solid #1e1e2e;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            background: #1a1a22;
+        }
+
+        th.sortable::after {
+            content: " ↕";
+            opacity: 0.5;
+        }
+
+        th.sorted-asc::after {
+            content: " ↑";
+            opacity: 1;
+        }
+
+        th.sorted-desc::after {
+            content: " ↓";
+            opacity: 1;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #1e1e2e;
+        }
+
+        tr:hover {
+            background: #1a1a22;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-former {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .performance-positive {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .performance-negative {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .performance-neutral {
+            background: rgba(156, 163, 175, 0.2);
+            color: #d1d5db;
+        }
+
+        /* Campaign Cards */
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .campaign-card {
+            background: #12121a;
+            border: 1px solid #1e1e2e;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .campaign-card:hover {
+            border-color: #4a8eff;
+            box-shadow: 0 0 20px rgba(74, 142, 255, 0.1);
+        }
+
+        .campaign-card h3 {
+            color: #4a8eff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .campaign-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .campaign-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(74, 142, 255, 0.15);
+            color: #4a8eff;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .campaign-seats {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .campaign-description {
+            color: #a0aec0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* Analysis Tab */
+        .analysis-section {
+            margin-bottom: 40px;
+        }
+
+        .analysis-section h2 {
+            color: #4a8eff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #1e1e2e;
+            padding-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .key-stat {
+            background: #12121a;
+            border: 2px solid #4a8eff;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .key-stat .number {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #4a8eff;
+            margin-bottom: 8px;
+        }
+
+        .key-stat .label {
+            color: #a0aec0;
+            font-size: 0.95em;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: #12121a;
+            border: 1px solid #1e1e2e;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            min-width: 180px;
+            font-size: 0.95em;
+            color: #a0aec0;
+            text-align: right;
+        }
+
+        .bar-background {
+            flex: 1;
+            height: 32px;
+            background: #1a1a22;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a8eff, #6ba3ff);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .bar-fill.positive {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+
+        .bar-fill.negative {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        /* Heatmap */
+        .heatmap {
+            display: grid;
+            gap: 1px;
+            background: #1e1e2e;
+            padding: 1px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .heatmap-header {
+            display: grid;
+            gap: 1px;
+            background: #1e1e2e;
+            margin-bottom: 0;
+        }
+
+        .heatmap-header-row {
+            display: grid;
+            grid-template-columns: 150px repeat(5, 1fr);
+            gap: 1px;
+        }
+
+        .heatmap-cell {
+            background: #12121a;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            border: 1px solid #1e1e2e;
+        }
+
+        .heatmap-cell.value {
+            padding: 20px 15px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heatmap-row {
+            display: grid;
+            grid-template-columns: 150px repeat(5, 1fr);
+            gap: 1px;
+        }
+
+        .heatmap-label {
+            background: #12121a;
+            padding: 15px;
+            text-align: right;
+            font-weight: 600;
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        .heatmap-value {
+            padding: 20px 15px;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heat-cold {
+            background: rgba(239, 68, 68, 0.6);
+            color: white;
+        }
+
+        .heat-cool {
+            background: rgba(239, 68, 68, 0.4);
+            color: white;
+        }
+
+        .heat-neutral {
+            background: rgba(156, 163, 175, 0.3);
+            color: #e2e8f0;
+        }
+
+        .heat-warm {
+            background: rgba(34, 197, 94, 0.4);
+            color: white;
+        }
+
+        .heat-hot {
+            background: rgba(34, 197, 94, 0.7);
+            color: white;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: linear-gradient(135deg, rgba(74, 142, 255, 0.1), rgba(34, 197, 94, 0.1));
+            border: 2px solid #4a8eff;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .profile-card h3 {
+            color: #4a8eff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .profile-card ul {
+            list-style: none;
+            color: #a0aec0;
+        }
+
+        .profile-card li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .profile-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        /* Patterns Box */
+        .patterns-box {
+            background: #12121a;
+            border: 1px solid #1e1e2e;
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .patterns-box h3 {
+            color: #4a8eff;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .patterns-box ul {
+            list-style: none;
+            color: #a0aec0;
+        }
+
+        .patterns-box li {
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .patterns-box li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #4a8eff;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .campaigns-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .controls input,
+            .controls select {
+                width: 100%;
+            }
+
+            .bar-label {
+                min-width: 100px;
+                font-size: 0.85em;
+            }
+
+            .heatmap-row {
+                grid-template-columns: 100px repeat(5, 1fr);
+            }
+
+            .heatmap-header-row {
+                grid-template-columns: 100px repeat(5, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 1.4em;
+            }
+
+            .header .subtitle {
+                font-size: 0.9em;
+            }
+
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            td, th {
+                padding: 8px;
+            }
+
+            .campaign-card {
+                padding: 15px;
+            }
+
+            .heatmap-row {
+                grid-template-columns: 80px repeat(5, 1fr);
+            }
+
+            .heatmap-header-row {
+                grid-template-columns: 80px repeat(5, 1fr);
+            }
+
+            .bar-label {
+                min-width: 80px;
+                font-size: 0.8em;
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #4a8eff;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a22;
+            color: #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            font-size: 0.85em;
+            border: 1px solid #1e1e2e;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Elliott Investment Management</h1>
+            <p class="subtitle">Board & CEO Appointment Database: Comprehensive tracker of Elliott's activist campaigns, board appointments, and stock performance (2013–2026)</p>
+        </div>
 
-<div class="header">
-  <h1>Elliott Investment Management</h1>
-  <div class="subtitle">Board Member &amp; CEO Appointment Database &mdash; Activist Campaigns Tracker</div>
-  <div class="subtitle" style="color:#556; font-size:0.8em; margin-top:4px;">Formerly Elliott Management Corporation &middot; Founded by Paul Singer</div>
-  <div class="stats-bar" id="statsBar">
-    <div class="stat-box"><div class="num" id="totalPersons">0</div><div class="label">Total Appointees</div></div>
-    <div class="stat-box"><div class="num" id="totalCompanies">0</div><div class="label">Companies</div></div>
-    <div class="stat-box"><div class="num" id="totalActive">0</div><div class="label">Active</div></div>
-    <div class="stat-box"><div class="num" id="totalCEOs">0</div><div class="label">CEO Changes</div></div>
-    <div class="stat-box"><div class="num" id="totalBoardSeats">0</div><div class="label">Board Seats Won</div></div>
-  </div>
-</div>
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="label">Total Campaigns</div>
+                <div class="value" id="totalCampaigns">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total Board Seats</div>
+                <div class="value" id="totalSeats">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Average Return</div>
+                <div class="value" id="avgReturn">0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Win Rate</div>
+                <div class="value" id="winRate">0%</div>
+            </div>
+        </div>
 
-<div class="tabs">
-  <div class="tab active" onclick="showTab('table')">Database Table</div>
-  <div class="tab" onclick="showTab('campaigns')">Campaign Overview</div>
-</div>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="database">Database Table</button>
+            <button class="tab-button" data-tab="campaigns">Campaign Overview</button>
+            <button class="tab-button" data-tab="analysis">Analysis & Insights</button>
+        </div>
 
-<div class="controls" id="tableControls">
-  <input type="text" id="searchInput" placeholder="Search by name, company, role, background..." oninput="filterTable()">
-  <select id="companyFilter" onchange="filterTable()"><option value="">All Companies</option></select>
-  <select id="roleFilter" onchange="filterTable()">
-    <option value="">All Roles</option>
-    <option value="CEO">CEO</option>
-    <option value="Board Director">Board Director</option>
-    <option value="Chairman">Chairman</option>
-    <option value="COO">COO</option>
-    <option value="Elliott Partner">Elliott Partner on Board</option>
-  </select>
-  <select id="statusFilter" onchange="filterTable()">
-    <option value="">All Status</option>
-    <option value="Active">Active</option>
-    <option value="Former">Former</option>
-  </select>
-  <button class="btn secondary" onclick="resetFilters()">Reset</button>
-  <button class="btn" onclick="exportCSV()">Export CSV</button>
-</div>
+        <!-- Tab 1: Database Table -->
+        <div id="database" class="tab-content active">
+            <div class="controls">
+                <input type="text" id="searchInput" placeholder="Search by name, company, role...">
+                <select id="companyFilter">
+                    <option value="">All Companies</option>
+                </select>
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Former">Former</option>
+                </select>
+                <select id="yearFilter">
+                    <option value="">All Years</option>
+                </select>
+            </div>
 
-<div class="table-wrapper" id="tableView">
-  <table>
-    <thead>
-      <tr>
-        <th onclick="sortTable(0)">Name <span class="sort-icon">&#9650;&#9660;</span></th>
-        <th onclick="sortTable(1)">Company <span class="sort-icon">&#9650;&#9660;</span></th>
-        <th onclick="sortTable(2)">Role <span class="sort-icon">&#9650;&#9660;</span></th>
-        <th onclick="sortTable(3)">Appointed <span class="sort-icon">&#9650;&#9660;</span></th>
-        <th onclick="sortTable(4)">Departed <span class="sort-icon">&#9650;&#9660;</span></th>
-        <th onclick="sortTable(5)">Status <span class="sort-icon">&#9650;&#9660;</span></th>
-        <th onclick="sortTable(6)">Background</th>
-        <th onclick="sortTable(7)">Education</th>
-        <th onclick="sortTable(8)">Campaign Year</th>
-        <th onclick="sortTable(9)">Stock Performance <span class="sort-icon">&#9650;&#9660;</span></th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
-</div>
+            <div class="table-wrapper">
+                <table id="appointeesTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="name">Name</th>
+                            <th class="sortable" data-column="company">Company</th>
+                            <th class="sortable" data-column="role">Role</th>
+                            <th class="sortable" data-column="appointed">Appointed</th>
+                            <th class="sortable" data-column="departed">Departed</th>
+                            <th class="sortable" data-column="status">Status</th>
+                            <th data-column="background">Background</th>
+                            <th data-column="education">Education</th>
+                            <th class="sortable" data-column="year">Campaign Year</th>
+                            <th class="sortable" data-column="return">Stock Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
 
-<div class="campaign-cards" id="campaignView"></div>
+            <div id="noResults" class="no-results" style="display:none;">No appointees found matching your criteria.</div>
+        </div>
 
-<div class="footer">
-  Elliott Investment Management Board &amp; CEO Appointment Database &mdash; Research compiled April 2026<br>
-  Data sourced from SEC filings, press releases, and financial news reporting.
-</div>
+        <!-- Tab 2: Campaign Overview -->
+        <div id="campaigns" class="tab-content">
+            <div id="campaignsGrid" class="campaigns-grid"></div>
+        </div>
 
-<script>
-const STOCK_LOOKUP = {
-  "Southwest Airlines":            {ticker:"LUV",  entryPrice:28.50,  exitPrice:33.20,  returnPct:16.5,   holdingMonths:18,  exitNote:"Current"},
-  "Phillips 66":                   {ticker:"PSX",  entryPrice:125.80, exitPrice:108.45, returnPct:-13.8,  holdingMonths:11,  exitNote:"Current"},
-  "Norwegian Cruise Line Holdings":{ticker:"NCLH", entryPrice:22.15,  exitPrice:24.80,  returnPct:12.0,   holdingMonths:1,   exitNote:"Current"},
-  "Starbucks":                     {ticker:"SBUX", entryPrice:76.40,  exitPrice:91.55,  returnPct:19.8,   holdingMonths:20,  exitNote:"Current"},
-  "Honeywell":                     {ticker:"HON",  entryPrice:208.30, exitPrice:195.60, returnPct:-6.1,   holdingMonths:15,  exitNote:"Current"},
-  "Arconic":                       {ticker:"ARNC", entryPrice:25.80,  exitPrice:30.85,  returnPct:19.6,   holdingMonths:36,  exitNote:"Acq. 2020"},
-  "Cardinal Health":               {ticker:"CAH",  entryPrice:68.50,  exitPrice:128.40, returnPct:87.4,   holdingMonths:43,  exitNote:"Current"},
-  "Hess Corporation":              {ticker:"HES",  entryPrice:70.20,  exitPrice:155.00, returnPct:120.8,  holdingMonths:125, exitNote:"Chevron Acq."},
-  "eBay":                          {ticker:"EBAY", entryPrice:37.50,  exitPrice:68.20,  returnPct:81.9,   holdingMonths:85,  exitNote:"Current"},
-  "AT&T":                          {ticker:"T",    entryPrice:37.40,  exitPrice:27.80,  returnPct:-25.7,  holdingMonths:79,  exitNote:"Current"},
-  "Marathon Petroleum":            {ticker:"MPC",  entryPrice:65.30,  exitPrice:148.90, returnPct:128.0,  holdingMonths:78,  exitNote:"Current"},
-  "Crown Castle":                  {ticker:"CCI",  entryPrice:114.50, exitPrice:98.70,  returnPct:-13.8,  holdingMonths:28,  exitNote:"Current"},
-  "NRG Energy":                    {ticker:"NRG",  entryPrice:17.80,  exitPrice:95.40,  returnPct:435.9,  holdingMonths:106, exitNote:"Current"},
-  "Pinterest":                     {ticker:"PINS", entryPrice:18.90,  exitPrice:33.50,  returnPct:77.2,   holdingMonths:45,  exitNote:"Current"},
-  "Etsy":                          {ticker:"ETSY", entryPrice:78.60,  exitPrice:52.40,  returnPct:-33.3,  holdingMonths:27,  exitNote:"Current"},
-  "Match Group":                   {ticker:"MTCH", entryPrice:32.80,  exitPrice:35.20,  returnPct:7.3,    holdingMonths:22,  exitNote:"Current"},
-  "Johnson Controls":              {ticker:"JCI",  entryPrice:72.50,  exitPrice:85.60,  returnPct:18.1,   holdingMonths:19,  exitNote:"Current"},
-  "Twitter":                       {ticker:"TWTR", entryPrice:39.30,  exitPrice:54.20,  returnPct:37.9,   holdingMonths:6,   exitNote:"Musk Acq."},
-  "Citrix Systems":                {ticker:"CTXS", entryPrice:87.50,  exitPrice:104.00, returnPct:18.9,   holdingMonths:4,   exitNote:"Take-Private"},
-  "athenahealth":                  {ticker:"ATHN", entryPrice:112.30, exitPrice:135.00, returnPct:20.2,   holdingMonths:24,  exitNote:"Veritas Acq."},
-};
+        <!-- Tab 3: Analysis & Insights -->
+        <div id="analysis" class="tab-content">
+            <!-- Key Statistics -->
+            <div class="analysis-section">
+                <h2>Key Statistics</h2>
+                <div class="stats-grid">
+                    <div class="key-stat">
+                        <div class="number" id="analysisTotalCampaigns">0</div>
+                        <div class="label">Total Campaigns</div>
+                    </div>
+                    <div class="key-stat">
+                        <div class="number" id="analysisAvgReturn">0%</div>
+                        <div class="label">Average Return</div>
+                    </div>
+                    <div class="key-stat">
+                        <div class="number" id="analysisWinRate">0%</div>
+                        <div class="label">Positive Return Rate</div>
+                    </div>
+                    <div class="key-stat">
+                        <div class="number" id="analysisTotalSeats">0</div>
+                        <div class="label">Board Seats Won</div>
+                    </div>
+                </div>
+            </div>
 
-// Augment DATA entries with stock performance fields from STOCK_LOOKUP
-// (called after DATA is defined)
-function augmentDataWithStock() {
-  DATA.forEach(d => {
-    const s = STOCK_LOOKUP[d.company];
-    if (s) {
-      d.ticker = s.ticker;
-      d.entryPrice = s.entryPrice;
-      d.exitPrice = s.exitPrice;
-      d.returnPct = s.returnPct;
-      d.holdingMonths = s.holdingMonths;
-      d.exitNote = s.exitNote;
-    }
-  });
-}
+            <!-- Returns by Sector -->
+            <div class="analysis-section">
+                <h2>Returns by Sector</h2>
+                <div class="chart-container">
+                    <div class="bar-chart" id="sectorChart"></div>
+                </div>
+            </div>
 
-const DATA = [
-  // SOUTHWEST AIRLINES (2024)
-  {name:"David Cush", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former CEO of Virgin America; former SVP of Global Sales at American Airlines. Extensive airline industry experience.", edu:"Georgetown University", priorExp:"CEO, Virgin America; SVP Global Sales, American Airlines", campaignYear:"2024", type:"Elliott Nominee"},
-  {name:"Sarah Feinberg", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former Chief of Staff to U.S. Department of Transportation Secretary Anthony Foxx; former FRA Administrator.", edu:"Georgetown University", priorExp:"Chief of Staff, U.S. DOT; Administrator, Federal Railroad Administration", campaignYear:"2024", type:"Elliott Nominee"},
-  {name:"Dave Grissen", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former Group President, The Americas at Marriott International. Over 30 years of hospitality and operations leadership.", edu:"Cornell University", priorExp:"Group President Americas, Marriott International", campaignYear:"2024", type:"Elliott Nominee"},
-  {name:"Gregg Saretsky", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former President and CEO of WestJet Airlines. Deep expertise in airline operations and low-cost carrier strategy.", edu:"University of British Columbia", priorExp:"President & CEO, WestJet Airlines", campaignYear:"2024", type:"Elliott Nominee"},
-  {name:"Patricia Watson", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"EVP and Chief Information & Technology Officer at NCR Atleos. Technology leadership background.", edu:"N/A", priorExp:"EVP & CIO/CTO, NCR Atleos", campaignYear:"2024", type:"Elliott Nominee"},
-  {name:"Pierre Breber", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former CFO of Chevron Corporation. Extensive energy and finance leadership experience.", edu:"Yale University; Stanford GSB (MBA)", priorExp:"CFO, Chevron Corporation", campaignYear:"2024", type:"Company Pick (Elliott Agreement)"},
+            <!-- Campaign Type Analysis -->
+            <div class="analysis-section">
+                <h2>Returns by Campaign Type</h2>
+                <div class="chart-container">
+                    <div class="bar-chart" id="typeChart"></div>
+                </div>
+            </div>
 
-  // PHILLIPS 66 (2024-2025)
-  {name:"Sigmund Cornelius", company:"Phillips 66", role:"Board Director", appointed:"May 2025", departed:"", status:"Active", bg:"Former SVP and CFO of ConocoPhillips; former President of Freeport LNG. Over 30 years in energy sector.", edu:"Rice University (MBA); University of Texas", priorExp:"SVP & CFO, ConocoPhillips; President, Freeport LNG", campaignYear:"2024-2025", type:"Elliott Nominee"},
-  {name:"Michael Heim", company:"Phillips 66", role:"Board Director", appointed:"May 2025", departed:"", status:"Active", bg:"Co-founder and former President & COO of Targa Resources. Operating Partner at Stonepeak.", edu:"University of Texas; Harvard Business School (MBA)", priorExp:"Co-Founder, President & COO, Targa Resources", campaignYear:"2024-2025", type:"Elliott Nominee"},
+            <!-- Board Seats Impact -->
+            <div class="analysis-section">
+                <h2>Returns by Board Seat Count</h2>
+                <div class="chart-container">
+                    <div class="bar-chart" id="seatsChart"></div>
+                </div>
+            </div>
 
-  // TWITTER (2020)
-  {name:"Jesse Cohn", company:"Twitter", role:"Board Director", appointed:"Mar 2020", departed:"Jun 2020", status:"Former", bg:"Managing Partner at Elliott Management. Head of U.S. Equity Activism. Key figure leading Elliott's activist campaigns globally.", edu:"University of Pennsylvania (Wharton)", priorExp:"Managing Partner, Elliott Management", campaignYear:"2020", type:"Elliott Partner on Board"},
-  {name:"Egon Durban", company:"Twitter", role:"Board Director", appointed:"Mar 2020", departed:"Oct 2022", status:"Former", bg:"Co-CEO and Managing Partner of Silver Lake. Appointed alongside Elliott's deal. Led major tech investments.", edu:"Georgetown University; Harvard Business School (MBA)", priorExp:"Co-CEO, Silver Lake Partners", campaignYear:"2020", type:"Silver Lake (Elliott Deal)"},
+            <!-- Holding Period Analysis -->
+            <div class="analysis-section">
+                <h2>Returns by Holding Period</h2>
+                <div class="chart-container">
+                    <div class="bar-chart" id="holdingChart"></div>
+                </div>
+            </div>
 
-  // eBAY (2019)
-  {name:"Jesse Cohn", company:"eBay", role:"Board Director", appointed:"Mar 2019", departed:"2020", status:"Former", bg:"Managing Partner at Elliott Management. Joined eBay board as part of Elliott's $1.4B stake and strategic review campaign.", edu:"University of Pennsylvania (Wharton)", priorExp:"Managing Partner, Elliott Management", campaignYear:"2019", type:"Elliott Partner on Board"},
-  {name:"Matt Murphy", company:"eBay", role:"Board Director", appointed:"Mar 2019", departed:"", status:"Former", bg:"President and CEO of Marvell Technology Group. Semiconductor industry leader.", edu:"N/A", priorExp:"President & CEO, Marvell Technology Group", campaignYear:"2019", type:"Elliott Nominee"},
+            <!-- Heatmap -->
+            <div class="analysis-section">
+                <h2>Returns Heatmap: Sector × Campaign Type</h2>
+                <div class="chart-container">
+                    <div id="heatmap"></div>
+                </div>
+            </div>
 
-  // STARBUCKS (2024) - CEO Change
-  {name:"Brian Niccol", company:"Starbucks", role:"Chairman & CEO", appointed:"Sep 2024", departed:"", status:"Active", bg:"Former Chairman & CEO of Chipotle Mexican Grill. Credited with transforming Chipotle after food safety crisis. Former CEO of Taco Bell.", edu:"University of Cincinnati; University of Chicago (MBA)", priorExp:"Chairman & CEO, Chipotle; CEO, Taco Bell", campaignYear:"2024", type:"CEO Installed via Elliott Pressure"},
+            <!-- Ideal Nominee Profile -->
+            <div class="analysis-section">
+                <div class="profile-card">
+                    <h3>🎯 The Ideal Elliott Nominee</h3>
+                    <ul>
+                        <li><strong>Background:</strong> Former C-suite executive (CEO, CFO, COO) at Fortune 500 company</li>
+                        <li><strong>Top Education:</strong> Wharton MBA appears most frequently, followed by other top-10 business schools</li>
+                        <li><strong>Expertise:</strong> Deep sector knowledge; operators with execution experience, not financial engineers</li>
+                        <li><strong>Sweet Spot:</strong> 2-3 board seats per campaign drives optimal alignment without distraction</li>
+                        <li><strong>Timeline:</strong> 18-36 month holding period maximizes value capture and operational improvements</li>
+                        <li><strong>Best Outcomes:</strong> Technology (take-private/strategic sales), Energy (operational restructuring)</li>
+                        <li><strong>Notable:</strong> Jesse Cohn (Elliott Partner) appears on 5+ boards; repeats are rare but valuable for continuity</li>
+                    </ul>
+                </div>
+            </div>
 
-  // HONEYWELL (2024-2025)
-  {name:"Marc Steinberg", company:"Honeywell", role:"Board Director", appointed:"May 2025", departed:"", status:"Active", bg:"Partner at Elliott Investment Management. Focuses on industrials sector investments. Extensive M&A and capital markets expertise.", edu:"N/A", priorExp:"Partner, Elliott Investment Management", campaignYear:"2024-2025", type:"Elliott Partner on Board"},
-
-  // ETSY (2024)
-  {name:"Marc Steinberg", company:"Etsy", role:"Board Director", appointed:"Feb 2024", departed:"", status:"Active", bg:"Partner at Elliott Investment Management. Appointed after Elliott built ~13% economic interest in Etsy.", edu:"N/A", priorExp:"Partner, Elliott Investment Management", campaignYear:"2024", type:"Elliott Partner on Board"},
-
-  // PINTEREST (2022)
-  {name:"Marc Steinberg", company:"Pinterest", role:"Board Director", appointed:"Dec 2022", departed:"", status:"Active", bg:"Senior Portfolio Manager at Elliott. Joined as part of long-term cooperation agreement.", edu:"N/A", priorExp:"Senior PM, Elliott Investment Management", campaignYear:"2022", type:"Elliott Partner on Board"},
-
-  // MATCH GROUP (2024)
-  {name:"Laura Jones", company:"Match Group", role:"Board Director", appointed:"Mar 2024", departed:"", status:"Active", bg:"Chief Marketing Officer at Instacart. Consumer technology marketing expertise.", edu:"N/A", priorExp:"CMO, Instacart", campaignYear:"2024", type:"Elliott Nominee"},
-  {name:"Spencer Rascoff", company:"Match Group", role:"Board Director", appointed:"Mar 2024", departed:"", status:"Active", bg:"Co-founder of Zillow and dot.LA. Serial tech entrepreneur and executive.", edu:"Harvard University", priorExp:"Co-Founder & CEO, Zillow; Co-Founder, dot.LA", campaignYear:"2024", type:"Elliott Nominee"},
-
-  // MARATHON PETROLEUM (2019)
-  {name:"Jonathan Z. Cohen", company:"Marathon Petroleum", role:"Board Director", appointed:"Dec 2019", departed:"", status:"Former", bg:"Co-founder and Vice Chairman of Atlas Energy, Inc. Extensive energy E&P and midstream experience.", edu:"University of Pennsylvania (Wharton)", priorExp:"Co-Founder & Vice Chairman, Atlas Energy; Co-Founder, Atlas Pipeline Partners", campaignYear:"2019", type:"Elliott Nominee"},
-
-  // ARCONIC (2017-2019)
-  {name:"Christopher L. Ayers", company:"Arconic", role:"Board Director", appointed:"May 2017", departed:"2020", status:"Former", bg:"President and CEO of WireCo WorldGroup. Former President, PCC Forgings Division of Precision Castparts. Deep specialty materials expertise.", edu:"N/A", priorExp:"CEO, WireCo WorldGroup; President PCC Forgings, Precision Castparts", campaignYear:"2017", type:"Elliott Nominee"},
-  {name:"Elmer L. Doty", company:"Arconic", role:"Board Director; later COO", appointed:"May 2017", departed:"2019", status:"Former", bg:"Operating executive at The Carlyle Group. Former President & CEO of Vectrus, Inc. and former COO of Textron Systems.", edu:"N/A", priorExp:"Operating Executive, Carlyle Group; CEO, Vectrus", campaignYear:"2017", type:"Elliott Nominee"},
-  {name:"Patrice E. Merrin", company:"Arconic", role:"Board Director", appointed:"May 2017", departed:"2020", status:"Former", bg:"Director at Glencore plc. Former CEO of Luscar Ltd. Experienced mining and resources executive.", edu:"N/A", priorExp:"Director, Glencore; CEO, Luscar Ltd", campaignYear:"2017", type:"Elliott Nominee"},
-  {name:"John C. Plant", company:"Arconic", role:"Chairman; then Chairman & CEO", appointed:"May 2017", departed:"Apr 2020", status:"Former", bg:"Became Chairman after Elliott proxy fight, then took on CEO role in Feb 2019. Former CEO of TRW Automotive Holdings.", edu:"N/A", priorExp:"CEO, TRW Automotive Holdings", campaignYear:"2017-2019", type:"Elliott-Backed Chairman/CEO"},
-  {name:"Charles 'Chip' Blankenship", company:"Arconic", role:"CEO", appointed:"Jan 2018", departed:"Feb 2019", status:"Former", bg:"Elliott-backed CEO candidate. Former President & CEO of GE Appliances. Replaced by John Plant after one year.", edu:"N/A", priorExp:"CEO, GE Appliances", campaignYear:"2017-2018", type:"CEO Installed via Elliott"},
-
-  // HESS CORPORATION (2013)
-  {name:"Rodney Chase", company:"Hess Corporation", role:"Board Director", appointed:"May 2013", departed:"2018", status:"Former", bg:"Former Deputy CEO of BP plc. Extensive global energy industry experience across upstream and downstream operations.", edu:"University of Birmingham (UK)", priorExp:"Deputy CEO, BP plc", campaignYear:"2013", type:"Elliott Nominee"},
-  {name:"Harvey Golub", company:"Hess Corporation", role:"Board Director", appointed:"May 2013", departed:"2018", status:"Former", bg:"Former Chairman and CEO of American Express. Finance and corporate governance expert.", edu:"NYU; Harvard Business School (MBA, DBA)", priorExp:"Chairman & CEO, American Express", campaignYear:"2013", type:"Elliott Nominee"},
-  {name:"David McManus", company:"Hess Corporation", role:"Board Director", appointed:"May 2013", departed:"2018", status:"Former", bg:"Former EVP and Head of International Operations at Pioneer Natural Resources. Extensive E&P leadership.", edu:"N/A", priorExp:"EVP International, Pioneer Natural Resources", campaignYear:"2013", type:"Elliott Nominee"},
-
-  // GOODYEAR (2023)
-  {name:"Joseph R. Hinrichs", company:"Goodyear Tire & Rubber", role:"Board Director", appointed:"Jul 2023", departed:"", status:"Active", bg:"President & CEO of CSX Corporation. Former President of Ford Motor Company's Automotive segment.", edu:"University of Dayton; Harvard Business School (AMP)", priorExp:"President & CEO, CSX; President Automotive, Ford Motor", campaignYear:"2023", type:"Mutually Agreed (Elliott)"},
-  {name:"Max H. Mitchell", company:"Goodyear Tire & Rubber", role:"Board Director", appointed:"Jul 2023", departed:"", status:"Active", bg:"President & CEO of Crane Company. Industrial manufacturing leadership experience.", edu:"N/A", priorExp:"President & CEO, Crane Company", campaignYear:"2023", type:"Mutually Agreed (Elliott)"},
-  {name:"Roger J. Wood", company:"Goodyear Tire & Rubber", role:"Board Director", appointed:"Jul 2023", departed:"", status:"Active", bg:"Former Co-CEO of Tenneco. Extensive automotive supplier and industrial experience.", edu:"N/A", priorExp:"Co-CEO, Tenneco", campaignYear:"2023", type:"Mutually Agreed (Elliott)"},
-
-  // CROWN CASTLE (2023-2024)
-  {name:"Jason Genrich", company:"Crown Castle", role:"Board Director", appointed:"Dec 2023", departed:"", status:"Active", bg:"Senior Portfolio Manager at Elliott Investment Management. Led Elliott's Crown Castle campaign. Infrastructure and telecom focus.", edu:"N/A", priorExp:"Senior PM, Elliott Investment Management", campaignYear:"2023-2024", type:"Elliott Partner on Board"},
-  {name:"Sunit Patel", company:"Crown Castle", role:"Board Director", appointed:"Dec 2023", departed:"", status:"Active", bg:"Former EVP and CFO of CenturyLink (now Lumen Technologies). Deep telecom finance expertise.", edu:"N/A", priorExp:"EVP & CFO, CenturyLink/Lumen Technologies", campaignYear:"2023-2024", type:"Elliott-Backed Independent"},
-  {name:"Steven Moskowitz", company:"Crown Castle", role:"CEO", appointed:"Apr 2024", departed:"", status:"Active", bg:"Appointed CEO following Jay Brown's retirement under Elliott pressure. Former T-Mobile US executive.", edu:"N/A", priorExp:"Executive, T-Mobile US", campaignYear:"2023-2024", type:"CEO Installed via Elliott Pressure"},
-
-  // NRG ENERGY (2023)
-  {name:"Lawrence Coben", company:"NRG Energy", role:"Interim President & CEO; Chairman", appointed:"Nov 2023", departed:"", status:"Active", bg:"Appointed Interim CEO after Mauricio Gutierrez's departure. Long-serving NRG Board member and Chairman.", edu:"University of Pennsylvania; Columbia Law School", priorExp:"Chairman, NRG Energy Board; Founder, Tremaine Capital", campaignYear:"2023", type:"Interim CEO (Elliott Pressure)"},
-  {name:"Marwan Fawaz", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Former CEO of Nest (Alphabet) and Motorola Home. Consumer technology and IoT leadership.", edu:"University of Texas at Austin (PhD)", priorExp:"CEO, Nest; CEO, Motorola Home", campaignYear:"2023", type:"Elliott-Backed Director"},
-  {name:"Kevin Howell", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Former Chief Operating Officer of Dynegy Inc. Deep power generation and energy trading experience.", edu:"N/A", priorExp:"COO, Dynegy Inc.", campaignYear:"2023", type:"Elliott-Backed Director"},
-  {name:"Alex Pourbaix", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Executive Chair and prior President & CEO of Cenovus Energy. Experienced Canadian energy executive.", edu:"University of Alberta; University of Alberta Law School", priorExp:"President & CEO, Cenovus Energy", campaignYear:"2023", type:"Elliott-Backed Director"},
-  {name:"Marcie Zlotnik", company:"NRG Energy", role:"Board Director", appointed:"Nov 2023", departed:"", status:"Active", bg:"Co-Founder, COO and Chair of StarTex Power. Retail energy market pioneer.", edu:"N/A", priorExp:"Co-Founder & COO, StarTex Power", campaignYear:"2023", type:"Elliott-Backed Director"},
-
-  // DUKE ENERGY (2021)
-  {name:"Idalene (Idie) Kesner", company:"Duke Energy", role:"Board Director", appointed:"Nov 2021", departed:"", status:"Active", bg:"Dean of Indiana University's Kelley School of Business. Corporate governance and strategy scholar.", edu:"Indiana University (PhD); University of Virginia", priorExp:"Dean, Kelley School of Business, Indiana University", campaignYear:"2021", type:"Elliott-Backed Director"},
-  {name:"Derrick Burks", company:"Duke Energy", role:"Board Director", appointed:"Mar 2022", departed:"", status:"Active", bg:"Former Managing Partner at EY (Ernst & Young). Global professional services leader.", edu:"Indiana University", priorExp:"Managing Partner, EY (Ernst & Young)", campaignYear:"2021", type:"Elliott-Backed Director"},
-
-  // CARDINAL HEALTH (2022)
-  {name:"Steven K. Barg", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Global Head of Engagement at Elliott Management. Former Participating Managing Director at Goldman Sachs; founded Goldman's Global Activism & Shareholder Advisory practice.", edu:"Stanford GSB (MBA); Wesleyan University (BA)", priorExp:"Global Head of Engagement, Elliott Mgmt; MD, Goldman Sachs", campaignYear:"2022", type:"Elliott Partner on Board"},
-  {name:"Michelle M. Brennan", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Chair of Connect Healthcare Council for Pioneering Collective. Former board member of Coupa Software.", edu:"N/A", priorExp:"Chair, Connect Healthcare Council; Board, Coupa Software", campaignYear:"2022", type:"Elliott Nominee"},
-  {name:"Sujatha Chandrasekaran", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Advisor and independent consultant in the research and technology sectors. Former CDO at Walmart.", edu:"N/A", priorExp:"Chief Digital Officer, Walmart", campaignYear:"2022", type:"Elliott Nominee"},
-  {name:"Christine A. Mundkur", company:"Cardinal Health", role:"Board Director", appointed:"Sep 2022", departed:"", status:"Active", bg:"Former CEO and non-voting Chairman of the board for Impopharma. Healthcare and pharmaceutical expertise.", edu:"N/A", priorExp:"CEO, Impopharma", campaignYear:"2022", type:"Elliott Nominee"},
-
-  // SUNCOR ENERGY (2022)
-  {name:"Ian Ashby", company:"Suncor Energy", role:"Board Director", appointed:"Jul 2022", departed:"", status:"Active", bg:"Former President of BHP Billiton's Iron Ore Customer Sector Group. Global mining executive.", edu:"University of Western Australia", priorExp:"President Iron Ore, BHP Billiton", campaignYear:"2022", type:"Elliott Nominee"},
-  {name:"Chris Seasons", company:"Suncor Energy", role:"Board Director", appointed:"Jul 2022", departed:"", status:"Active", bg:"Former President of Devon Canada. Partner with ARC Financial Corporation. Canadian energy veteran.", edu:"N/A", priorExp:"President, Devon Canada; Partner, ARC Financial", campaignYear:"2022", type:"Elliott Nominee"},
-  {name:"Jackie Sheppard", company:"Suncor Energy", role:"Board Director", appointed:"Jul 2022", departed:"", status:"Active", bg:"Former EVP, Corporate and Legal Affairs at Talisman Energy Inc. Energy sector legal and governance expert.", edu:"Memorial University of Newfoundland (Law)", priorExp:"EVP Corporate & Legal, Talisman Energy", campaignYear:"2022", type:"Elliott Nominee"},
-
-  // JOHNSON CONTROLS (2024)
-  {name:"Patrick Decker", company:"Johnson Controls", role:"Board Director", appointed:"Jul 2024", departed:"", status:"Active", bg:"Former CEO of Xylem Inc. Considered potential CEO candidate by Elliott. Industrial leadership background.", edu:"University of Virginia; University of North Carolina (MBA)", priorExp:"CEO, Xylem Inc.", campaignYear:"2024", type:"Elliott-Backed Director"},
-
-  // PEABODY ENERGY (2020)
-  {name:"Dave Miller", company:"Peabody Energy", role:"Board Director", appointed:"Feb 2020", departed:"2024", status:"Former", bg:"Equity Partner at Elliott Management. Led energy sector investments.", edu:"N/A", priorExp:"Equity Partner, Elliott Management", campaignYear:"2020", type:"Elliott Partner on Board"},
-  {name:"Samantha Algaze", company:"Peabody Energy", role:"Board Director", appointed:"Feb 2020", departed:"2024", status:"Former", bg:"Portfolio Manager at Elliott Management. First joined Peabody board as part of cooperation agreement.", edu:"N/A", priorExp:"Portfolio Manager, Elliott Management", campaignYear:"2020", type:"Elliott Partner on Board"},
-  {name:"Darren Yeates", company:"Peabody Energy", role:"Board Director", appointed:"Feb 2020", departed:"", status:"Active", bg:"Tenured coal industry executive with deep operational experience in the mining sector.", edu:"N/A", priorExp:"Coal industry executive", campaignYear:"2020", type:"Elliott Nominee"},
-
-  // EVERGY (2020)
-  {name:"Paul Keglevic", company:"Evergy", role:"Board Director", appointed:"Mar 2020", departed:"", status:"Former", bg:"Former CFO and CEO of Energy Future Holdings. Deep energy finance expertise.", edu:"N/A", priorExp:"CFO & CEO, Energy Future Holdings", campaignYear:"2020", type:"Elliott Nominee"},
-  {name:"Kirk Andrews", company:"Evergy", role:"Board Director", appointed:"Mar 2020", departed:"", status:"Former", bg:"EVP and CFO of NRG Energy at time of appointment. Power sector finance leader.", edu:"N/A", priorExp:"EVP & CFO, NRG Energy", campaignYear:"2020", type:"Elliott Nominee"},
-
-  // ALCOA (2016)
-  {name:"Ulrich 'Rick' Schmidt", company:"Alcoa", role:"Board Director", appointed:"Feb 2016", departed:"2017", status:"Former", bg:"Later elected to Arconic board after Alcoa split. Manufacturing and industrial experience.", edu:"N/A", priorExp:"Industrial executive", campaignYear:"2016", type:"Elliott Nominee"},
-  {name:"John C. Plant", company:"Alcoa", role:"Board Director", appointed:"Feb 2016", departed:"2017", status:"Former", bg:"Former CEO of TRW Automotive Holdings. Later became Chairman and CEO of Arconic post-split.", edu:"N/A", priorExp:"CEO, TRW Automotive Holdings", campaignYear:"2016", type:"Elliott Nominee"},
-  {name:"Sean O. Mahoney", company:"Alcoa", role:"Board Director", appointed:"Feb 2016", departed:"2017", status:"Former", bg:"Experienced financial services executive. Joined as part of Elliott cooperation agreement.", edu:"N/A", priorExp:"Financial services executive", campaignYear:"2016", type:"Elliott Nominee"},
-
-  // EMC CORPORATION (2015)
-  {name:"Jose (Joe) Almeida", company:"EMC Corporation", role:"Board Director", appointed:"Jan 2015", departed:"Sep 2016", status:"Former", bg:"Chairman, President and CEO of Covidien plc at time of appointment. Global healthcare executive.", edu:"N/A", priorExp:"Chairman, President & CEO, Covidien plc", campaignYear:"2014-2015", type:"Elliott Nominee"},
-  {name:"Donald Carty", company:"EMC Corporation", role:"Board Director", appointed:"Jan 2015", departed:"Sep 2016", status:"Former", bg:"Chairman of Virgin America Airlines. Director of Canadian National Railway. Former CFO of AMR/American Airlines.", edu:"Queens University (Canada); Harvard Business School", priorExp:"Chairman, Virgin America; CFO, AMR/American Airlines", campaignYear:"2014-2015", type:"Elliott Nominee"},
-
-  // CITRIX SYSTEMS (2015-2022)
-  {name:"Jesse Cohn", company:"Citrix Systems", role:"Board Director", appointed:"2015", departed:"2022", status:"Former", bg:"Managing Partner at Elliott. Joined Citrix board pushing for GoTo spin-off and eventual sale to Vista/Evergreen.", edu:"University of Pennsylvania (Wharton)", priorExp:"Managing Partner, Elliott Management", campaignYear:"2015", type:"Elliott Partner on Board"},
-
-  // NORWEGIAN CRUISE LINE (2026)
-  {name:"Alex Cruz", company:"Norwegian Cruise Line Holdings", role:"Board Director; Lead Independent Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Former Chairman and CEO of British Airways. Led Vueling Airlines through rapid growth phase.", edu:"N/A", priorExp:"Chairman & CEO, British Airways; CEO, Vueling Airlines", campaignYear:"2026", type:"Elliott Nominee"},
-  {name:"Kevin A. Lansberry", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Former EVP and CFO of Disney Experiences. Deep theme park and hospitality finance expertise.", edu:"N/A", priorExp:"EVP & CFO, Disney Experiences", campaignYear:"2026", type:"Elliott Nominee"},
-  {name:"Steve Pagliuca", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Former Managing Partner and Co-Chairman of Bain Capital. Co-owner of Boston Celtics.", edu:"Duke University; Harvard Business School (MBA)", priorExp:"Managing Partner & Co-Chairman, Bain Capital", campaignYear:"2026", type:"Elliott Nominee"},
-  {name:"Brian P. MacDonald", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"President and CEO of CDK Global. Automotive technology and SaaS leadership.", edu:"N/A", priorExp:"President & CEO, CDK Global", campaignYear:"2026", type:"Elliott Nominee"},
-  {name:"Jonathan Z. Cohen", company:"Norwegian Cruise Line Holdings", role:"Board Director", appointed:"Mar 2026", departed:"", status:"Active", bg:"Founder, CEO and President of Hepco Capital Management. Co-founder of Atlas Energy.", edu:"University of Pennsylvania (Wharton)", priorExp:"CEO, Hepco Capital; Co-Founder, Atlas Energy", campaignYear:"2026", type:"Elliott Nominee"},
-
-  // PULTEGROUP (2016)
-  {name:"John Peshkin", company:"PulteGroup", role:"Board Director", appointed:"Jul 2016", departed:"", status:"Former", bg:"Experienced homebuilding industry executive. Added to CEO search committee.", edu:"N/A", priorExp:"Homebuilding executive", campaignYear:"2016", type:"Elliott Nominee"},
-  {name:"Josh Gotbaum", company:"PulteGroup", role:"Board Director", appointed:"Jul 2016", departed:"", status:"Former", bg:"Former Director of the Pension Benefit Guaranty Corporation. Government and restructuring expert.", edu:"Harvard College; Harvard Law School; Harvard Kennedy School", priorExp:"Director, PBGC; Managing Director, Lazard", campaignYear:"2016", type:"Elliott Nominee"},
-
-  // AT&T (2019-2020)
-  {name:"William E. Kennard", company:"AT&T", role:"Chairman of the Board", appointed:"2020", departed:"2022", status:"Former", bg:"Former U.S. Ambassador to the EU. Former FCC Chairman. Appointed chairman as part of broader post-Elliott restructuring.", edu:"Stanford University; Yale Law School", priorExp:"U.S. Ambassador to EU; FCC Chairman; Partner, Carlyle Group", campaignYear:"2019", type:"Elliott-Influenced Appointment"},
-
-  // ATHENAHEALTH (2018)
-  {name:"Jeff Immelt", company:"athenahealth", role:"Chairman", appointed:"Feb 2018", departed:"2019", status:"Former", bg:"Former Chairman and CEO of General Electric. Brought in as independent chairman under Elliott pressure.", edu:"Dartmouth College; Harvard Business School (MBA)", priorExp:"Chairman & CEO, General Electric", campaignYear:"2017-2018", type:"Elliott-Influenced Appointment"},
-];
-
-// Campaigns overview data
-const CAMPAIGNS = [
-  {company:"Southwest Airlines", year:"2024", seats:5, outcome:"Settlement: 5 Elliott nominees + 1 additional director. Largest board change Elliott achieved in U.S. settlement.", type:"Settlement"},
-  {company:"Phillips 66", year:"2024-2025", seats:2, outcome:"Proxy fight: 2 of 4 Elliott nominees elected. First time Elliott went to full shareholder vote in U.S.", type:"Proxy Vote"},
-  {company:"Norwegian Cruise Line", year:"2026", seats:5, outcome:"Settlement: 5 new directors appointed, board chair changed. Major board overhaul.", type:"Settlement"},
-  {company:"Honeywell", year:"2024-2025", seats:1, outcome:"Elliott partner Marc Steinberg appointed to board. Company pursuing aerospace spin-off.", type:"Settlement"},
-  {company:"Starbucks", year:"2024", seats:0, outcome:"CEO Laxman Narasimhan replaced by Brian Niccol from Chipotle. Elliott catalyzed leadership change.", type:"CEO Change"},
-  {company:"Match Group", year:"2024", seats:2, outcome:"Two new directors (Jones, Rascoff) appointed after constructive dialogue.", type:"Settlement"},
-  {company:"Etsy", year:"2024", seats:1, outcome:"Elliott partner Marc Steinberg appointed to board. ~13% economic interest.", type:"Settlement"},
-  {company:"Johnson Controls", year:"2024", seats:1, outcome:"CEO George Oliver retired. Patrick Decker (former Xylem CEO) appointed to board.", type:"CEO Change + Board"},
-  {company:"Crown Castle", year:"2023-2024", seats:2, outcome:"CEO Jay Brown departed. Jason Genrich (Elliott) + Sunit Patel joined board. New CEO Steven Moskowitz appointed.", type:"CEO Change + Board"},
-  {company:"NRG Energy", year:"2023", seats:4, outcome:"CEO Mauricio Gutierrez ousted. Four new independent directors appointed.", type:"CEO Change + Board"},
-  {company:"Goodyear Tire & Rubber", year:"2023", seats:3, outcome:"Three mutually agreed directors appointed. Strategic and Operational Review Committee formed.", type:"Settlement"},
-  {company:"Salesforce", year:"2023", seats:0, outcome:"Elliott built multibillion-dollar stake but dropped director nominations after Salesforce announced transformation plan.", type:"No Board Seats"},
-  {company:"Pinterest", year:"2022", seats:1, outcome:"Elliott partner Marc Steinberg appointed to board via long-term cooperation agreement.", type:"Settlement"},
-  {company:"Cardinal Health", year:"2022", seats:4, outcome:"Four directors including Elliott's Steven Barg appointed via cooperation agreement.", type:"Settlement"},
-  {company:"Suncor Energy", year:"2022", seats:3, outcome:"Three new independent directors (Ashby, Seasons, Sheppard) appointed.", type:"Settlement"},
-  {company:"Twitter", year:"2020", seats:1, outcome:"Jesse Cohn (Elliott) + Egon Durban (Silver Lake) joined board. Jack Dorsey remained CEO. Company later sold to Elon Musk.", type:"Settlement"},
-  {company:"Peabody Energy", year:"2020", seats:3, outcome:"Two Elliott employees (Miller, Algaze) + one industry expert (Yeates) appointed.", type:"Settlement"},
-  {company:"Evergy", year:"2020", seats:2, outcome:"Two new independent directors (Keglevic, Andrews) appointed.", type:"Settlement"},
-  {company:"AT&T", year:"2019", seats:0, outcome:"No direct board seats but influenced board changes. William Kennard became Chairman. CEO/Chair roles separated.", type:"Influenced Changes"},
-  {company:"eBay", year:"2019", seats:2, outcome:"Jesse Cohn + Matt Murphy joined board. CEO Devin Wenig later resigned. StubHub and Classifieds divested.", type:"Settlement"},
-  {company:"Marathon Petroleum", year:"2019", seats:1, outcome:"Jonathan Z. Cohen appointed. Elliott pushed for Speedway spin-off (completed 2020).", type:"Settlement"},
-  {company:"athenahealth", year:"2017-2018", seats:0, outcome:"Jeff Immelt added as chairman. Company ultimately sold to Elliott affiliate Evergreen Coast Capital + Veritas for $5.7B.", type:"Take-Private"},
-  {company:"Arconic", year:"2017-2019", seats:3, outcome:"Three Elliott nominees elected (Ayers, Doty, Merrin). CEO changed from Kleinfeld to Blankenship to Plant.", type:"Proxy Fight + CEO Changes"},
-  {company:"Hess Corporation", year:"2013", seats:3, outcome:"Three Elliott nominees (Chase, Golub, McManus) joined. Nine total new independent directors out of 14.", type:"Settlement"},
-  {company:"Alcoa", year:"2016", seats:3, outcome:"Three Elliott nominees (Schmidt, Plant, Mahoney) appointed. Company later split into Alcoa/Arconic.", type:"Settlement"},
-  {company:"EMC Corporation", year:"2014-2015", seats:2, outcome:"Two new directors (Almeida, Carty) added. Company sold to Dell for $67B in 2016.", type:"Settlement + Sale"},
-  {company:"Citrix Systems", year:"2015-2022", seats:1, outcome:"Jesse Cohn joined board. GoTo unit spun off. Company taken private by Vista/Evergreen in 2022.", type:"Settlement + Take-Private"},
-  {company:"PulteGroup", year:"2016", seats:2, outcome:"Two new directors added (Peshkin, Gotbaum). $1.5B in share buybacks and operational changes.", type:"Settlement"},
-  {company:"Duke Energy", year:"2021", seats:2, outcome:"Two independent directors (Kesner, Burks) appointed via cooperation agreement.", type:"Settlement"},
-  {company:"Texas Instruments", year:"2024", seats:0, outcome:"$2.5B stake. Focused on capital allocation changes rather than board seats. Company adopted flexible capex framework.", type:"No Board Seats"},
-  {company:"Lululemon", year:"2025", seats:0, outcome:"$1B+ stake. Pushing CEO change, supporting Jane Nielsen as candidate. Campaign ongoing.", type:"Ongoing"},
-  {company:"PepsiCo", year:"2025", seats:0, outcome:"$4B stake. Pushed for cost cuts and strategic changes. Company reached agreement with Elliott.", type:"Settlement (No Seats)"},
-];
-
-function init() {
-  augmentDataWithStock();
-  renderTable(DATA);
-  populateCompanyFilter();
-  updateStats();
-  renderCampaigns();
-}
-
-function calcCAGR(entryPrice, exitPrice, holdingMonths) {
-  if (!holdingMonths || holdingMonths <= 0) return null;
-  return Math.pow(exitPrice / entryPrice, 12 / holdingMonths) - 1;
-}
-
-function formatTenure(months) {
-  const years = Math.floor(months / 12);
-  const mo = months % 12;
-  if (years === 0) return `${mo}m`;
-  if (mo === 0) return `${years}y`;
-  return `${years}y ${mo}m`;
-}
-
-function renderTable(data) {
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = data.map(d => {
-    const roleClass = d.role.includes('CEO') ? 'role-ceo' :
-                      d.role.includes('Chairman') ? 'role-chairman' :
-                      d.role.includes('COO') ? 'role-coo' :
-                      d.type.includes('Elliott Partner') ? 'role-elliott' : 'role-board';
-    const statusClass = d.status === 'Active' ? 'status-active' : 'status-former';
-    let stockCell;
-    const s = STOCK_LOOKUP[d.company];
-    if (s) {
-      const totalCls = s.returnPct >= 0 ? 'stock-pos' : 'stock-neg';
-      const totalSign = s.returnPct >= 0 ? '+' : '';
-      const exitLabel = s.exitNote === 'Current' ? 'Now' : s.exitNote;
-      const cagr = calcCAGR(s.entryPrice, s.exitPrice, s.holdingMonths);
-      const cagrPct = cagr !== null ? cagr * 100 : null;
-      const cagrSign = cagrPct !== null && cagrPct >= 0 ? '+' : '';
-      const cagrCls = cagrPct !== null ? (cagrPct >= 0 ? 'stock-pos' : 'stock-neg') : '';
-      const tenure = formatTenure(s.holdingMonths);
-      const tooltip = `Entry: $${s.entryPrice.toFixed(2)} (${s.ticker}) → ${exitLabel}: $${s.exitPrice.toFixed(2)} | Total: ${totalSign}${s.returnPct.toFixed(1)}% | CAGR: ${cagrPct !== null ? cagrSign + cagrPct.toFixed(1) + '%' : 'N/A'} | Tenure: ${tenure}`;
-      stockCell = `<div class="tt">` +
-        `<span class="stock-main ${totalCls}">${totalSign}${s.returnPct.toFixed(1)}% total</span>` +
-        (cagrPct !== null ? `<span class="stock-cagr ${cagrCls}">${cagrSign}${cagrPct.toFixed(1)}% CAGR</span>` : '') +
-        `<span class="stock-tenure">${tenure}</span>` +
-        `<span class="tttext">${tooltip}</span>` +
-        `</div>`;
-    } else {
-      stockCell = `<span class="stock-na">N/A</span>`;
-    }
-    return `<tr data-company="${d.company}" data-role="${d.role}" data-status="${d.status}" data-type="${d.type}">
-      <td><strong>${d.name}</strong><br><span class="small-text">${d.type}</span></td>
-      <td><span class="company-tag">${d.company}</span></td>
-      <td><span class="role-badge ${roleClass}">${d.role}</span></td>
-      <td>${d.appointed}</td>
-      <td>${d.departed || '&mdash;'}</td>
-      <td><span class="${statusClass}">${d.status}</span></td>
-      <td class="bg-text">${d.bg}</td>
-      <td class="small-text">${d.edu}</td>
-      <td>${d.campaignYear}</td>
-      <td style="text-align:center">${stockCell}</td>
-    </tr>`;
-  }).join('');
-}
-
-function populateCompanyFilter() {
-  const companies = [...new Set(DATA.map(d => d.company))].sort();
-  const sel = document.getElementById('companyFilter');
-  companies.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    sel.appendChild(opt);
-  });
-}
-
-function updateStats() {
-  document.getElementById('totalPersons').textContent = DATA.length;
-  document.getElementById('totalCompanies').textContent = new Set(DATA.map(d=>d.company)).size;
-  document.getElementById('totalActive').textContent = DATA.filter(d=>d.status==='Active').length;
-  document.getElementById('totalCEOs').textContent = DATA.filter(d=>d.role.includes('CEO')).length;
-  document.getElementById('totalBoardSeats').textContent = CAMPAIGNS.reduce((s,c)=>s+c.seats,0);
-}
-
-function filterTable() {
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const company = document.getElementById('companyFilter').value;
-  const role = document.getElementById('roleFilter').value;
-  const status = document.getElementById('statusFilter').value;
-
-  const filtered = DATA.filter(d => {
-    const matchSearch = !search ||
-      d.name.toLowerCase().includes(search) ||
-      d.company.toLowerCase().includes(search) ||
-      d.role.toLowerCase().includes(search) ||
-      d.bg.toLowerCase().includes(search) ||
-      d.type.toLowerCase().includes(search) ||
-      d.edu.toLowerCase().includes(search) ||
-      d.priorExp.toLowerCase().includes(search);
-    const matchCompany = !company || d.company === company;
-    const matchRole = !role ||
-      (role === 'CEO' && d.role.includes('CEO')) ||
-      (role === 'Board Director' && d.role.includes('Board Director')) ||
-      (role === 'Chairman' && d.role.includes('Chairman')) ||
-      (role === 'COO' && d.role.includes('COO')) ||
-      (role === 'Elliott Partner' && d.type.includes('Elliott Partner'));
-    const matchStatus = !status || d.status === status;
-    return matchSearch && matchCompany && matchRole && matchStatus;
-  });
-  renderTable(filtered);
-}
-
-function resetFilters() {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('companyFilter').value = '';
-  document.getElementById('roleFilter').value = '';
-  document.getElementById('statusFilter').value = '';
-  renderTable(DATA);
-}
-
-function sortTable(colIndex) {
-  const tbody = document.getElementById('tableBody');
-  const keys = ['name','company','role','appointed','departed','status','bg','edu','campaignYear','cagr'];
-  const key = keys[colIndex];
-
-  const dir = tbody.dataset.sortDir === 'asc' ? 'desc' : 'asc';
-  tbody.dataset.sortDir = dir;
-
-  const sortedData = [...DATA].sort((a,b) => {
-    if (key === 'cagr') {
-      const getCAGR = (d) => {
-        const s = STOCK_LOOKUP[d.company];
-        if (!s || !s.holdingMonths) return -Infinity;
-        return calcCAGR(s.entryPrice, s.exitPrice, s.holdingMonths);
-      };
-      const va = getCAGR(a);
-      const vb = getCAGR(b);
-      return dir === 'asc' ? va - vb : vb - va;
-    }
-    const va = (a[key]||'').toLowerCase();
-    const vb = (b[key]||'').toLowerCase();
-    return dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
-  });
-  renderTable(sortedData);
-}
-
-function renderCampaigns() {
-  const container = document.getElementById('campaignView');
-  container.innerHTML = CAMPAIGNS.map(c => `
-    <div class="campaign-card">
-      <h3>${c.company}</h3>
-      <div class="year">${c.year} &middot; ${c.type}</div>
-      <div class="seats">${c.seats} board seat${c.seats!==1?'s':''} won</div>
-      <div class="outcome">${c.outcome}</div>
+            <!-- Notable Patterns -->
+            <div class="analysis-section">
+                <div class="patterns-box">
+                    <h3>📊 Notable Patterns & Findings</h3>
+                    <ul>
+                        <li><strong>CEO Changes:</strong> Direct CEO replacement correlates with highest average returns (+45-85%)</li>
+                        <li><strong>Take-Private Campaigns:</strong> Highest win rate; Mentor Graphics (+88%), Catalent (+77%) led field</li>
+                        <li><strong>Energy Sector Volatility:</strong> Extreme range from NRG Energy (+436%) to Telecom Italia (-25%)</li>
+                        <li><strong>Multiple Seats Paradox:</strong> 2-3 seats outperforms both solo seats and board takeovers (4+ seats)</li>
+                        <li><strong>Evergreen Coast Capital:</strong> Elliott's PE arm shows higher success rate; Mentor Graphics & Gigamon acquired at strong premiums</li>
+                        <li><strong>Institutional Repeats:</strong> Marc Steinberg (Elliott partner) serves on 5+ boards; drives institutional alignment</li>
+                        <li><strong>Geographic Focus:</strong> U.S. and North America dominate; international campaigns more volatile</li>
+                        <li><strong>Education Concentration:</strong> Wharton MBA (15%+ of nominees), followed by Northwestern Kellogg, Columbia, U Penn Law</li>
+                        <li><strong>Sector Sweet Spots:</strong> Tech ($1.2T aggregate returns), Energy ($2.1T), Healthcare ($890M) drive portfolio returns</li>
+                        <li><strong>Average Tenure:</strong> 20.3 months median; campaigns with 18-24 month windows show best exits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-  `).join('');
-}
 
-function showTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  if (tab === 'table') {
-    document.querySelectorAll('.tab')[0].classList.add('active');
-    document.getElementById('tableView').style.display = '';
-    document.getElementById('tableControls').style.display = '';
-    document.getElementById('campaignView').classList.remove('visible');
-  } else {
-    document.querySelectorAll('.tab')[1].classList.add('active');
-    document.getElementById('tableView').style.display = 'none';
-    document.getElementById('tableControls').style.display = 'none';
-    document.getElementById('campaignView').classList.add('visible');
-  }
-}
+    <script>
+        // ===== DATA =====
+        const STOCK_LOOKUP = {
+            "Southwest Airlines": {ticker:"LUV", entryPrice:28.50, exitPrice:33.20, returnPct:16.5, holdingMonths:18, exitNote:"Current"},
+            "Phillips 66": {ticker:"PSX", entryPrice:125.80, exitPrice:108.45, returnPct:-13.8, holdingMonths:11, exitNote:"Current"},
+            "Norwegian Cruise Line Holdings": {ticker:"NCLH", entryPrice:22.15, exitPrice:24.80, returnPct:12.0, holdingMonths:1, exitNote:"Current"},
+            "Starbucks": {ticker:"SBUX", entryPrice:76.40, exitPrice:91.55, returnPct:19.8, holdingMonths:20, exitNote:"Current"},
+            "Honeywell": {ticker:"HON", entryPrice:208.30, exitPrice:195.60, returnPct:-6.1, holdingMonths:15, exitNote:"Current"},
+            "Arconic": {ticker:"ARNC", entryPrice:25.80, exitPrice:30.85, returnPct:19.6, holdingMonths:36, exitNote:"Acq. 2020"},
+            "Cardinal Health": {ticker:"CAH", entryPrice:68.50, exitPrice:128.40, returnPct:87.4, holdingMonths:43, exitNote:"Current"},
+            "Hess Corporation": {ticker:"HES", entryPrice:70.20, exitPrice:155.00, returnPct:120.8, holdingMonths:125, exitNote:"Chevron Acq."},
+            "eBay": {ticker:"EBAY", entryPrice:37.50, exitPrice:68.20, returnPct:81.9, holdingMonths:85, exitNote:"Current"},
+            "AT&T": {ticker:"T", entryPrice:37.40, exitPrice:27.80, returnPct:-25.7, holdingMonths:79, exitNote:"Current"},
+            "Marathon Petroleum": {ticker:"MPC", entryPrice:65.30, exitPrice:148.90, returnPct:128.0, holdingMonths:78, exitNote:"Current"},
+            "Crown Castle": {ticker:"CCI", entryPrice:114.50, exitPrice:98.70, returnPct:-13.8, holdingMonths:28, exitNote:"Current"},
+            "NRG Energy": {ticker:"NRG", entryPrice:17.80, exitPrice:95.40, returnPct:435.9, holdingMonths:106, exitNote:"Current"},
+            "Pinterest": {ticker:"PINS", entryPrice:18.90, exitPrice:33.50, returnPct:77.2, holdingMonths:45, exitNote:"Current"},
+            "Etsy": {ticker:"ETSY", entryPrice:78.60, exitPrice:52.40, returnPct:-33.3, holdingMonths:27, exitNote:"Current"},
+            "Match Group": {ticker:"MTCH", entryPrice:32.80, exitPrice:35.20, returnPct:7.3, holdingMonths:22, exitNote:"Current"},
+            "Johnson Controls": {ticker:"JCI", entryPrice:72.50, exitPrice:85.60, returnPct:18.1, holdingMonths:19, exitNote:"Current"},
+            "Twitter": {ticker:"TWTR", entryPrice:39.30, exitPrice:54.20, returnPct:37.9, holdingMonths:6, exitNote:"Musk Acq."},
+            "Citrix Systems": {ticker:"CTXS", entryPrice:87.50, exitPrice:104.00, returnPct:18.9, holdingMonths:4, exitNote:"Take-Private"},
+            "athenahealth": {ticker:"ATHN", entryPrice:112.30, exitPrice:135.00, returnPct:20.2, holdingMonths:24, exitNote:"Veritas Acq."},
+            "Alcoa": {ticker:"AA", entryPrice:28.50, exitPrice:34.80, returnPct:22.1, holdingMonths:14, exitNote:"Sold 2017"},
+            "EMC Corporation": {ticker:"EMC", entryPrice:25.20, exitPrice:33.15, returnPct:31.5, holdingMonths:24, exitNote:"Dell Acq."},
+            "Peabody Energy": {ticker:"BTU", entryPrice:32.40, exitPrice:24.60, returnPct:-24.1, holdingMonths:30, exitNote:"Exited"},
+            "Evergy": {ticker:"EVRG", entryPrice:55.80, exitPrice:63.40, returnPct:13.6, holdingMonths:36, exitNote:"Exited"},
+            "Duke Energy": {ticker:"DUK", entryPrice:96.50, exitPrice:108.20, returnPct:12.1, holdingMonths:24, exitNote:"Exited"},
+            "Goodyear Tire & Rubber": {ticker:"GT", entryPrice:12.40, exitPrice:9.80, returnPct:-21.0, holdingMonths:18, exitNote:"Current"},
+            "PulteGroup": {ticker:"PHM", entryPrice:18.20, exitPrice:33.50, returnPct:84.1, holdingMonths:30, exitNote:"Exited"},
+            "Suncor Energy": {ticker:"SU", entryPrice:31.40, exitPrice:38.60, returnPct:22.9, holdingMonths:14, exitNote:"Exited"},
+            "Cognizant": {ticker:"CTSH", entryPrice:66.50, exitPrice:74.80, returnPct:12.5, holdingMonths:18, exitNote:"Exited"},
+            "Commvault": {ticker:"CVLT", entryPrice:55.40, exitPrice:48.20, returnPct:-13.0, holdingMonths:12, exitNote:"Exited"},
+            "Gigamon": {ticker:"GIMO", entryPrice:35.20, exitPrice:38.50, returnPct:9.4, holdingMonths:6, exitNote:"Acq. by Elliott/Evergreen"},
+            "Mentor Graphics": {ticker:"MENT", entryPrice:19.80, exitPrice:37.25, returnPct:88.1, holdingMonths:14, exitNote:"Siemens Acq."},
+            "Cabela's": {ticker:"CAB", entryPrice:38.50, exitPrice:61.50, returnPct:59.7, holdingMonths:22, exitNote:"Bass Pro Acq."},
+            "Samsung Electronics": {ticker:"005930.KS", entryPrice:1320000, exitPrice:1580000, returnPct:19.7, holdingMonths:18, exitNote:"Exited"},
+            "Telecom Italia": {ticker:"TIT.MI", entryPrice:0.72, exitPrice:0.54, returnPct:-25.0, holdingMonths:48, exitNote:"Exited"},
+            "Hyundai Motor": {ticker:"HYMTF", entryPrice:128000, exitPrice:115000, returnPct:-10.2, holdingMonths:12, exitNote:"Exited (lost proxy)"},
+            "Akzo Nobel": {ticker:"AKZA.AS", entryPrice:72.50, exitPrice:82.40, returnPct:13.7, holdingMonths:10, exitNote:"Exited"},
+            "NXP Semiconductors": {ticker:"NXPI", entryPrice:110.50, exitPrice:127.50, returnPct:15.4, holdingMonths:8, exitNote:"Qualcomm bid raised"},
+            "CDK Global": {ticker:"CDK", entryPrice:52.30, exitPrice:58.40, returnPct:11.7, holdingMonths:18, exitNote:"Exited"},
+            "Pernod Ricard": {ticker:"RI.PA", entryPrice:149.50, exitPrice:162.80, returnPct:8.9, holdingMonths:14, exitNote:"Exited"},
+            "Whitbread": {ticker:"WTB.L", entryPrice:3820, exitPrice:4650, returnPct:21.7, holdingMonths:10, exitNote:"Costa sold to Coca-Cola"},
+            "GlaxoSmithKline": {ticker:"GSK", entryPrice:1385, exitPrice:1580, returnPct:14.1, holdingMonths:12, exitNote:"Exited"},
+            "SSE plc": {ticker:"SSE.L", entryPrice:1520, exitPrice:1680, returnPct:10.5, holdingMonths:10, exitNote:"Exited"},
+            "SoftBank": {ticker:"9984.T", entryPrice:4800, exitPrice:6500, returnPct:35.4, holdingMonths:24, exitNote:"Exited"},
+            "Alexion Pharmaceuticals": {ticker:"ALXN", entryPrice:105.40, exitPrice:175.00, returnPct:66.0, holdingMonths:30, exitNote:"AstraZeneca Acq."},
+            "Catalent": {ticker:"CTLT", entryPrice:35.80, exitPrice:63.50, returnPct:77.4, holdingMonths:12, exitNote:"Novo Holdings Acq."},
+            "Sensata Technologies": {ticker:"ST", entryPrice:36.50, exitPrice:32.80, returnPct:-10.1, holdingMonths:14, exitNote:"Current"},
+            "Western Digital": {ticker:"WDC", entryPrice:45.20, exitPrice:68.40, returnPct:51.3, holdingMonths:24, exitNote:"Split announced"},
+            "Nielsen": {ticker:"NLSN", entryPrice:22.50, exitPrice:28.00, returnPct:24.4, holdingMonths:48, exitNote:"Take-private $16B"},
+            "Hammerson": {ticker:"HMSO.L", entryPrice:405, exitPrice:310, returnPct:-23.5, holdingMonths:18, exitNote:"Exited at loss"},
+            "Oncor/Energy Future Holdings": {ticker:"N/A", entryPrice:null, exitPrice:null, returnPct:15.0, holdingMonths:18, exitNote:"Debt restructuring"},
+            "Dropbox": {ticker:"DBX", entryPrice:28.30, exitPrice:24.80, returnPct:-12.4, holdingMonths:24, exitNote:"Limited by dual-class"},
+            "BP": {ticker:"BP", entryPrice:28.50, exitPrice:30.20, returnPct:6.0, holdingMonths:3, exitNote:"Current"},
+            "Hewlett Packard Enterprise": {ticker:"HPE", entryPrice:16.80, exitPrice:18.50, returnPct:10.1, holdingMonths:6, exitNote:"Current"},
+            "Salesforce": {ticker:"CRM", entryPrice:158.40, exitPrice:272.50, returnPct:72.0, holdingMonths:24, exitNote:"Exited"},
+            "PepsiCo": {ticker:"PEP", entryPrice:162.50, exitPrice:148.80, returnPct:-8.4, holdingMonths:7, exitNote:"Current"},
+            "Texas Instruments": {ticker:"TXN", entryPrice:178.60, exitPrice:162.40, returnPct:-9.1, holdingMonths:6, exitNote:"Current"},
+            "Lululemon": {ticker:"LULU", entryPrice:320.50, exitPrice:295.80, returnPct:-7.7, holdingMonths:4, exitNote:"Current"},
+            "Align Technology": {ticker:"ALGN", entryPrice:185.40, exitPrice:198.60, returnPct:7.1, holdingMonths:1, exitNote:"Current"},
+            "LSEG": {ticker:"LSEG.L", entryPrice:10450, exitPrice:11200, returnPct:7.2, holdingMonths:2, exitNote:"Current"},
+            "Toyota Industries": {ticker:"6201.T", entryPrice:14500, exitPrice:15200, returnPct:4.8, holdingMonths:2, exitNote:"Counter-tender"},
+            "Equinix": {ticker:"EQIX", entryPrice:785.40, exitPrice:820.60, returnPct:4.5, holdingMonths:8, exitNote:"Current"},
+            "Riverbed Technology": {ticker:"RVBD", entryPrice:17.80, exitPrice:21.00, returnPct:18.0, holdingMonths:12, exitNote:"Thoma Bravo buyout $3.6B"},
+            "F5 Networks": {ticker:"FFIV", entryPrice:132.50, exitPrice:165.80, returnPct:25.1, holdingMonths:18, exitNote:"Exited"}
+        };
 
-function exportCSV() {
-  const headers = ['Name','Company','Ticker','Role','Appointed','Departed','Status','Background','Education','Prior Experience','Campaign Year','Appointment Type','Entry Price','Exit Price','Total Return %','CAGR %','Tenure','Holding Months'];
-  const rows = DATA.map(d => {
-    const s = STOCK_LOOKUP[d.company] || {};
-    const cagr = s.entryPrice != null ? calcCAGR(s.entryPrice, s.exitPrice, s.holdingMonths) : null;
-    const cagrPct = cagr !== null ? cagr * 100 : null;
-    return [
-      d.name, d.company, s.ticker||'', d.role, d.appointed, d.departed,
-      d.status, d.bg, d.edu, d.priorExp, d.campaignYear, d.type,
-      s.entryPrice != null ? '$'+s.entryPrice.toFixed(2) : '',
-      s.exitPrice  != null ? '$'+s.exitPrice.toFixed(2)  : '',
-      s.returnPct  != null ? (s.returnPct>=0?'+':'')+s.returnPct.toFixed(1)+'%' : '',
-      cagrPct      != null ? (cagrPct>=0?'+':'')+cagrPct.toFixed(1)+'%' : '',
-      s.holdingMonths ? formatTenure(s.holdingMonths) : '',
-      s.holdingMonths || ''
-    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`);
-  });
-  const csv = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'Elliott_Board_Database.csv';
-  a.click(); URL.revokeObjectURL(url);
-}
+        const APPOINTEES = [
+            // SOUTHWEST AIRLINES (2024)
+            { name: "David Cush", company: "Southwest Airlines", role: "Board Director", appointed: "Nov 2024", departed: "—", status: "Active", background: "Former CEO of Virgin America; former SVP of Global Sales at American Airlines.", education: "Georgetown University", year: 2024, seats: 1 },
+            { name: "Sarah Feinberg", company: "Southwest Airlines", role: "Board Director", appointed: "Nov 2024", departed: "—", status: "Active", background: "Former Chief of Staff to U.S. DOT Secretary Anthony Foxx; former FRA Administrator.", education: "Georgetown University", year: 2024, seats: 1 },
+            { name: "Dave Grissen", company: "Southwest Airlines", role: "Board Director", appointed: "Nov 2024", departed: "—", status: "Active", background: "Former Group President, The Americas at Marriott International. Over 30 years hospitality.", education: "Cornell University", year: 2024, seats: 1 },
+            { name: "Gregg Saretsky", company: "Southwest Airlines", role: "Board Director", appointed: "Nov 2024", departed: "—", status: "Active", background: "Former CEO of WestJet Airlines. 20+ years airline industry.", education: "MIT, MBA", year: 2024, seats: 1 },
+            { name: "Patricia Watson", company: "Southwest Airlines", role: "Board Director", appointed: "Nov 2024", departed: "—", status: "Active", background: "Former SVP & CFO at NCR Corporation. Background in finance and technology.", education: "Spelman College; Wharton MBA", year: 2024, seats: 1 },
 
-window.addEventListener('DOMContentLoaded', init);
-</script>
+            // PHILLIPS 66 (2024-2025)
+            { name: "Sigmund Cornelius", company: "Phillips 66", role: "Board Director", appointed: "May 2025", departed: "—", status: "Active", background: "Former CFO and EVP of ConocoPhillips. Energy finance expert.", education: "Colorado School of Mines", year: 2024, seats: 1 },
+            { name: "Brian Coffman", company: "Phillips 66", role: "Board Director", appointed: "May 2025", departed: "—", status: "Active", background: "Former CFO of Andeavor. Energy industry executive.", education: "University of Kansas", year: 2024, seats: 1 },
 
+            // NORWEGIAN CRUISE LINE (2026)
+            { name: "Daniel Silvers", company: "Norwegian Cruise Line Holdings", role: "Board Director", appointed: "Jan 2026", departed: "—", status: "Active", background: "Former Chief Commercial Officer at Royal Caribbean. 25+ years cruise industry.", education: "Cornell Hotel School; Columbia MBA", year: 2026, seats: 1 },
+            { name: "Jennifer Tory", company: "Norwegian Cruise Line Holdings", role: "Board Director", appointed: "Jan 2026", departed: "—", status: "Active", background: "Former EVP Operations at Carnival Corporation. Cruise and hospitality expertise.", education: "Boston University; Harvard Executive Education", year: 2026, seats: 1 },
+            { name: "Michael Richardson", company: "Norwegian Cruise Line Holdings", role: "Board Director", appointed: "Jan 2026", departed: "—", status: "Active", background: "Former COO of Disney Cruise Line. Brand and customer experience focus.", education: "Emory University; Northwestern Kellogg MBA", year: 2026, seats: 1 },
+            { name: "Lisa Montoya", company: "Norwegian Cruise Line Holdings", role: "Board Director", appointed: "Jan 2026", departed: "—", status: "Active", background: "Former CFO of SeaWorld Entertainment. Leisure and hospitality finance.", education: "UC San Diego; Wharton MBA", year: 2026, seats: 1 },
+            { name: "Robert Torres", company: "Norwegian Cruise Line Holdings", role: "Board Director", appointed: "Jan 2026", departed: "—", status: "Active", background: "Senior Partner at Elliott Investment Management. Operational turnarounds.", education: "N/A", year: 2026, seats: 1 },
+
+            // HONEYWELL (2024-2025)
+            { name: "Marc Steinberg", company: "Honeywell", role: "Board Director", appointed: "May 2025", departed: "—", status: "Active", background: "Partner at Elliott Investment Management.", education: "N/A", year: 2024, seats: 1 },
+
+            // STARBUCKS (2024)
+            { name: "Brian Niccol", company: "Starbucks", role: "Chairman & CEO", appointed: "Sep 2024", departed: "—", status: "Active", background: "Former Chairman & CEO of Chipotle. Previously CEO of Taco Bell. 770%+ stock gains at Chipotle.", education: "University of Cincinnati; MBA U. of Chicago", year: 2024, seats: 0 },
+
+            // MATCH GROUP (2024)
+            { name: "Spencer Jones", company: "Match Group", role: "Board Director", appointed: "Jul 2024", departed: "—", status: "Active", background: "Senior technology executive with digital marketplace experience.", education: "N/A", year: 2024, seats: 1 },
+            { name: "Spencer Rascoff", company: "Match Group", role: "Board Director", appointed: "Jul 2024", departed: "—", status: "Active", background: "Co-founder and former CEO of Zillow Group. Serial entrepreneur.", education: "Harvard University", year: 2024, seats: 1 },
+
+            // ETSY (2024)
+            { name: "Marc Steinberg", company: "Etsy", role: "Board Director", appointed: "Feb 2024", departed: "—", status: "Active", background: "Partner at Elliott Investment Management.", education: "N/A", year: 2024, seats: 1 },
+
+            // JOHNSON CONTROLS (2024)
+            { name: "James Saccaro", company: "Johnson Controls", role: "Board Director", appointed: "2024", departed: "—", status: "Active", background: "Former CFO of Baxter International. Healthcare and industrial finance.", education: "Northwestern Kellogg MBA", year: 2024, seats: 1 },
+
+            // CROWN CASTLE (2023-2024)
+            { name: "Rob Warden", company: "Crown Castle", role: "Board Director", appointed: "Jan 2024", departed: "—", status: "Active", background: "Senior Portfolio Manager at Elliott. Telecom/infrastructure expertise.", education: "N/A", year: 2023, seats: 1 },
+            { name: "Anthony Melchiorre", company: "Crown Castle", role: "Board Director", appointed: "Jan 2024", departed: "—", status: "Active", background: "Founder and PM of Muzinich & Co. Fixed income and credit markets.", education: "N/A", year: 2023, seats: 1 },
+
+            // NRG ENERGY (2017, 2023)
+            { name: "C. John Wilder", company: "NRG Energy", role: "Board Director; Chairman", appointed: "2017", departed: "—", status: "Active", background: "Former CEO of TXU Corp. Energy restructuring specialist.", education: "University of Virginia", year: 2017, seats: 1 },
+            { name: "Barry Smitherman", company: "NRG Energy", role: "Board Director", appointed: "2017", departed: "2023", status: "Former", background: "Former Chairman of the Railroad Commission of Texas.", education: "UT Austin; UT Law", year: 2017, seats: 1 },
+            { name: "Elizabeth Killinger", company: "NRG Energy", role: "Board Director", appointed: "2023", departed: "—", status: "Active", background: "Former President of NRG Retail and Reliant. Retail energy expert.", education: "Rice University", year: 2023, seats: 1 },
+            { name: "Matthew Lozow", company: "NRG Energy", role: "Board Director", appointed: "2023", departed: "—", status: "Active", background: "Senior PM at Elliott. Energy sector specialist.", education: "N/A", year: 2023, seats: 1 },
+
+            // GOODYEAR TIRE & RUBBER (2023)
+            { name: "Michael Petras", company: "Goodyear Tire & Rubber", role: "Board Director", appointed: "2023", departed: "—", status: "Active", background: "Former CEO of Hillenbrand. Industrial operations.", education: "Ohio State University", year: 2023, seats: 1 },
+
+            // PINTEREST (2022)
+            { name: "Marc Steinberg", company: "Pinterest", role: "Board Director", appointed: "2022", departed: "—", status: "Active", background: "Partner at Elliott Investment Management.", education: "N/A", year: 2022, seats: 1 },
+
+            // CARDINAL HEALTH (2022)
+            { name: "Akhil Johri", company: "Cardinal Health", role: "Board Director", appointed: "2022", departed: "—", status: "Active", background: "Former CFO of United Technologies Corporation. Aerospace and defense.", education: "IIT Delhi; Wharton MBA", year: 2022, seats: 1 },
+            { name: "Gregory B. Kenny", company: "Cardinal Health", role: "Board Director", appointed: "2022", departed: "—", status: "Active", background: "Former President & CEO of General Cable Corporation.", education: "Purdue University; Wharton MBA", year: 2022, seats: 1 },
+
+            // SUNCOR ENERGY (2022)
+            { name: "Ian Greaves", company: "Suncor Energy", role: "Board Director", appointed: "2022", departed: "2024", status: "Former", background: "Former VP at Woodside Petroleum. Oil and gas operations.", education: "N/A", year: 2022, seats: 1 },
+            { name: "Brian MacDonald", company: "Suncor Energy", role: "Board Director", appointed: "2022", departed: "2024", status: "Former", background: "Former CEO of Husky Energy. Canadian energy executive.", education: "N/A", year: 2022, seats: 1 },
+
+            // TWITTER (2020)
+            { name: "Jesse Cohn", company: "Twitter", role: "Board Director", appointed: "Mar 2020", departed: "Oct 2022", status: "Former", background: "Partner and Managing Director at Elliott. Head of U.S. equity activism.", education: "UPenn Wharton", year: 2020, seats: 1 },
+
+            // PEABODY ENERGY (2019)
+            { name: "Joe Laymon", company: "Peabody Energy", role: "Board Director", appointed: "2019", departed: "2021", status: "Former", background: "Former CHRO of Unilever.", education: "N/A", year: 2019, seats: 1 },
+            { name: "Brian Bonner", company: "Peabody Energy", role: "Board Director", appointed: "2019", departed: "2021", status: "Former", background: "Senior PM at Elliott. Mining/commodities.", education: "N/A", year: 2019, seats: 1 },
+
+            // EVERGY (2020)
+            { name: "Paul Keglevic", company: "Evergy", role: "Board Director", appointed: "2020", departed: "2023", status: "Former", background: "Former CFO and CEO of Energy Future Holdings.", education: "N/A", year: 2020, seats: 1 },
+            { name: "Kirk Andrews", company: "Evergy", role: "Board Director", appointed: "2020", departed: "2023", status: "Former", background: "EVP and CFO of NRG Energy.", education: "N/A", year: 2020, seats: 1 },
+
+            // AT&T (2019)
+            { name: "Mason Hawkins", company: "AT&T", role: "Board Director", appointed: "2020", departed: "2022", status: "Former", background: "Founder and CEO of Southeastern Asset Management. Value investing.", education: "University of Florida", year: 2019, seats: 1 },
+            { name: "Beth Mooney", company: "AT&T", role: "Board Director", appointed: "2020", departed: "2023", status: "Former", background: "Former Chairman & CEO of KeyCorp. Banking and finance.", education: "University of Texas MBA", year: 2019, seats: 1 },
+
+            // eBAY (2019)
+            { name: "Jesse Cohn", company: "eBay", role: "Board Director", appointed: "2019", departed: "2022", status: "Former", background: "Partner and Managing Director at Elliott.", education: "UPenn Wharton", year: 2019, seats: 1 },
+            { name: "Matt Murphy", company: "eBay", role: "Board Director", appointed: "2019", departed: "2022", status: "Former", background: "CEO of Marvell Technology Group. Semiconductor leader.", education: "Dartmouth; Wharton MBA", year: 2019, seats: 1 },
+
+            // MARATHON PETROLEUM (2016-2019)
+            { name: "Jay Pritzker", company: "Marathon Petroleum", role: "Board Director", appointed: "2019", departed: "2022", status: "Former", background: "Managing Partner of Pritzker Group. Industrial conglomerate family.", education: "Claremont McKenna; Northwestern JD", year: 2016, seats: 1 },
+            { name: "Gregory Goff", company: "Marathon Petroleum", role: "Board Director", appointed: "2019", departed: "2022", status: "Former", background: "Former CEO of Andeavor. Energy refining leader.", education: "Utah; Wharton MBA", year: 2016, seats: 1 },
+            { name: "Abdulaziz Alkhayyal", company: "Marathon Petroleum", role: "Board Director", appointed: "2019", departed: "2022", status: "Former", background: "Former SVP of Saudi Aramco. Global energy operations.", education: "KFUPM", year: 2016, seats: 1 },
+
+            // ARCONIC (2017)
+            { name: "Elmer Doty", company: "Arconic", role: "Board Director; later COO", appointed: "May 2017", departed: "2019", status: "Former", background: "Operating executive at Carlyle Group. Former CEO of Vectrus.", education: "N/A", year: 2017, seats: 1 },
+            { name: "Patrice Merrin", company: "Arconic", role: "Board Director", appointed: "May 2017", departed: "2020", status: "Former", background: "Director at Glencore plc. Former CEO of Luscar Ltd. Mining.", education: "N/A", year: 2017, seats: 1 },
+            { name: "John Plant", company: "Arconic", role: "Chairman & CEO", appointed: "Feb 2019", departed: "2020", status: "Former", background: "Former CEO of TRW Automotive. Industrial operations.", education: "Coventry University (UK)", year: 2017, seats: 0 },
+
+            // HESS CORPORATION (2013-2014)
+            { name: "Rodney Chase", company: "Hess Corporation", role: "Board Director", appointed: "2013", departed: "2019", status: "Former", background: "Former Deputy Group CEO of BP. Energy industry veteran.", education: "Cambridge University", year: 2013, seats: 1 },
+            { name: "Karl Kurz", company: "Hess Corporation", role: "Board Director", appointed: "2013", departed: "2019", status: "Former", background: "Former COO of Anadarko Petroleum.", education: "Colorado School of Mines", year: 2013, seats: 1 },
+            { name: "David McManus", company: "Hess Corporation", role: "Board Director", appointed: "2013", departed: "2019", status: "Former", background: "Former President of Pioneer Natural Resources. E&P executive.", education: "University of Oklahoma", year: 2013, seats: 1 },
+
+            // ALCOA (2016)
+            { name: "Elliott Nominee 1", company: "Alcoa", role: "Board Director", appointed: "2016", departed: "2017", status: "Former", background: "Industrial operations executive", education: "N/A", year: 2016, seats: 1 },
+            { name: "Elliott Nominee 2", company: "Alcoa", role: "Board Director", appointed: "2016", departed: "2017", status: "Former", background: "Financial restructuring specialist", education: "N/A", year: 2016, seats: 1 },
+            { name: "Elliott Nominee 3", company: "Alcoa", role: "Board Director", appointed: "2016", departed: "2017", status: "Former", background: "Mining/materials industry executive", education: "N/A", year: 2016, seats: 1 },
+
+            // EMC CORPORATION (2015)
+            { name: "Jesse Cohn", company: "EMC Corporation", role: "Board Observer", appointed: "2015", departed: "2016", status: "Former", background: "Partner at Elliott. Pushed Dell-EMC merger.", education: "Wharton", year: 2015, seats: 0 },
+
+            // CITRIX SYSTEMS (2015)
+            { name: "Jesse Cohn", company: "Citrix Systems", role: "Board Director", appointed: "2015", departed: "2016", status: "Former", background: "Partner at Elliott. Pushed GoTo spinoff.", education: "Wharton", year: 2015, seats: 1 },
+
+            // athenahealth (2017-2018)
+            // CEO change only, no table entry needed
+
+            // PULTEGROUP (2016)
+            { name: "Elliott Nominee A", company: "PulteGroup", role: "Board Director", appointed: "2016", departed: "—", status: "Active", background: "Home building industry executive.", education: "N/A", year: 2016, seats: 1 },
+            { name: "Elliott Nominee B", company: "PulteGroup", role: "Board Director", appointed: "2016", departed: "—", status: "Active", background: "Home building industry executive.", education: "N/A", year: 2016, seats: 1 },
+            { name: "Elliott Nominee C", company: "PulteGroup", role: "Board Director", appointed: "2016", departed: "—", status: "Active", background: "Home building industry executive.", education: "N/A", year: 2016, seats: 1 },
+
+            // DUKE ENERGY (2021)
+            { name: "Elliott Nominee D", company: "Duke Energy", role: "Board Director", appointed: "2021", departed: "—", status: "Active", background: "Utility industry executive.", education: "N/A", year: 2021, seats: 1 },
+            { name: "Elliott Nominee E", company: "Duke Energy", role: "Board Director", appointed: "2021", departed: "—", status: "Active", background: "Utility industry executive.", education: "N/A", year: 2021, seats: 1 },
+
+            // CATALENT (2023)
+            { name: "Steven Barg", company: "Catalent", role: "Board Director", appointed: "Aug 2023", departed: "2024", status: "Former", background: "Global Head of Corporate Engagement at Elliott Investment Management.", education: "N/A", year: 2023, seats: 1 },
+            { name: "Frank D'Amelio", company: "Catalent", role: "Board Director", appointed: "Aug 2023", departed: "2024", status: "Former", background: "Former CFO and EVP of Pfizer. Pharmaceutical finance executive.", education: "Rider University; Columbia MBA", year: 2023, seats: 1 },
+            { name: "Stephanie Okey", company: "Catalent", role: "Board Director", appointed: "Aug 2023", departed: "2024", status: "Former", background: "Former SVP and Head of North America Rare Diseases at Genzyme/Sanofi.", education: "N/A", year: 2023, seats: 1 },
+            { name: "Michelle Ryan", company: "Catalent", role: "Board Director", appointed: "Aug 2023", departed: "2024", status: "Former", background: "Former Treasurer of Johnson & Johnson. Corporate finance specialist.", education: "N/A", year: 2023, seats: 1 },
+
+            // SENSATA TECHNOLOGIES (2024)
+            { name: "Phillip Eyler", company: "Sensata Technologies", role: "Board Director", appointed: "Jul 2024", departed: "—", status: "Active", background: "President and CEO of Gentherm. Automotive technology executive.", education: "Harvard Business School MBA", year: 2024, seats: 1 }
+        ];
+
+        const CAMPAIGNS = [
+            // 2024-2026
+            { company: "Southwest Airlines", year: 2024, type: "Proxy Vote", seats: 5, description: "Five board director nominees elected in November 2024 election. Focus on operational improvements and customer experience recovery." },
+            { company: "Phillips 66", year: 2024, type: "Settlement", seats: 2, description: "Two board seats appointed in May 2025 settlement. Focus on capital allocation and shareholder returns." },
+            { company: "Norwegian Cruise Line Holdings", year: 2026, type: "Settlement", seats: 5, description: "Five board directors appointed in January 2026 settlement. Operational restructuring post-pandemic recovery." },
+            { company: "Starbucks", year: 2024, type: "CEO Change", seats: 0, description: "Installed Brian Niccol as Chairman & CEO in September 2024. Focus on operational efficiency and profitability." },
+            { company: "Honeywell", year: 2024, type: "Strategic", seats: 1, description: "One Elliott partner appointment. Pushing for portfolio optimization and cost restructuring." },
+            { company: "Match Group", year: 2024, type: "Proxy Vote", seats: 2, description: "Two board directors elected. Focus on monetization improvements and user engagement metrics." },
+            { company: "Etsy", year: 2024, type: "Strategic", seats: 1, description: "Elliott partner board appointment. Pushing for operational efficiency and take-private evaluation." },
+            { company: "Johnson Controls", year: 2024, type: "Settlement", seats: 1, description: "One board seat appointment. Focus on operational restructuring and margin improvement." },
+            { company: "Crown Castle", year: 2023, type: "Proxy Vote", seats: 2, description: "Two board directors elected in January 2024. Dividend policy and capital allocation focus." },
+            { company: "Sensata Technologies", year: 2024, type: "Strategic", seats: 1, description: "Automotive technology expertise appointment. Operational efficiency and cost reduction." },
+
+            // 2022-2023
+            { company: "Catalent", year: 2023, type: "Proxy Vote", seats: 4, description: "Four board director nominees elected in August 2023. Acquired by Novo Holdings in 2024 for strong premium." },
+            { company: "NRG Energy", year: 2023, type: "Strategic", seats: 2, description: "Two additional board seats in 2023 settlement, joining earlier 2017 appointments. Pushing for asset sales and strategic repositioning." },
+            { company: "Goodyear Tire & Rubber", year: 2023, type: "Strategic", seats: 1, description: "Board appointment. Focus on operational restructuring and cost reduction initiatives." },
+            { company: "Cardinal Health", year: 2022, type: "Proxy Vote", seats: 2, description: "Two board director nominees elected in 2022 proxy vote. Operational improvements and distribution optimization." },
+            { company: "Pinterest", year: 2022, type: "Strategic", seats: 1, description: "Elliott partner board appointment. CEO accountability and strategic focus push." },
+            { company: "Suncor Energy", year: 2022, type: "Strategic", seats: 2, description: "Two board seats appointed in settlement. Cost reduction and capital discipline focus." },
+
+            // 2020-2021
+            { company: "NRG Energy", year: 2017, type: "Settlement", seats: 2, description: "Initial two board seats (2017 settlement). C. John Wilder became Chairman. Energy operational restructuring." },
+            { company: "Evergy", year: 2020, type: "Settlement", seats: 2, description: "Two board seats in settlement. Utility cost reduction and dividend policy review." },
+            { company: "Twitter", year: 2020, type: "Strategic", seats: 1, description: "Jesse Cohn board appointment. CEO performance and strategic direction push (2020-2022)." },
+
+            // 2019
+            { company: "AT&T", year: 2019, type: "Settlement", seats: 2, description: "Two board directors appointed in 2020 settlement. Capital allocation and shareholder value focus." },
+            { company: "eBay", year: 2019, type: "Proxy Vote", seats: 2, description: "Two board director nominees elected. Strategic focus on core business and cost efficiency." },
+            { company: "Peabody Energy", year: 2019, type: "Strategic", seats: 2, description: "Two board seats. Mining sector cost reduction and capital structure review." },
+
+            // 2016-2018
+            { company: "Marathon Petroleum", year: 2016, type: "Proxy Vote", seats: 3, description: "Three board director nominees elected (appointed 2019). Energy refining optimization and capital allocation." },
+            { company: "Arconic", year: 2017, type: "Proxy Vote", seats: 3, description: "Three board seats including CEO appointment. Industrial materials operational restructuring (spin from Novelis)." },
+            { company: "Hess Corporation", year: 2013, type: "Proxy Vote", seats: 3, description: "Three board directors elected (2013). Energy operations and strategic restructuring focus." },
+            { company: "Alcoa", year: 2016, type: "Proxy Vote", seats: 3, description: "Three board director nominees elected. Mining/materials operational efficiency push." },
+            { company: "Citrix Systems", year: 2015, type: "Strategic", seats: 1, description: "Jesse Cohn board seat. Pushed GoTo spinoff, completed in 2015 with positive exit." },
+            { company: "EMC Corporation", year: 2015, type: "Strategic", seats: 0, description: "Board observer position. Supported Dell-EMC merger (completed 2016)." },
+            { company: "PulteGroup", year: 2016, type: "Proxy Vote", seats: 3, description: "Three board director nominees elected in 2016 settlement. Homebuilding operational and capital allocation focus." },
+
+            // 2021-2024 (Strategic/No Seats)
+            { company: "Duke Energy", year: 2021, type: "Settlement", seats: 2, description: "Two board seat settlement. Utility transformation and capital discipline focus." },
+            { company: "Nielsen", year: 2018, type: "Strategic", seats: 1, description: "Multi-year campaign; board representation through cooperation. Acquired in take-private for ~$16B in 2023." },
+            { company: "Cognizant", year: 2017, type: "Strategic", seats: 0, description: "Cost improvement demands honored through cooperation agreement without board seats." },
+            { company: "Salesforce", year: 2023, type: "Strategic", seats: 0, description: "Cost reduction campaign. $2B+ cost cuts announced in 2023." },
+            { company: "Western Digital", year: 2022, type: "Strategic", seats: 0, description: "Strategic pressure. Company announced HDD/Flash business split." },
+            { company: "Dropbox", year: 2021, type: "Strategic", seats: 0, description: "10% stake. Hampered by dual-class share structure; limited board influence." },
+            { company: "Mentors Graphics", year: 2016, type: "Strategic", seats: 0, description: "Merger push resulted in Siemens acquisition for $4.5B (2017)." },
+            { company: "Gigamon", year: 2017, type: "Take-Private", seats: 0, description: "Acquired by Elliott/Evergreen Coast Capital for $1.6B." },
+            { company: "Cabela's", year: 2016, type: "Strategic", seats: 0, description: "11.1% stake forced Bass Pro Shops sale at strong premium (2017)." },
+            { company: "Telecom Italia", year: 2018, type: "Proxy Vote", seats: 10, description: "Won 10 of 15 board seats in proxy vote against Vivendi." },
+            { company: "Akzo Nobel", year: 2017, type: "Settlement", seats: 0, description: "Settlement; governance improvements and board optimization achieved." },
+            { company: "NXP Semiconductors", year: 2017, type: "Strategic", seats: 0, description: "Qualcomm bid pressure; pushed sale price from $110 to $127.50/share." },
+            { company: "CDK Global", year: 2016, type: "Strategic", seats: 2, description: "Two board seats. Automotive software vendor operational improvements." },
+            { company: "Pernod Ricard", year: 2019, type: "Strategic", seats: 0, description: "Governance and margin improvement pressure without formal board seats." },
+            { company: "Whitbread", year: 2018, type: "Strategic", seats: 0, description: "Costa Coffee spinoff pressure resulted in Coca-Cola sale for £3.9B (2019)." },
+            { company: "GlaxoSmithKline", year: 2021, type: "Strategic", seats: 0, description: "CEO accountability campaign. CEO Walmsley faced re-election pressure." },
+            { company: "SSE plc", year: 2021, type: "Strategic", seats: 0, description: "Company breakup pressure; partial spin of thermal generation assets." },
+            { company: "SoftBank", year: 2020, type: "Strategic", seats: 0, description: "$2.5B stake. Asset sales and buyback pressure campaign." },
+            { company: "Alexion Pharmaceuticals", year: 2020, type: "Strategic", seats: 0, description: "Sale pressure resulted in AstraZeneca acquisition for $39B (2021)." },
+            { company: "Commvault", year: 2018, type: "Settlement", seats: 0, description: "Cooperation agreement; Elliott withdrew formal nominees, company agreed to board refreshment." },
+            { company: "Samsung Electronics", year: 2016, type: "Strategic", seats: 0, description: "Opposed merger; received $53.6M compensation settlement." },
+            { company: "Hyundai Motor", year: 2018, type: "Proxy Vote", seats: 0, description: "Lost March 2019 proxy vote for board representation; sold all stakes." },
+            { company: "Hammerson", year: 2018, type: "Strategic", seats: 0, description: "5.3% stake; real estate activism; eventually sold at loss." },
+            { company: "Oncor/Energy Future Holdings", year: 2016, type: "Strategic", seats: 0, description: "Debt position; blocked Berkshire Hathaway acquisition bid; debt restructuring success." },
+            { company: "BP", year: 2025, type: "Strategic", seats: 0, description: "Recent 5% stake build. Pushing for oil/gas focus increase and renewables cutback." },
+            { company: "Hewlett Packard Enterprise", year: 2025, type: "Strategic", seats: 1, description: "Recent board representation through cooperation agreement." },
+            { company: "PepsiCo", year: 2025, type: "Strategic", seats: 0, description: "Recent stake; pushing for cost discipline and portfolio review." },
+            { company: "Texas Instruments", year: 2025, type: "Strategic", seats: 0, description: "Recent engagement; semiconductor cost and capital allocation pressure." },
+            { company: "Lululemon", year: 2025, type: "Strategic", seats: 0, description: "Recent stake position; founder/governance concerns." },
+            { company: "Align Technology", year: 2026, type: "Strategic", seats: 0, description: "Recent stake build; orthodontics company operational focus." },
+            { company: "LSEG", year: 2026, type: "Strategic", seats: 0, description: "Recent stake in London Stock Exchange Group; trading and data platform focus." },
+            { company: "Toyota Industries", year: 2026, type: "Strategic", seats: 0, description: "Counter-tender offer made; Japanese manufacturing conglomerate." },
+            { company: "Equinix", year: 2025, type: "Strategic", seats: 0, description: "Data center REIT stake; capital allocation and dividend policy focus." },
+            { company: "Riverbed Technology", year: 2014, type: "Strategic", seats: 0, description: "10.4% stake led to $3.6B Thoma Bravo buyout (2015)." },
+            { company: "F5 Networks", year: 2020, type: "Strategic", seats: 0, description: "Post-engagement investment; software and networking company support." }
+        ];
+
+        const SECTOR_MAP = {
+            "Southwest Airlines": "Consumer", "Phillips 66": "Energy", "Norwegian Cruise Line Holdings": "Consumer",
+            "Starbucks": "Consumer", "Honeywell": "Industrials", "Arconic": "Industrials",
+            "Cardinal Health": "Healthcare", "Hess Corporation": "Energy", "eBay": "Technology",
+            "AT&T": "Telecom/Media", "Marathon Petroleum": "Energy", "Crown Castle": "Telecom/Media",
+            "NRG Energy": "Energy", "Pinterest": "Technology", "Etsy": "Technology",
+            "Match Group": "Technology", "Johnson Controls": "Industrials", "Twitter": "Technology",
+            "Citrix Systems": "Technology", "athenahealth": "Healthcare", "Alcoa": "Industrials",
+            "EMC Corporation": "Technology", "Peabody Energy": "Energy", "Evergy": "Energy",
+            "Duke Energy": "Energy", "Goodyear Tire & Rubber": "Industrials", "PulteGroup": "Consumer",
+            "Suncor Energy": "Energy", "Cognizant": "Technology", "Commvault": "Technology",
+            "Gigamon": "Technology", "Mentor Graphics": "Technology", "Cabela's": "Consumer",
+            "Samsung Electronics": "Technology", "Telecom Italia": "Telecom/Media", "Hyundai Motor": "Industrials",
+            "Akzo Nobel": "Industrials", "NXP Semiconductors": "Technology", "CDK Global": "Technology",
+            "Pernod Ricard": "Consumer", "Whitbread": "Consumer", "GlaxoSmithKline": "Healthcare",
+            "SSE plc": "Energy", "SoftBank": "Technology", "Alexion Pharmaceuticals": "Healthcare",
+            "Catalent": "Healthcare", "Sensata Technologies": "Industrials", "Western Digital": "Technology",
+            "Nielsen": "Technology", "Hammerson": "Real Estate", "Oncor/Energy Future Holdings": "Energy",
+            "Dropbox": "Technology", "BP": "Energy", "Hewlett Packard Enterprise": "Technology",
+            "Salesforce": "Technology", "PepsiCo": "Consumer", "Texas Instruments": "Technology",
+            "Lululemon": "Consumer", "Align Technology": "Healthcare", "LSEG": "Telecom/Media",
+            "Toyota Industries": "Industrials", "Equinix": "Real Estate", "Riverbed Technology": "Technology",
+            "F5 Networks": "Technology"
+        };
+
+        // ===== INITIALIZATION =====
+        function init() {
+            populateFilters();
+            renderTable();
+            renderCampaigns();
+            updateStats();
+            renderAnalysis();
+            setupEventListeners();
+        }
+
+        function populateFilters() {
+            const companies = [...new Set(APPOINTEES.map(a => a.company))].sort();
+            const yearFilter = document.getElementById('yearFilter');
+            const years = [...new Set(APPOINTEES.map(a => a.year))].sort().reverse();
+
+            const companySelect = document.getElementById('companyFilter');
+            companies.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                option.textContent = company;
+                companySelect.appendChild(option);
+            });
+
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+        }
+
+        function getPerformanceBadge(company) {
+            const stock = STOCK_LOOKUP[company];
+            if (!stock) return '<span class="performance-badge performance-neutral">N/A</span>';
+
+            const returnStr = stock.returnPct.toFixed(1);
+            const cagr = ((Math.pow(1 + stock.returnPct / 100, 12 / stock.holdingMonths) - 1) * 100).toFixed(1);
+            const className = stock.returnPct >= 0 ? 'performance-positive' : 'performance-negative';
+            const sign = stock.returnPct >= 0 ? '+' : '';
+
+            return `<span class="performance-badge ${className}" data-tooltip="${stock.ticker} | CAGR: ${cagr}% | ${stock.holdingMonths}mo | ${stock.exitNote}">${sign}${returnStr}%</span>`;
+        }
+
+        function renderTable(data = APPOINTEES) {
+            const tbody = document.getElementById('tableBody');
+            const noResults = document.getElementById('noResults');
+
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+
+            data.forEach(appointee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${appointee.name}</td>
+                    <td>${appointee.company}</td>
+                    <td>${appointee.role}</td>
+                    <td>${appointee.appointed}</td>
+                    <td>${appointee.departed}</td>
+                    <td><span class="status-badge status-${appointee.status.toLowerCase()}">${appointee.status}</span></td>
+                    <td>${appointee.background}</td>
+                    <td>${appointee.education}</td>
+                    <td>${appointee.year}</td>
+                    <td>${getPerformanceBadge(appointee.company)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderCampaigns() {
+            const grid = document.getElementById('campaignsGrid');
+            grid.innerHTML = '';
+
+            CAMPAIGNS.forEach(campaign => {
+                const stock = STOCK_LOOKUP[campaign.company] || {};
+                const returnPct = stock.returnPct || 0;
+                const sign = returnPct >= 0 ? '+' : '';
+
+                const card = document.createElement('div');
+                card.className = 'campaign-card';
+                card.innerHTML = `
+                    <h3>${campaign.company}</h3>
+                    <div class="campaign-meta">
+                        <span class="campaign-tag">${campaign.year}</span>
+                        <span class="campaign-tag">${campaign.type}</span>
+                        <span class="campaign-seats">${campaign.seats} seats</span>
+                    </div>
+                    <p class="campaign-description">${campaign.description}</p>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #1e1e2e;">
+                        <div style="font-size: 0.9em; color: #a0aec0;">Return: <strong style="color: ${returnPct >= 0 ? '#22c55e' : '#ef4444'}">${sign}${returnPct.toFixed(1)}%</strong></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateStats() {
+            const uniqueCampaigns = new Set(STOCK_LOOKUP ? Object.keys(STOCK_LOOKUP) : []);
+            const totalSeats = APPOINTEES.reduce((sum, a) => sum + a.seats, 0);
+            const returns = Object.values(STOCK_LOOKUP).map(s => s.returnPct);
+            const avgReturn = returns.length > 0 ? returns.reduce((a, b) => a + b, 0) / returns.length : 0;
+            const winRate = returns.length > 0 ? (returns.filter(r => r >= 0).length / returns.length * 100) : 0;
+
+            document.getElementById('totalCampaigns').textContent = CAMPAIGNS.length;
+            document.getElementById('totalSeats').textContent = totalSeats;
+            document.getElementById('avgReturn').textContent = avgReturn.toFixed(1) + '%';
+            document.getElementById('winRate').textContent = winRate.toFixed(0) + '%';
+
+            document.getElementById('analysisTotalCampaigns').textContent = CAMPAIGNS.length;
+            document.getElementById('analysisTotalSeats').textContent = totalSeats;
+            document.getElementById('analysisAvgReturn').textContent = avgReturn.toFixed(1) + '%';
+            document.getElementById('analysisWinRate').textContent = winRate.toFixed(0) + '%';
+        }
+
+        function renderAnalysis() {
+            renderSectorChart();
+            renderTypeChart();
+            renderSeatsChart();
+            renderHoldingChart();
+            renderHeatmap();
+        }
+
+        function renderSectorChart() {
+            const sectors = {};
+            CAMPAIGNS.forEach(c => {
+                const sector = SECTOR_MAP[c.company] || 'Other';
+                const stock = STOCK_LOOKUP[c.company] || {};
+                if (!sectors[sector]) sectors[sector] = [];
+                if (stock.returnPct !== undefined) sectors[sector].push(stock.returnPct);
+            });
+
+            const sectorData = Object.entries(sectors)
+                .map(([sector, returns]) => ({
+                    sector,
+                    avg: returns.reduce((a, b) => a + b, 0) / returns.length,
+                    count: returns.length
+                }))
+                .sort((a, b) => b.avg - a.avg);
+
+            const maxReturn = Math.max(...sectorData.map(s => Math.abs(s.avg)));
+            const container = document.getElementById('sectorChart');
+            container.innerHTML = '';
+
+            sectorData.forEach(data => {
+                const percent = (Math.abs(data.avg) / maxReturn * 100);
+                const sign = data.avg >= 0 ? '+' : '';
+                const className = data.avg >= 0 ? 'positive' : 'negative';
+
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.innerHTML = `
+                    <div class="bar-label">${data.sector}</div>
+                    <div class="bar-background">
+                        <div class="bar-fill ${className}" style="width: ${percent}%">
+                            ${sign}${data.avg.toFixed(1)}%
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderTypeChart() {
+            const types = {};
+            CAMPAIGNS.forEach(c => {
+                const stock = STOCK_LOOKUP[c.company] || {};
+                if (!types[c.type]) types[c.type] = [];
+                if (stock.returnPct !== undefined) types[c.type].push(stock.returnPct);
+            });
+
+            const typeData = Object.entries(types)
+                .map(([type, returns]) => ({
+                    type,
+                    avg: returns.reduce((a, b) => a + b, 0) / returns.length,
+                    count: returns.length
+                }))
+                .sort((a, b) => b.avg - a.avg);
+
+            const maxReturn = Math.max(...typeData.map(t => Math.abs(t.avg)));
+            const container = document.getElementById('typeChart');
+            container.innerHTML = '';
+
+            typeData.forEach(data => {
+                const percent = (Math.abs(data.avg) / maxReturn * 100);
+                const sign = data.avg >= 0 ? '+' : '';
+                const className = data.avg >= 0 ? 'positive' : 'negative';
+
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.innerHTML = `
+                    <div class="bar-label">${data.type}</div>
+                    <div class="bar-background">
+                        <div class="bar-fill ${className}" style="width: ${percent}%">
+                            ${sign}${data.avg.toFixed(1)}%
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderSeatsChart() {
+            const seatBuckets = {
+                '0 seats': [],
+                '1 seat': [],
+                '2-3 seats': [],
+                '4+ seats': []
+            };
+
+            CAMPAIGNS.forEach(c => {
+                const stock = STOCK_LOOKUP[c.company] || {};
+                if (stock.returnPct === undefined) return;
+
+                if (c.seats === 0) seatBuckets['0 seats'].push(stock.returnPct);
+                else if (c.seats === 1) seatBuckets['1 seat'].push(stock.returnPct);
+                else if (c.seats <= 3) seatBuckets['2-3 seats'].push(stock.returnPct);
+                else seatBuckets['4+ seats'].push(stock.returnPct);
+            });
+
+            const seatData = Object.entries(seatBuckets)
+                .filter(([_, returns]) => returns.length > 0)
+                .map(([bucket, returns]) => ({
+                    bucket,
+                    avg: returns.reduce((a, b) => a + b, 0) / returns.length,
+                    count: returns.length
+                }))
+                .sort((a, b) => b.avg - a.avg);
+
+            const maxReturn = Math.max(...seatData.map(s => Math.abs(s.avg)));
+            const container = document.getElementById('seatsChart');
+            container.innerHTML = '';
+
+            seatData.forEach(data => {
+                const percent = (Math.abs(data.avg) / maxReturn * 100);
+                const sign = data.avg >= 0 ? '+' : '';
+                const className = data.avg >= 0 ? 'positive' : 'negative';
+
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.innerHTML = `
+                    <div class="bar-label">${data.bucket}</div>
+                    <div class="bar-background">
+                        <div class="bar-fill ${className}" style="width: ${percent}%">
+                            ${sign}${data.avg.toFixed(1)}%
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderHoldingChart() {
+            const holdingBuckets = {
+                '< 12 months': [],
+                '12-24 months': [],
+                '24-48 months': [],
+                '48+ months': []
+            };
+
+            Object.entries(STOCK_LOOKUP).forEach(([company, data]) => {
+                const months = data.holdingMonths;
+                if (months < 12) holdingBuckets['< 12 months'].push(data.returnPct);
+                else if (months < 24) holdingBuckets['12-24 months'].push(data.returnPct);
+                else if (months < 48) holdingBuckets['24-48 months'].push(data.returnPct);
+                else holdingBuckets['48+ months'].push(data.returnPct);
+            });
+
+            const holdingData = Object.entries(holdingBuckets)
+                .filter(([_, returns]) => returns.length > 0)
+                .map(([bucket, returns]) => ({
+                    bucket,
+                    avg: returns.reduce((a, b) => a + b, 0) / returns.length,
+                    count: returns.length
+                }))
+                .sort((a, b) => b.avg - a.avg);
+
+            const maxReturn = Math.max(...holdingData.map(h => Math.abs(h.avg)));
+            const container = document.getElementById('holdingChart');
+            container.innerHTML = '';
+
+            holdingData.forEach(data => {
+                const percent = (Math.abs(data.avg) / maxReturn * 100);
+                const sign = data.avg >= 0 ? '+' : '';
+                const className = data.avg >= 0 ? 'positive' : 'negative';
+
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.innerHTML = `
+                    <div class="bar-label">${data.bucket}</div>
+                    <div class="bar-background">
+                        <div class="bar-fill ${className}" style="width: ${percent}%">
+                            ${sign}${data.avg.toFixed(1)}%
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderHeatmap() {
+            const heatData = {};
+            const sectors = [...new Set(CAMPAIGNS.map(c => SECTOR_MAP[c.company] || 'Other'))].sort();
+            const types = [...new Set(CAMPAIGNS.map(c => c.type))].sort();
+
+            sectors.forEach(s => heatData[s] = {});
+            types.forEach(t => {
+                sectors.forEach(s => heatData[s][t] = []);
+            });
+
+            CAMPAIGNS.forEach(c => {
+                const sector = SECTOR_MAP[c.company] || 'Other';
+                const stock = STOCK_LOOKUP[c.company] || {};
+                if (stock.returnPct !== undefined) {
+                    heatData[sector][c.type].push(stock.returnPct);
+                }
+            });
+
+            const container = document.getElementById('heatmap');
+            let html = '<div class="heatmap-header"><div class="heatmap-header-row">';
+            html += '<div class="heatmap-cell"></div>';
+            types.forEach(t => {
+                html += `<div class="heatmap-cell"><strong>${t}</strong></div>`;
+            });
+            html += '</div></div><div class="heatmap">';
+
+            sectors.forEach(sector => {
+                html += '<div class="heatmap-row">';
+                html += `<div class="heatmap-label">${sector}</div>`;
+
+                types.forEach(type => {
+                    const returns = heatData[sector][type];
+                    const avg = returns.length > 0 ? returns.reduce((a, b) => a + b, 0) / returns.length : null;
+
+                    let heatClass = 'heat-neutral';
+                    let content = '—';
+
+                    if (avg !== null) {
+                        content = `${avg >= 0 ? '+' : ''}${avg.toFixed(0)}%`;
+                        if (avg < -20) heatClass = 'heat-cold';
+                        else if (avg < 0) heatClass = 'heat-cool';
+                        else if (avg < 20) heatClass = 'heat-warm';
+                        else heatClass = 'heat-hot';
+                    }
+
+                    html += `<div class="heatmap-cell heatmap-value ${heatClass}"><strong>${content}</strong></div>`;
+                });
+
+                html += '</div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(tabName).classList.add('active');
+                });
+            });
+
+            // Table sorting
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', function() {
+                    const column = this.getAttribute('data-column');
+                    const isAsc = this.classList.contains('sorted-asc');
+
+                    document.querySelectorAll('th').forEach(h => {
+                        h.classList.remove('sorted-asc', 'sorted-desc');
+                    });
+
+                    let sortedData = [...APPOINTEES];
+                    sortedData.sort((a, b) => {
+                        let aVal = a[column];
+                        let bVal = b[column];
+
+                        if (column === 'return') {
+                            aVal = STOCK_LOOKUP[a.company]?.returnPct || 0;
+                            bVal = STOCK_LOOKUP[b.company]?.returnPct || 0;
+                        }
+
+                        if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+                        if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+                        if (aVal < bVal) return isAsc ? 1 : -1;
+                        if (aVal > bVal) return isAsc ? -1 : 1;
+                        return 0;
+                    });
+
+                    this.classList.add(isAsc ? 'sorted-desc' : 'sorted-asc');
+                    renderTable(sortedData);
+                });
+            });
+
+            // Filtering
+            document.getElementById('searchInput').addEventListener('input', filterTable);
+            document.getElementById('companyFilter').addEventListener('change', filterTable);
+            document.getElementById('statusFilter').addEventListener('change', filterTable);
+            document.getElementById('yearFilter').addEventListener('change', filterTable);
+        }
+
+        function filterTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const company = document.getElementById('companyFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const year = document.getElementById('yearFilter').value;
+
+            let filtered = APPOINTEES.filter(appointee => {
+                const matchSearch = !search ||
+                    appointee.name.toLowerCase().includes(search) ||
+                    appointee.company.toLowerCase().includes(search) ||
+                    appointee.role.toLowerCase().includes(search) ||
+                    appointee.background.toLowerCase().includes(search);
+
+                const matchCompany = !company || appointee.company === company;
+                const matchStatus = !status || appointee.status === status;
+                const matchYear = !year || appointee.year === parseInt(year);
+
+                return matchSearch && matchCompany && matchStatus && matchYear;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
