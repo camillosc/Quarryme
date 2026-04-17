@@ -83,6 +83,18 @@
   .perf-negative { color: #e74c3c; font-weight: 600; }
   .perf-na { color: #555; }
 
+  .stock-pos { color: #2ecc71; font-weight: 700; }
+  .stock-neg { color: #e74c3c; font-weight: 700; }
+  .stock-na { color: #445; font-size: 0.82em; }
+  .tt { position: relative; display: inline-block; cursor: help; border-bottom: 1px dotted #446; }
+  .tt .tttext {
+    display: none; background: #151e32; color: #ccd; border: 1px solid #2a3a5c;
+    border-radius: 6px; padding: 7px 11px; font-size: 0.78em; white-space: nowrap;
+    position: absolute; z-index: 200; bottom: 130%; left: 50%; transform: translateX(-50%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .tt:hover .tttext { display: block; }
+
   .company-tag {
     display: inline-block; background: rgba(30,144,255,0.08);
     border: 1px solid rgba(30,144,255,0.2); border-radius: 4px;
@@ -185,6 +197,7 @@
         <th onclick="sortTable(6)">Background</th>
         <th onclick="sortTable(7)">Education</th>
         <th onclick="sortTable(8)">Campaign Year</th>
+        <th onclick="sortTable(9)">Stock Return <span class="sort-icon">&#9650;&#9660;</span></th>
       </tr>
     </thead>
     <tbody id="tableBody"></tbody>
@@ -199,6 +212,45 @@
 </div>
 
 <script>
+const STOCK_LOOKUP = {
+  "Southwest Airlines":            {ticker:"LUV",  entryPrice:28.50,  exitPrice:33.20,  returnPct:16.5,   holdingMonths:18,  exitNote:"Current"},
+  "Phillips 66":                   {ticker:"PSX",  entryPrice:125.80, exitPrice:108.45, returnPct:-13.8,  holdingMonths:11,  exitNote:"Current"},
+  "Norwegian Cruise Line Holdings":{ticker:"NCLH", entryPrice:22.15,  exitPrice:24.80,  returnPct:12.0,   holdingMonths:1,   exitNote:"Current"},
+  "Starbucks":                     {ticker:"SBUX", entryPrice:76.40,  exitPrice:91.55,  returnPct:19.8,   holdingMonths:20,  exitNote:"Current"},
+  "Honeywell":                     {ticker:"HON",  entryPrice:208.30, exitPrice:195.60, returnPct:-6.1,   holdingMonths:15,  exitNote:"Current"},
+  "Arconic":                       {ticker:"ARNC", entryPrice:25.80,  exitPrice:30.85,  returnPct:19.6,   holdingMonths:36,  exitNote:"Acq. 2020"},
+  "Cardinal Health":               {ticker:"CAH",  entryPrice:68.50,  exitPrice:128.40, returnPct:87.4,   holdingMonths:43,  exitNote:"Current"},
+  "Hess Corporation":              {ticker:"HES",  entryPrice:70.20,  exitPrice:155.00, returnPct:120.8,  holdingMonths:125, exitNote:"Chevron Acq."},
+  "eBay":                          {ticker:"EBAY", entryPrice:37.50,  exitPrice:68.20,  returnPct:81.9,   holdingMonths:85,  exitNote:"Current"},
+  "AT&T":                          {ticker:"T",    entryPrice:37.40,  exitPrice:27.80,  returnPct:-25.7,  holdingMonths:79,  exitNote:"Current"},
+  "Marathon Petroleum":            {ticker:"MPC",  entryPrice:65.30,  exitPrice:148.90, returnPct:128.0,  holdingMonths:78,  exitNote:"Current"},
+  "Crown Castle":                  {ticker:"CCI",  entryPrice:114.50, exitPrice:98.70,  returnPct:-13.8,  holdingMonths:28,  exitNote:"Current"},
+  "NRG Energy":                    {ticker:"NRG",  entryPrice:17.80,  exitPrice:95.40,  returnPct:435.9,  holdingMonths:106, exitNote:"Current"},
+  "Pinterest":                     {ticker:"PINS", entryPrice:18.90,  exitPrice:33.50,  returnPct:77.2,   holdingMonths:45,  exitNote:"Current"},
+  "Etsy":                          {ticker:"ETSY", entryPrice:78.60,  exitPrice:52.40,  returnPct:-33.3,  holdingMonths:27,  exitNote:"Current"},
+  "Match Group":                   {ticker:"MTCH", entryPrice:32.80,  exitPrice:35.20,  returnPct:7.3,    holdingMonths:22,  exitNote:"Current"},
+  "Johnson Controls":              {ticker:"JCI",  entryPrice:72.50,  exitPrice:85.60,  returnPct:18.1,   holdingMonths:19,  exitNote:"Current"},
+  "Twitter":                       {ticker:"TWTR", entryPrice:39.30,  exitPrice:54.20,  returnPct:37.9,   holdingMonths:6,   exitNote:"Musk Acq."},
+  "Citrix Systems":                {ticker:"CTXS", entryPrice:87.50,  exitPrice:104.00, returnPct:18.9,   holdingMonths:4,   exitNote:"Take-Private"},
+  "athenahealth":                  {ticker:"ATHN", entryPrice:112.30, exitPrice:135.00, returnPct:20.2,   holdingMonths:24,  exitNote:"Veritas Acq."},
+};
+
+// Augment DATA entries with stock performance fields from STOCK_LOOKUP
+// (called after DATA is defined)
+function augmentDataWithStock() {
+  DATA.forEach(d => {
+    const s = STOCK_LOOKUP[d.company];
+    if (s) {
+      d.ticker = s.ticker;
+      d.entryPrice = s.entryPrice;
+      d.exitPrice = s.exitPrice;
+      d.returnPct = s.returnPct;
+      d.holdingMonths = s.holdingMonths;
+      d.exitNote = s.exitNote;
+    }
+  });
+}
+
 const DATA = [
   // SOUTHWEST AIRLINES (2024)
   {name:"David Cush", company:"Southwest Airlines", role:"Board Director", appointed:"Nov 2024", departed:"", status:"Active", bg:"Former CEO of Virgin America; former SVP of Global Sales at American Airlines. Extensive airline industry experience.", edu:"Georgetown University", priorExp:"CEO, Virgin America; SVP Global Sales, American Airlines", campaignYear:"2024", type:"Elliott Nominee"},
@@ -362,6 +414,7 @@ const CAMPAIGNS = [
 ];
 
 function init() {
+  augmentDataWithStock();
   renderTable(DATA);
   populateCompanyFilter();
   updateStats();
@@ -376,6 +429,17 @@ function renderTable(data) {
                       d.role.includes('COO') ? 'role-coo' :
                       d.type.includes('Elliott Partner') ? 'role-elliott' : 'role-board';
     const statusClass = d.status === 'Active' ? 'status-active' : 'status-former';
+    let stockCell;
+    const s = STOCK_LOOKUP[d.company];
+    if (s) {
+      const cls = s.returnPct >= 0 ? 'stock-pos' : 'stock-neg';
+      const sign = s.returnPct >= 0 ? '+' : '';
+      const exitLabel = s.exitNote === 'Current' ? 'Now' : s.exitNote;
+      const tooltip = `${s.ticker} · Entry: $${s.entryPrice.toFixed(2)} → ${exitLabel}: $${s.exitPrice.toFixed(2)} | Holding: ${s.holdingMonths} mo`;
+      stockCell = `<span class="tt ${cls}">${sign}${s.returnPct.toFixed(1)}%<span class="tttext">${tooltip}</span></span>`;
+    } else {
+      stockCell = `<span class="stock-na">N/A</span>`;
+    }
     return `<tr data-company="${d.company}" data-role="${d.role}" data-status="${d.status}" data-type="${d.type}">
       <td><strong>${d.name}</strong><br><span class="small-text">${d.type}</span></td>
       <td><span class="company-tag">${d.company}</span></td>
@@ -386,6 +450,7 @@ function renderTable(data) {
       <td class="bg-text">${d.bg}</td>
       <td class="small-text">${d.edu}</td>
       <td>${d.campaignYear}</td>
+      <td style="text-align:center">${stockCell}</td>
     </tr>`;
   }).join('');
 }
@@ -446,14 +511,18 @@ function resetFilters() {
 
 function sortTable(colIndex) {
   const tbody = document.getElementById('tableBody');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-  const keys = ['name','company','role','appointed','departed','status','bg','edu','campaignYear'];
+  const keys = ['name','company','role','appointed','departed','status','bg','edu','campaignYear','returnPct'];
   const key = keys[colIndex];
 
   const dir = tbody.dataset.sortDir === 'asc' ? 'desc' : 'asc';
   tbody.dataset.sortDir = dir;
 
   const sortedData = [...DATA].sort((a,b) => {
+    if (key === 'returnPct') {
+      const va = (STOCK_LOOKUP[a.company] != null) ? STOCK_LOOKUP[a.company].returnPct : -Infinity;
+      const vb = (STOCK_LOOKUP[b.company] != null) ? STOCK_LOOKUP[b.company].returnPct : -Infinity;
+      return dir === 'asc' ? va - vb : vb - va;
+    }
     const va = (a[key]||'').toLowerCase();
     const vb = (b[key]||'').toLowerCase();
     return dir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
@@ -489,8 +558,18 @@ function showTab(tab) {
 }
 
 function exportCSV() {
-  const headers = ['Name','Company','Role','Appointed','Departed','Status','Background','Education','Prior Experience','Campaign Year','Appointment Type'];
-  const rows = DATA.map(d => [d.name,d.company,d.role,d.appointed,d.departed,d.status,d.bg,d.edu,d.priorExp,d.campaignYear,d.type].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+  const headers = ['Name','Company','Ticker','Role','Appointed','Departed','Status','Background','Education','Prior Experience','Campaign Year','Appointment Type','Entry Price','Exit Price','Return %','Holding Months'];
+  const rows = DATA.map(d => {
+    const s = STOCK_LOOKUP[d.company] || {};
+    return [
+      d.name, d.company, s.ticker||'', d.role, d.appointed, d.departed,
+      d.status, d.bg, d.edu, d.priorExp, d.campaignYear, d.type,
+      s.entryPrice != null ? '$'+s.entryPrice.toFixed(2) : '',
+      s.exitPrice  != null ? '$'+s.exitPrice.toFixed(2)  : '',
+      s.returnPct  != null ? (s.returnPct>=0?'+':'')+s.returnPct.toFixed(1)+'%' : '',
+      s.holdingMonths || ''
+    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`);
+  });
   const csv = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
   const blob = new Blob([csv], {type:'text/csv'});
   const url = URL.createObjectURL(blob);
