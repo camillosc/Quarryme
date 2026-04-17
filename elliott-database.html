@@ -86,6 +86,9 @@
   .stock-pos { color: #2ecc71; font-weight: 700; }
   .stock-neg { color: #e74c3c; font-weight: 700; }
   .stock-na { color: #445; font-size: 0.82em; }
+  .stock-main { font-size: 1.05em; display: block; }
+  .stock-cagr { font-size: 0.82em; display: block; }
+  .stock-tenure { font-size: 0.78em; color: #778; display: block; margin-top: 2px; }
   .tt { position: relative; display: inline-block; cursor: help; border-bottom: 1px dotted #446; }
   .tt .tttext {
     display: none; background: #151e32; color: #ccd; border: 1px solid #2a3a5c;
@@ -197,7 +200,7 @@
         <th onclick="sortTable(6)">Background</th>
         <th onclick="sortTable(7)">Education</th>
         <th onclick="sortTable(8)">Campaign Year</th>
-        <th onclick="sortTable(9)">Stock Return <span class="sort-icon">&#9650;&#9660;</span></th>
+        <th onclick="sortTable(9)">Stock Performance <span class="sort-icon">&#9650;&#9660;</span></th>
       </tr>
     </thead>
     <tbody id="tableBody"></tbody>
@@ -421,6 +424,19 @@ function init() {
   renderCampaigns();
 }
 
+function calcCAGR(entryPrice, exitPrice, holdingMonths) {
+  if (!holdingMonths || holdingMonths <= 0) return null;
+  return Math.pow(exitPrice / entryPrice, 12 / holdingMonths) - 1;
+}
+
+function formatTenure(months) {
+  const years = Math.floor(months / 12);
+  const mo = months % 12;
+  if (years === 0) return `${mo}m`;
+  if (mo === 0) return `${years}y`;
+  return `${years}y ${mo}m`;
+}
+
 function renderTable(data) {
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = data.map(d => {
@@ -432,11 +448,21 @@ function renderTable(data) {
     let stockCell;
     const s = STOCK_LOOKUP[d.company];
     if (s) {
-      const cls = s.returnPct >= 0 ? 'stock-pos' : 'stock-neg';
-      const sign = s.returnPct >= 0 ? '+' : '';
+      const totalCls = s.returnPct >= 0 ? 'stock-pos' : 'stock-neg';
+      const totalSign = s.returnPct >= 0 ? '+' : '';
       const exitLabel = s.exitNote === 'Current' ? 'Now' : s.exitNote;
-      const tooltip = `${s.ticker} · Entry: $${s.entryPrice.toFixed(2)} → ${exitLabel}: $${s.exitPrice.toFixed(2)} | Holding: ${s.holdingMonths} mo`;
-      stockCell = `<span class="tt ${cls}">${sign}${s.returnPct.toFixed(1)}%<span class="tttext">${tooltip}</span></span>`;
+      const cagr = calcCAGR(s.entryPrice, s.exitPrice, s.holdingMonths);
+      const cagrPct = cagr !== null ? cagr * 100 : null;
+      const cagrSign = cagrPct !== null && cagrPct >= 0 ? '+' : '';
+      const cagrCls = cagrPct !== null ? (cagrPct >= 0 ? 'stock-pos' : 'stock-neg') : '';
+      const tenure = formatTenure(s.holdingMonths);
+      const tooltip = `Entry: $${s.entryPrice.toFixed(2)} (${s.ticker}) → ${exitLabel}: $${s.exitPrice.toFixed(2)} | Total: ${totalSign}${s.returnPct.toFixed(1)}% | CAGR: ${cagrPct !== null ? cagrSign + cagrPct.toFixed(1) + '%' : 'N/A'} | Tenure: ${tenure}`;
+      stockCell = `<div class="tt">` +
+        `<span class="stock-main ${totalCls}">${totalSign}${s.returnPct.toFixed(1)}% total</span>` +
+        (cagrPct !== null ? `<span class="stock-cagr ${cagrCls}">${cagrSign}${cagrPct.toFixed(1)}% CAGR</span>` : '') +
+        `<span class="stock-tenure">${tenure}</span>` +
+        `<span class="tttext">${tooltip}</span>` +
+        `</div>`;
     } else {
       stockCell = `<span class="stock-na">N/A</span>`;
     }
@@ -511,16 +537,21 @@ function resetFilters() {
 
 function sortTable(colIndex) {
   const tbody = document.getElementById('tableBody');
-  const keys = ['name','company','role','appointed','departed','status','bg','edu','campaignYear','returnPct'];
+  const keys = ['name','company','role','appointed','departed','status','bg','edu','campaignYear','cagr'];
   const key = keys[colIndex];
 
   const dir = tbody.dataset.sortDir === 'asc' ? 'desc' : 'asc';
   tbody.dataset.sortDir = dir;
 
   const sortedData = [...DATA].sort((a,b) => {
-    if (key === 'returnPct') {
-      const va = (STOCK_LOOKUP[a.company] != null) ? STOCK_LOOKUP[a.company].returnPct : -Infinity;
-      const vb = (STOCK_LOOKUP[b.company] != null) ? STOCK_LOOKUP[b.company].returnPct : -Infinity;
+    if (key === 'cagr') {
+      const getCAGR = (d) => {
+        const s = STOCK_LOOKUP[d.company];
+        if (!s || !s.holdingMonths) return -Infinity;
+        return calcCAGR(s.entryPrice, s.exitPrice, s.holdingMonths);
+      };
+      const va = getCAGR(a);
+      const vb = getCAGR(b);
       return dir === 'asc' ? va - vb : vb - va;
     }
     const va = (a[key]||'').toLowerCase();
@@ -558,15 +589,19 @@ function showTab(tab) {
 }
 
 function exportCSV() {
-  const headers = ['Name','Company','Ticker','Role','Appointed','Departed','Status','Background','Education','Prior Experience','Campaign Year','Appointment Type','Entry Price','Exit Price','Return %','Holding Months'];
+  const headers = ['Name','Company','Ticker','Role','Appointed','Departed','Status','Background','Education','Prior Experience','Campaign Year','Appointment Type','Entry Price','Exit Price','Total Return %','CAGR %','Tenure','Holding Months'];
   const rows = DATA.map(d => {
     const s = STOCK_LOOKUP[d.company] || {};
+    const cagr = s.entryPrice != null ? calcCAGR(s.entryPrice, s.exitPrice, s.holdingMonths) : null;
+    const cagrPct = cagr !== null ? cagr * 100 : null;
     return [
       d.name, d.company, s.ticker||'', d.role, d.appointed, d.departed,
       d.status, d.bg, d.edu, d.priorExp, d.campaignYear, d.type,
       s.entryPrice != null ? '$'+s.entryPrice.toFixed(2) : '',
       s.exitPrice  != null ? '$'+s.exitPrice.toFixed(2)  : '',
       s.returnPct  != null ? (s.returnPct>=0?'+':'')+s.returnPct.toFixed(1)+'%' : '',
+      cagrPct      != null ? (cagrPct>=0?'+':'')+cagrPct.toFixed(1)+'%' : '',
+      s.holdingMonths ? formatTenure(s.holdingMonths) : '',
       s.holdingMonths || ''
     ].map(v => `"${String(v||'').replace(/"/g,'""')}"`);
   });
