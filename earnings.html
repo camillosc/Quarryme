@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q1 2026 US Aggregates Earnings Database</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-hover: #222633;
+    --border: #2a2e3d;
+    --accent: #4f8cff;
+    --accent2: #36d399;
+    --accent3: #f7b955;
+    --accent4: #f472b6;
+    --red: #ef4444;
+    --green: #22c55e;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #f8fafc;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+
+  .header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid var(--border); padding: 28px 40px; }
+  .header h1 { font-size: 26px; font-weight: 700; color: var(--text-bright); }
+  .header p { color: var(--text-dim); margin-top: 4px; font-size: 14px; }
+  .header .badge { display: inline-block; background: var(--accent); color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-left: 10px; vertical-align: middle; }
+  .header .updated { float: right; color: var(--text-dim); font-size: 13px; margin-top: 6px; }
+
+  .tabs { display: flex; gap: 0; background: #151823; border-bottom: 1px solid var(--border); padding: 0 40px; overflow-x: auto; }
+  .tab { padding: 14px 22px; cursor: pointer; color: var(--text-dim); font-size: 14px; font-weight: 500; border-bottom: 2px solid transparent; transition: all .2s; white-space: nowrap; }
+  .tab:hover { color: var(--text); background: rgba(79,140,255,.05); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .container { max-width: 1440px; margin: 0 auto; padding: 28px 40px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Company Cards */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 20px; }
+  .company-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: all .2s; }
+  .company-card:hover { background: var(--card-hover); border-color: var(--accent); }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .card-header h3 { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+  .ticker { background: rgba(79,140,255,.15); color: var(--accent); padding: 3px 10px; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: .5px; }
+  .card-subtitle { color: var(--text-dim); font-size: 13px; margin-bottom: 16px; }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .metric { background: rgba(255,255,255,.03); border-radius: 8px; padding: 12px; }
+  .metric-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+  .metric-value { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+  .metric-value.green { color: var(--green); }
+  .metric-value.red { color: var(--red); }
+  .metric-value small { font-size: 12px; color: var(--text-dim); font-weight: 400; }
+  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+  .status-reported { background: rgba(34,197,94,.15); color: var(--green); }
+  .status-pending { background: rgba(247,185,85,.15); color: var(--accent3); }
+  .rating-buy { color: var(--green); }
+  .rating-hold { color: var(--accent3); }
+  .card-footer { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+
+  /* Earnings Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
+  th { background: #151823; padding: 14px 16px; text-align: left; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; font-weight: 600; border-bottom: 1px solid var(--border); }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  tr:hover td { background: rgba(79,140,255,.03); }
+  .beat { color: var(--green); font-weight: 600; }
+  .miss { color: var(--red); font-weight: 600; }
+
+  /* Heat Map */
+  .heatmap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+  .heatmap-cell { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; position: relative; overflow: hidden; }
+  .heatmap-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .heat-high::before { background: linear-gradient(90deg, var(--green), #4ade80); }
+  .heat-med::before { background: linear-gradient(90deg, var(--accent3), #fbbf24); }
+  .heat-low::before { background: linear-gradient(90deg, var(--accent4), #f43f5e); }
+  .region-name { font-size: 14px; font-weight: 600; color: var(--text-bright); margin-bottom: 8px; }
+  .region-price { font-size: 26px; font-weight: 700; }
+  .region-price.high { color: var(--green); }
+  .region-price.med { color: var(--accent3); }
+  .region-change { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+  /* Dashboard Cards */
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .dash-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .dash-card h4 { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+  .dash-big { font-size: 32px; font-weight: 700; color: var(--text-bright); }
+  .dash-sub { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+  .bar-chart { margin-top: 12px; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
+  .bar-label { width: 80px; font-size: 12px; color: var(--text-dim); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 24px; background: rgba(255,255,255,.05); border-radius: 6px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; color: #fff; transition: width .6s ease; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 24px; }
+  .tl-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); background: var(--bg); }
+  .tl-item.reported::before { background: var(--green); border-color: var(--green); }
+  .tl-item.upcoming::before { background: var(--accent3); border-color: var(--accent3); }
+  .tl-date { font-size: 13px; color: var(--accent); font-weight: 600; }
+  .tl-content { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 6px; }
+  .tl-content h4 { font-size: 15px; color: var(--text-bright); margin-bottom: 4px; }
+  .tl-content p { font-size: 13px; color: var(--text-dim); }
+
+  /* Analyst Section */
+  .analyst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .analyst-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .analyst-card h4 { font-size: 15px; color: var(--text-bright); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .consensus-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 8px 0; }
+  .consensus-buy { background: var(--green); }
+  .consensus-hold { background: var(--accent3); }
+  .consensus-sell { background: var(--red); }
+  .pt-range { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .pt-line { flex: 1; height: 4px; background: linear-gradient(90deg, var(--red), var(--accent3), var(--green)); border-radius: 2px; position: relative; }
+  .pt-marker { position: absolute; top: -6px; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+  .pt-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); }
+
+  /* News section */
+  .news-list { display: grid; gap: 12px; }
+  .news-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; display: flex; gap: 16px; align-items: flex-start; }
+  .news-tag { padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .tag-acq { background: rgba(79,140,255,.15); color: var(--accent); }
+  .tag-guidance { background: rgba(54,211,153,.15); color: var(--accent2); }
+  .tag-analyst { background: rgba(244,114,182,.15); color: var(--accent4); }
+  .tag-industry { background: rgba(247,185,85,.15); color: var(--accent3); }
+  .tag-earnings { background: rgba(34,197,94,.15); color: var(--green); }
+  .news-body h4 { font-size: 14px; color: var(--text-bright); margin-bottom: 4px; }
+  .news-body p { font-size: 13px; color: var(--text-dim); }
+
+  .section-title { font-size: 20px; font-weight: 700; color: var(--text-bright); margin-bottom: 20px; }
+  .section-subtitle { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; }
+  .subsection { margin-top: 28px; }
+  .subsection h3 { font-size: 16px; font-weight: 600; color: var(--text-bright); margin-bottom: 14px; }
+
+  .note-box { background: rgba(79,140,255,.08); border: 1px solid rgba(79,140,255,.2); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; font-size: 13px; color: var(--text-dim); }
+  .note-box strong { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .header { padding: 20px 16px; }
+    .tabs { padding: 0 16px; }
+    .cards-grid, .heatmap-grid, .dash-grid, .analyst-grid { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="updated">Data as of April 17, 2026</span>
+  <h1>Q1 2026 US Aggregates Earnings Database <span class="badge">LIVE</span></h1>
+  <p>Comprehensive earnings tracker for major US aggregates & building materials companies</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showSection('overview')">Company Overview</div>
+  <div class="tab" onclick="showSection('earnings')">Earnings Tracker</div>
+  <div class="tab" onclick="showSection('pricing')">Regional Pricing</div>
+  <div class="tab" onclick="showSection('industry')">Industry Dashboard</div>
+  <div class="tab" onclick="showSection('analysts')">Analyst Consensus</div>
+  <div class="tab" onclick="showSection('timeline')">Earnings Timeline</div>
+  <div class="tab" onclick="showSection('news')">News & Commentary</div>
+  <div class="tab" onclick="showSection('research')">Primary Research</div>
+</div>
+
+<div class="container">
+
+<!-- ===================== OVERVIEW ===================== -->
+<div class="section active" id="overview">
+  <h2 class="section-title">Company Cards — Key Q1 2026 Metrics</h2>
+  <div class="note-box"><strong>Note:</strong> ASTE (Astec Industries) manufactures aggregates processing equipment — not a pure aggregates producer. Included for industry context. Summit Materials (SUM) is now private after the $11.5B Quikrete merger (Feb 2025) and no longer reports publicly.</div>
+  <div class="cards-grid">
+
+    <!-- CRH -->
+    <div class="company-card">
+      <div class="card-header">
+        <div>
+          <h3>CRH plc</h3>
+          <div class="card-subtitle">Global building materials leader · NYSE</div>
+        </div>
+        <span class="ticker">CRH</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">EPS Estimate</div>
+          <div class="metric-value">$0.28</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Revenue Estimate</div>
+          <div class="metric-value">$5.23B</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">FY2026 EBITDA Guide</div>
+          <div class="metric-value">$8.1–8.5B</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Earnings Date</div>
+          <div class="metric-value" style="font-size:15px">Apr 30, 2026</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><span class="status-badge status-pending">Pending</span></span>
+        <span class="rating-buy">Strong Buy · PT $142</span>
+      </div>
+    </div>
+
+    <!-- VMC -->
+    <div class="company-card">
+      <div class="card-header">
+        <div>
+          <h3>Vulcan Materials</h3>
+          <div class="card-subtitle">Largest US aggregates producer · NYSE</div>
+        </div>
+        <span class="ticker">VMC</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">EPS Estimate</div>
+          <div class="metric-value">$1.25</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Revenue Estimate</div>
+          <div class="metric-value">$1.63B</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">FY2026 EBITDA Guide</div>
+          <div class="metric-value">$2.4–2.6B</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Earnings Date</div>
+          <div class="metric-value" style="font-size:15px">Apr 29, 2026</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><span class="status-badge status-pending">Pending</span></span>
+        <span class="rating-buy">Buy · PT $324</span>
+      </div>
+    </div>
+
+    <!-- MLM -->
+    <div class="company-card">
+      <div class="card-header">
+        <div>
+          <h3>Martin Marietta</h3>
+          <div class="card-subtitle">#2 US aggregates producer · NYSE</div>
+        </div>
+        <span class="ticker">MLM</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">EPS Estimate</div>
+          <div class="metric-value">$2.34</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Revenue Estimate</div>
+          <div class="metric-value">~$1.7B</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">FY2026 EBITDA Guide</div>
+          <div class="metric-value">$2.43B</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Earnings Date</div>
+          <div class="metric-value" style="font-size:15px">Apr 30, 2026</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><span class="status-badge status-pending">Pending</span></span>
+        <span class="rating-buy">Buy · PT $634</span>
+      </div>
+    </div>
+
+    <!-- KNF -->
+    <div class="company-card" style="border-color: var(--green);">
+      <div class="card-header">
+        <div>
+          <h3>Knife River</h3>
+          <div class="card-subtitle">Spun off from MDU Resources · NYSE</div>
+        </div>
+        <span class="ticker">KNF</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">EPS Actual</div>
+          <div class="metric-value green">$0.56 <small>vs $0.41 est</small></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Revenue Actual</div>
+          <div class="metric-value green">$755M <small>vs $727M est</small></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">FY2026 EBITDA Guide</div>
+          <div class="metric-value">$520–560M</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Reported</div>
+          <div class="metric-value green" style="font-size:15px">Beat +37%</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><span class="status-badge status-reported">Reported — Beat</span></span>
+        <span class="rating-buy">Buy · PT $105</span>
+      </div>
+    </div>
+
+    <!-- ACA -->
+    <div class="company-card">
+      <div class="card-header">
+        <div>
+          <h3>Arcosa Inc</h3>
+          <div class="card-subtitle">Infrastructure products incl. aggregates · NYSE</div>
+        </div>
+        <span class="ticker">ACA</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">EPS Estimate</div>
+          <div class="metric-value">$0.51</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Revenue Estimate</div>
+          <div class="metric-value">$656M</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">FY2026 EBITDA Guide</div>
+          <div class="metric-value">$590–640M</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Earnings Date</div>
+          <div class="metric-value" style="font-size:15px">Apr 30, 2026</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><span class="status-badge status-pending">Pending</span></span>
+        <span class="rating-buy">Strong Buy · PT $130</span>
+      </div>
+    </div>
+
+    <!-- ASTE -->
+    <div class="company-card">
+      <div class="card-header">
+        <div>
+          <h3>Astec Industries</h3>
+          <div class="card-subtitle">Aggregates equipment manufacturer · NASDAQ</div>
+        </div>
+        <span class="ticker">ASTE</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">EPS Estimate</div>
+          <div class="metric-value">$0.88</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Revenue Estimate</div>
+          <div class="metric-value">~$400M</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">FY2026 EPS Est</div>
+          <div class="metric-value">$3.78</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Earnings Date</div>
+          <div class="metric-value" style="font-size:15px">~May 6, 2026</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span><span class="status-badge status-pending">Pending</span></span>
+        <span class="rating-buy">Strong Buy · PT $66</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== EARNINGS TRACKER ===================== -->
+<div class="section" id="earnings">
+  <h2 class="section-title">Q1 2026 Earnings — Expected vs Actual</h2>
+  <p class="section-subtitle">Tracking consensus estimates against reported results. Green-highlighted rows indicate companies that have reported.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Ticker</th>
+          <th>Report Date</th>
+          <th>Status</th>
+          <th>EPS Est.</th>
+          <th>EPS Actual</th>
+          <th>Surprise</th>
+          <th>Rev Est.</th>
+          <th>Rev Actual</th>
+          <th>FY26 EBITDA Guide</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Knife River</strong></td>
+          <td>KNF</td>
+          <td>Apr 16, 2026</td>
+          <td><span class="status-badge status-reported">Reported</span></td>
+          <td>$0.41</td>
+          <td class="beat">$0.56</td>
+          <td class="beat">+36.6%</td>
+          <td>$727M</td>
+          <td class="beat">$755M</td>
+          <td>$520–560M</td>
+        </tr>
+        <tr>
+          <td><strong>Vulcan Materials</strong></td>
+          <td>VMC</td>
+          <td>Apr 29, 2026</td>
+          <td><span class="status-badge status-pending">Pending</span></td>
+          <td>$1.25</td>
+          <td>—</td>
+          <td>—</td>
+          <td>$1.63B</td>
+          <td>—</td>
+          <td>$2.4–2.6B</td>
+        </tr>
+        <tr>
+          <td><strong>CRH plc</strong></td>
+          <td>CRH</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="status-badge status-pending">Pending</span></td>
+          <td>$0.28</td>
+          <td>—</td>
+          <td>—</td>
+          <td>$5.23B</td>
+          <td>—</td>
+          <td>$8.1–8.5B</td>
+        </tr>
+        <tr>
+          <td><strong>Martin Marietta</strong></td>
+          <td>MLM</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="status-badge status-pending">Pending</span></td>
+          <td>$2.34</td>
+          <td>—</td>
+          <td>—</td>
+          <td>~$1.7B</td>
+          <td>—</td>
+          <td>$2.43B</td>
+        </tr>
+        <tr>
+          <td><strong>Arcosa Inc</strong></td>
+          <td>ACA</td>
+          <td>Apr 30, 2026</td>
+          <td><span class="status-badge status-pending">Pending</span></td>
+          <td>$0.51</td>
+          <td>—</td>
+          <td>—</td>
+          <td>$656M</td>
+          <td>—</td>
+          <td>$590–640M</td>
+        </tr>
+        <tr>
+          <td><strong>Astec Industries</strong></td>
+          <td>ASTE</td>
+          <td>~May 6, 2026</td>
+          <td><span class="status-badge status-pending">Pending</span></td>
+          <td>$0.88</td>
+          <td>—</td>
+          <td>—</td>
+          <td>~$400M</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <h3>Full-Year 2026 Guidance Comparison</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>FY26 Revenue Guide</th>
+            <th>FY26 EBITDA Guide</th>
+            <th>FY26 EPS Guide</th>
+            <th>Volume Growth</th>
+            <th>Price Growth</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CRH</strong></td>
+            <td>—</td>
+            <td>$8.1–8.5B</td>
+            <td>$5.60–6.05</td>
+            <td>Low single-digit</td>
+            <td>Low single-digit</td>
+          </tr>
+          <tr>
+            <td><strong>VMC</strong></td>
+            <td>—</td>
+            <td>$2.4–2.6B</td>
+            <td>—</td>
+            <td>+1% to +3%</td>
+            <td>+4% to +6%</td>
+          </tr>
+          <tr>
+            <td><strong>MLM</strong></td>
+            <td>$7.16B</td>
+            <td>$2.43B</td>
+            <td>—</td>
+            <td>+12% (incl. M&A)</td>
+            <td>+5% organic ASP</td>
+          </tr>
+          <tr>
+            <td><strong>KNF</strong></td>
+            <td>$3.30–3.50B</td>
+            <td>$520–560M</td>
+            <td>$3.18 (cons.)</td>
+            <td>Mid-single-digit</td>
+            <td>Mid-single-digit</td>
+          </tr>
+          <tr>
+            <td><strong>ACA</strong></td>
+            <td>$2.95–3.10B</td>
+            <td>$590–640M</td>
+            <td>$4.27 (cons.)</td>
+            <td>Low single-digit</td>
+            <td>Mid-single-digit</td>
+          </tr>
+          <tr>
+            <td><strong>ASTE</strong></td>
+            <td>—</td>
+            <td>—</td>
+            <td>$3.78 (cons.)</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REGIONAL PRICING ===================== -->
+<div class="section" id="pricing">
+  <h2 class="section-title">Regional Aggregates Pricing Heat Map</h2>
+  <p class="section-subtitle">Estimated delivered price per ton by region, Q1 2026. Pricing reflects crushed stone/gravel averages.</p>
+
+  <div class="heatmap-grid">
+    <div class="heatmap-cell heat-high">
+      <div class="region-name">Southeast</div>
+      <div class="region-price high">$35–60</div>
+      <div class="region-change">+5–7% YoY · Year-round production</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-top:8px;">Key players: VMC, MLM, CRH</div>
+      <div style="font-size:12px; color:var(--text-dim);">Demand: Infrastructure + data centers</div>
+    </div>
+    <div class="heatmap-cell heat-high">
+      <div class="region-name">Texas</div>
+      <div class="region-price high">$38–65</div>
+      <div class="region-change">+6–8% YoY · Above-inflation pricing</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-top:8px;">Key players: MLM, VMC, KNF</div>
+      <div style="font-size:12px; color:var(--text-dim);">Demand: Strong DOT + energy projects</div>
+    </div>
+    <div class="heatmap-cell heat-med">
+      <div class="region-name">Mid-Atlantic / Northeast</div>
+      <div class="region-price med">$45–75</div>
+      <div class="region-change">+4–6% YoY · Q1 weather disruptions</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-top:8px;">Key players: CRH, ACA (Stavola)</div>
+      <div style="font-size:12px; color:var(--text-dim);">Demand: Delayed by harsh winter</div>
+    </div>
+    <div class="heatmap-cell heat-med">
+      <div class="region-name">West / Mountain</div>
+      <div class="region-price med">$42–80</div>
+      <div class="region-change">+4–6% YoY · 8–12% premium vs Midwest</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-top:8px;">Key players: KNF, VMC</div>
+      <div style="font-size:12px; color:var(--text-dim);">Demand: DOT funding + OR $4.3B pkg</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Pricing Trend Indicators by Company</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>2026 ASP Growth Guidance</th>
+            <th>2025 ASP/Ton</th>
+            <th>Key Pricing Region</th>
+            <th>Pricing Power</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>VMC</strong></td>
+            <td class="beat">+4% to +6%</td>
+            <td>~$21+/ton</td>
+            <td>Southeast, Texas, California</td>
+            <td>Strong — Sun Belt dominance</td>
+          </tr>
+          <tr>
+            <td><strong>MLM</strong></td>
+            <td class="beat">+5% organic ASP</td>
+            <td>$23.30/ton</td>
+            <td>Central, Southeast, Virginia</td>
+            <td>Strong — Highest ASP in sector</td>
+          </tr>
+          <tr>
+            <td><strong>CRH</strong></td>
+            <td>Low single-digit</td>
+            <td>—</td>
+            <td>Diversified US + Europe</td>
+            <td>Moderate — Global mix effect</td>
+          </tr>
+          <tr>
+            <td><strong>KNF</strong></td>
+            <td class="beat">Mid-single-digit</td>
+            <td>—</td>
+            <td>West, Mountain, Central</td>
+            <td>Growing — Commercial excellence</td>
+          </tr>
+          <tr>
+            <td><strong>ACA</strong></td>
+            <td>Mid-single-digit</td>
+            <td>$18.09/ton</td>
+            <td>Texas, Northeast (Stavola)</td>
+            <td>Moderate — Building scale</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== INDUSTRY DASHBOARD ===================== -->
+<div class="section" id="industry">
+  <h2 class="section-title">Industry Conditions Dashboard — Q1 2026</h2>
+
+  <div class="dash-grid">
+    <div class="dash-card">
+      <h4>Diesel Fuel Prices</h4>
+      <div class="dash-big" style="color:var(--red)">$5.29<small style="font-size:14px;color:var(--text-dim)">/gal</small></div>
+      <div class="dash-sub">March 2026 national average — up 37.8% MoM</div>
+      <div class="dash-sub" style="color:var(--red)">Largest single-month rise since 1990 Gulf War</div>
+      <div class="dash-sub">Driven by geopolitical tensions (Iran conflict)</div>
+    </div>
+    <div class="dash-card">
+      <h4>IIJA Funds Deployed</h4>
+      <div class="dash-big" style="color:var(--accent)">$568B</div>
+      <div class="dash-sub">Allocated across 68,000+ projects</div>
+      <div class="dash-sub">$275B obligated (47%) · $119B outlayed</div>
+      <div class="dash-sub" style="color:var(--accent3);">Deadline: Sept 30, 2026 for discretionary funds</div>
+    </div>
+    <div class="dash-card">
+      <h4>US Aggregates Consumption</h4>
+      <div class="dash-big">2.6B<small style="font-size:14px;color:var(--text-dim)"> tons</small></div>
+      <div class="dash-sub">2025 combined crushed stone & sand/gravel</div>
+      <div class="dash-sub">Volumes trending flat; pricing driving profitability</div>
+    </div>
+    <div class="dash-card">
+      <h4>Weather Impact</h4>
+      <div class="dash-big" style="color:var(--accent3)">Severe</div>
+      <div class="dash-sub">Harsh winter across Northeast & Midwest</div>
+      <div class="dash-sub">Delayed construction starts; reduced Q1 shipments</div>
+      <div class="dash-sub">Pent-up demand expected to shift to Q2–Q3</div>
+    </div>
+    <div class="dash-card">
+      <h4>Aggregates Pricing Trend</h4>
+      <div class="dash-big" style="color:var(--green)">+4–6%</div>
+      <div class="dash-sub">Nationwide average YoY increase</div>
+      <div class="dash-sub">Coastal/urban areas: potentially +8–10%</div>
+      <div class="dash-sub">PPI recorded largest MoM increase in 4 years (March)</div>
+    </div>
+    <div class="dash-card">
+      <h4>Data Center Demand</h4>
+      <div class="dash-big" style="color:var(--accent2)">Surging</div>
+      <div class="dash-sub">CRH active on 100+ data center sites</div>
+      <div class="dash-sub">VMC seeing significant DC bookings growth</div>
+      <div class="dash-sub">Emerging as top private demand driver for aggregates</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Key Demand Drivers — Impact Assessment</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">IIJA Infra</div>
+        <div class="bar-track"><div class="bar-fill" style="width:88%; background:linear-gradient(90deg, var(--green), #4ade80);">Very Strong</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Data Centers</div>
+        <div class="bar-track"><div class="bar-fill" style="width:82%; background:linear-gradient(90deg, var(--accent2), #6ee7b7);">Strong Growth</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">State DOTs</div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%; background:linear-gradient(90deg, var(--accent), #93c5fd);">Solid (+6% YoY budgets)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Commercial</div>
+        <div class="bar-track"><div class="bar-fill" style="width:45%; background:linear-gradient(90deg, var(--accent3), #fcd34d);">Mixed — Soft</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Residential</div>
+        <div class="bar-track"><div class="bar-fill" style="width:35%; background:linear-gradient(90deg, var(--accent4), #fda4af);">Weak — Rate Sensitive</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Cost Pressures</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Diesel</div>
+        <div class="bar-track"><div class="bar-fill" style="width:92%; background:linear-gradient(90deg, var(--red), #f87171);">Critical — +37.8% MoM</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Labor</div>
+        <div class="bar-track"><div class="bar-fill" style="width:60%; background:linear-gradient(90deg, var(--accent3), #fcd34d);">Moderate — Inflationary</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Equipment</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%; background:linear-gradient(90deg, var(--accent3), #fcd34d);">Moderate</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Transport</div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%; background:linear-gradient(90deg, #f97316, #fb923c);">Elevated — Fuel surcharges</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ANALYST CONSENSUS ===================== -->
+<div class="section" id="analysts">
+  <h2 class="section-title">Analyst Consensus Tracker</h2>
+  <p class="section-subtitle">Current analyst ratings, price targets, and recent changes for each company.</p>
+
+  <div class="analyst-grid">
+
+    <div class="analyst-card">
+      <h4>CRH plc <span class="ticker" style="font-size:11px;">CRH</span></h4>
+      <div style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">18 analysts · Consensus: <span class="rating-buy">Strong Buy</span></div>
+      <div class="consensus-bar">
+        <div class="consensus-buy" style="width:78%;"></div>
+        <div class="consensus-hold" style="width:22%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
+        <span>14 Buy</span><span>4 Hold</span><span>0 Sell</span>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:12px;color:var(--text-dim);">Price Target Range</div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:13px;color:var(--red);">$108</span>
+          <span style="font-size:16px;font-weight:700;color:var(--accent);">$142 avg</span>
+          <span style="font-size:13px;color:var(--green);">$171</span>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,var(--red),var(--accent3),var(--green));border-radius:2px;margin-top:4px;"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-dim);">
+        Recent: Wells Fargo ↓ Equal Weight (Jan) · JP Morgan PT $140 (Mar) · Longbow initiated Buy (Dec)
+      </div>
+    </div>
+
+    <div class="analyst-card">
+      <h4>Vulcan Materials <span class="ticker" style="font-size:11px;">VMC</span></h4>
+      <div style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">13 analysts · Consensus: <span class="rating-buy">Buy</span></div>
+      <div class="consensus-bar">
+        <div class="consensus-buy" style="width:62%;"></div>
+        <div class="consensus-hold" style="width:38%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
+        <span>8 Buy</span><span>5 Hold</span><span>0 Sell</span>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:12px;color:var(--text-dim);">Price Target Range</div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:13px;color:var(--red);">$296</span>
+          <span style="font-size:16px;font-weight:700;color:var(--accent);">$324 avg</span>
+          <span style="font-size:13px;color:var(--green);">$365</span>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,var(--red),var(--accent3),var(--green));border-radius:2px;margin-top:4px;"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-dim);">
+        Recent: JP Morgan ↓ Neutral (Mar) · Citi PT $365 Buy (Mar) · Barclays PT $296 OW (Mar) · Wells Fargo PT $305 EW (Apr)
+      </div>
+    </div>
+
+    <div class="analyst-card">
+      <h4>Martin Marietta <span class="ticker" style="font-size:11px;">MLM</span></h4>
+      <div style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">23 analysts · Consensus: <span class="rating-buy">Buy</span></div>
+      <div class="consensus-bar">
+        <div class="consensus-buy" style="width:57%;"></div>
+        <div class="consensus-hold" style="width:39%;"></div>
+        <div class="consensus-sell" style="width:4%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
+        <span>13 Buy</span><span>9 Hold</span><span>1 Sell</span>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:12px;color:var(--text-dim);">Price Target Range</div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:13px;color:var(--red);">$440</span>
+          <span style="font-size:16px;font-weight:700;color:var(--accent);">$634 avg</span>
+          <span style="font-size:13px;color:var(--green);">$804</span>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,var(--red),var(--accent3),var(--green));border-radius:2px;margin-top:4px;"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-dim);">
+        Recent: B. Riley ↑ Buy PT $700 (Apr) · Loop Capital ↓ Hold (Jan) · Morgan Stanley PT $664 OW (Apr) · Barclays PT $640 OW (Mar)
+      </div>
+    </div>
+
+    <div class="analyst-card">
+      <h4>Knife River <span class="ticker" style="font-size:11px;">KNF</span></h4>
+      <div style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">11 analysts · Consensus: <span class="rating-buy">Buy</span></div>
+      <div class="consensus-bar">
+        <div class="consensus-buy" style="width:73%;"></div>
+        <div class="consensus-hold" style="width:18%;"></div>
+        <div class="consensus-sell" style="width:9%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
+        <span>8 Buy</span><span>2 Hold</span><span>1 Sell</span>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:12px;color:var(--text-dim);">Price Target Range</div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:13px;color:var(--red);">$80</span>
+          <span style="font-size:16px;font-weight:700;color:var(--accent);">$105 avg</span>
+          <span style="font-size:13px;color:var(--green);">$131</span>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,var(--red),var(--accent3),var(--green));border-radius:2px;margin-top:4px;"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-dim);">
+        Recent: Wells Fargo Underweight PT $80 (Apr) · Record $1B backlog entering 2026 · Q1 beat +37% EPS surprise
+      </div>
+    </div>
+
+    <div class="analyst-card">
+      <h4>Arcosa Inc <span class="ticker" style="font-size:11px;">ACA</span></h4>
+      <div style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">5 analysts · Consensus: <span class="rating-buy">Strong Buy</span></div>
+      <div class="consensus-bar">
+        <div class="consensus-buy" style="width:100%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
+        <span>5 Buy</span><span>0 Hold</span><span>0 Sell</span>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:12px;color:var(--text-dim);">Price Target Range</div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;">
+          <span style="font-size:13px;color:var(--red);">$115</span>
+          <span style="font-size:16px;font-weight:700;color:var(--accent);">$130 avg</span>
+          <span style="font-size:13px;color:var(--green);">$135</span>
+        </div>
+        <div style="height:4px;background:linear-gradient(90deg,var(--red),var(--accent3),var(--green));border-radius:2px;margin-top:4px;"></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-dim);">
+        Recent: Unanimously bullish · Completed $450M barge divestiture (Apr 1) · $60M Florida aggregates acquisition (Mar)
+      </div>
+    </div>
+
+    <div class="analyst-card">
+      <h4>Astec Industries <span class="ticker" style="font-size:11px;">ASTE</span></h4>
+      <div style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">1 analyst · Consensus: <span class="rating-buy">Strong Buy</span></div>
+      <div class="consensus-bar">
+        <div class="consensus-buy" style="width:100%;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);">
+        <span>1 Buy</span><span>0 Hold</span><span>0 Sell</span>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:12px;color:var(--text-dim);">Price Target</div>
+        <div style="margin-top:4px;">
+          <span style="font-size:16px;font-weight:700;color:var(--accent);">$66</span>
+          <span style="font-size:12px;color:var(--text-dim);">  (Sidoti raised FY26 EPS from $3.30 to $3.78)</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-dim);">
+        Note: Equipment maker, not pure aggregates. Limited analyst coverage. Premium P/E leaves little room for execution missteps.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== TIMELINE ===================== -->
+<div class="section" id="timeline">
+  <h2 class="section-title">Q1 2026 Earnings Calendar</h2>
+  <p class="section-subtitle">Chronological timeline of earnings releases and key events.</p>
+
+  <div class="timeline">
+    <div class="tl-item reported">
+      <div class="tl-date">April 16, 2026</div>
+      <div class="tl-content">
+        <h4>Knife River (KNF) — Q1 2026 Results Released</h4>
+        <p>EPS: $0.56 vs $0.41 est (+36.6% beat) · Revenue: $755M vs $727M est · Record backlog of $1.0B · 3 acquisitions completed in 2026 (Morgan Asphalt, Sparrow Enterprises, Donaldson Brothers)</p>
+      </div>
+    </div>
+    <div class="tl-item upcoming">
+      <div class="tl-date">April 28, 2026 (estimated)</div>
+      <div class="tl-content">
+        <h4>Astec Industries (ASTE) — Q1 2026 Results Expected</h4>
+        <p>EPS est: $0.88 · Equipment demand indicator for broader aggregates sector · Watch for order backlog trends and Infrastructure Solutions segment</p>
+      </div>
+    </div>
+    <div class="tl-item upcoming">
+      <div class="tl-date">April 29, 2026</div>
+      <div class="tl-content">
+        <h4>Vulcan Materials (VMC) — Q1 2026 Results</h4>
+        <p>EPS est: $1.25 (+25% YoY) · Revenue est: $1.63B · Conference call 10:00 AM ET · Key watch: aggregates pricing realization, Southeast demand, data center bookings, California acquisition update</p>
+      </div>
+    </div>
+    <div class="tl-item upcoming">
+      <div class="tl-date">April 30, 2026</div>
+      <div class="tl-content">
+        <h4>CRH plc (CRH) — Q1 2026 Results</h4>
+        <p>EPS est: $0.28 (vs -$0.12 loss YoY) · Revenue est: $5.23B · Conference call 8:00 AM EDT · Key watch: IIJA deployment, data center pipeline (100+ sites), M&A activity, Eco Materials integration</p>
+      </div>
+    </div>
+    <div class="tl-item upcoming">
+      <div class="tl-date">April 30, 2026</div>
+      <div class="tl-content">
+        <h4>Martin Marietta (MLM) — Q1 2026 Results</h4>
+        <p>EPS est: $2.34 (+24% YoY) · Conference call 10:00 AM ET · Key watch: QUIKRETE integration (first full quarter), 222M ton volume target, organic ASP +5%, Central Division expansion</p>
+      </div>
+    </div>
+    <div class="tl-item upcoming">
+      <div class="tl-date">April 30, 2026 (after close)</div>
+      <div class="tl-content">
+        <h4>Arcosa Inc (ACA) — Q1 2026 Results</h4>
+        <p>EPS est: $0.51 · Revenue est: $656M · Earnings call May 1 at 8:30 AM ET · Key watch: Stavola weather impact, barge divestiture effect, Florida acquisition, wind tower outlook, new 2-segment reporting</p>
+      </div>
+    </div>
+    <div class="tl-item upcoming">
+      <div class="tl-date">May 6, 2026</div>
+      <div class="tl-content">
+        <h4>Astec Industries (ASTE) — Conference Call</h4>
+        <p>Conference call at 8:30 AM ET · Watch for Q2 order trends and infrastructure equipment demand signals</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== NEWS & COMMENTARY ===================== -->
+<div class="section" id="news">
+  <h2 class="section-title">News & Commentary — Q1 2026</h2>
+  <p class="section-subtitle">Key developments, acquisitions, management commentary, and industry news.</p>
+
+  <div class="news-list">
+    <div class="news-item">
+      <span class="news-tag tag-earnings">Earnings</span>
+      <div class="news-body">
+        <h4>Knife River beats Q1 estimates by 37%, reports record backlog</h4>
+        <p>KNF reported $0.56 EPS vs $0.41 consensus, with revenue of $755M beating $727M estimates. Record $1.0B backlog (+38% YoY) driven by Central segment (+83% backlog growth, primarily Texas). Stock gapped down despite beat. — April 16, 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-acq">Acquisition</span>
+      <div class="news-body">
+        <h4>Martin Marietta completes largest aggregates acquisition in company history</h4>
+        <p>MLM closed QUIKRETE asset exchange on Feb 23, acquiring ~20M tons/year of aggregates capacity in Virginia, Missouri, Kansas, and BC. Divested Midlothian cement plant and Texas ready-mix. Revenue guidance raised to $7.16B and EBITDA to $2.43B. — February 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-acq">Acquisition</span>
+      <div class="news-body">
+        <h4>Arcosa completes $450M barge business sale, acquires Florida aggregates</h4>
+        <p>ACA sold inland barge business to Wynnchurch Capital for $450M (Apr 1), pivoting to pure construction/infrastructure play. Separately acquired central Florida natural aggregates operation for $60M in March. Now reports in two segments. — March-April 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-acq">Acquisition</span>
+      <div class="news-body">
+        <h4>CRH deployed $4.1B in 38 acquisitions in 2025, including $2.1B Eco Material Technologies</h4>
+        <p>CRH enters 2026 with $8.4B available for M&A (cash + facilities). Eco Material deal adds 125+ supplementary cementitious materials sites. Expects ~$200M incremental EBITDA from 2026 M&A activity. — Ongoing</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-acq">Acquisition</span>
+      <div class="news-body">
+        <h4>Knife River expands into Utah, Montana with three 2026 acquisitions</h4>
+        <p>Morgan Asphalt Inc. (Feb, Salt Lake City market), Sparrow Enterprises, and Donaldson Brothers Ready Mix (western Montana — 3 aggregate sources, ready-mix, precast). Continuing aggressive growth strategy post-MDU spinoff. — Q1 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-industry">Industry</span>
+      <div class="news-body">
+        <h4>Diesel fuel surges 37.8% in March — largest monthly increase since 1990 Gulf War</h4>
+        <p>National average hit $5.29/gallon in March 2026 driven by Iran geopolitical tensions. Producer Price Index for construction materials recorded largest one-month increase in 4 years. AGC warns costs are pressuring contractors. — March 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-industry">Industry</span>
+      <div class="news-body">
+        <h4>IIJA funding deadline: Sept 30, 2026 creates urgency for infrastructure spending</h4>
+        <p>Only 47% of IIJA funds obligated ($275B of $568B allocated). Discretionary funds expire Sept 30. CRH notes 50% of highway funds still to be deployed — expects 2026 to be "record year for transportation infrastructure investment." $2.3B in rescissions announced. — Ongoing</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-industry">Industry</span>
+      <div class="news-body">
+        <h4>Data center construction emerges as top private demand driver for aggregates</h4>
+        <p>CRH active on 100+ data center sites, within 25 miles of 85% of all US data sites. VMC seeing significant DC bookings. MLM cites "accelerating momentum in data centers and energy." Replacing softness in residential and private non-residential. — Q1 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-guidance">Guidance</span>
+      <div class="news-body">
+        <h4>VMC Investor Day: targets $4.5–5.0B long-term EBITDA, $20/ton cash gross profit</h4>
+        <p>Vulcan Materials outlined ambitious growth targets at 260-270M tons. 2026 guidance of $2.4-2.6B EBITDA, 1-3% shipment growth, 4-6% pricing. Pending California ready-mix acquisition expected Q2. Expanding from 3 to 9 locations in Charleston/Myrtle Beach. — Q1 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-guidance">Guidance</span>
+      <div class="news-body">
+        <h4>Arcosa CFO warns Q1 will face "tough comps" due to Northeast winter</h4>
+        <p>CFO Gail Peck noted severe cold and snow impacted Stavola (NY-NJ) operations. Q1 expected to be a lower percentage of full-year EBITDA than prior year. Full-year guidance maintained: $590-640M adjusted EBITDA. Wind towers expect ~25% revenue decline in 2026. — February 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-analyst">Analyst</span>
+      <div class="news-body">
+        <h4>Mixed analyst signals: JP Morgan downgrades VMC while Citi raises target to $365</h4>
+        <p>JP Morgan moved VMC to Neutral from Overweight (Mar 4). Citigroup countered with Buy and $365 target. B. Riley upgraded MLM to Buy with $700 target (Apr 2). Wells Fargo downgraded CRH to Equal Weight. Sector views diverging on valuation vs. fundamentals. — Q1 2026</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <span class="news-tag tag-industry">Industry</span>
+      <div class="news-body">
+        <h4>Pit & Quarry: Autonomy, M&A, and safety headline 2026 aggregates trends</h4>
+        <p>Six key trends: (1) Autonomy extending beyond haul trucks, (2) Digital connectivity adoption, (3) Continued M&A platform deals, (4) Pricing over volumes driving profitability, (5) Safety focus after 27% increase in fatalities in 2025, (6) Supply chain digitalization. — January 2026</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PRIMARY RESEARCH ===================== -->
+<div class="section" id="research">
+  <h2 class="section-title">Primary Research — Ground-Level Intelligence</h2>
+  <p class="section-subtitle">Equity research channel check: on-the-ground data from trade publications, DOT filings, weather records, EIA fuel data, and management commentary. Every data point sourced.</p>
+
+  <!-- PRICING INTELLIGENCE -->
+  <div class="subsection">
+    <h3>Pricing Trends & Intelligence</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Data Point</th><th>Detail</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Crushed stone/gravel (national)</strong></td><td>$20–$50/ton pre-delivery; $30–$75/ton delivered</td><td><a href="https://hellogravel.com/how-much-does-a-ton-of-aggregate-cost-in-2026" target="_blank" style="color:var(--accent)">HelloGravel 2026 Guide</a></td></tr>
+          <tr><td><strong>Sand & gravel PPI trend</strong></td><td>Rose from $7.29/ton (2014) to $12.61/ton (2024) — 5.6% CAGR. 2026 expect +4–6% additional</td><td><a href="https://fred.stlouisfed.org/series/WPS1321" target="_blank" style="color:var(--accent)">FRED PPI Data</a></td></tr>
+          <tr><td><strong>PPI March 2026 spike</strong></td><td>Largest one-month increase in 4 years for nonresidential construction PPI, driven by diesel surge</td><td><a href="https://www.agc.org/news/2026/04/14/onstruction-materials-costs-climb-march-driven-near-record-jump-diesel-fuel-price-and-further" target="_blank" style="color:var(--accent)">AGC News April 2026</a></td></tr>
+          <tr><td><strong>Hot-mix asphalt (HMA)</strong></td><td>$80–$160/ton national; SE $80–110, MW $90–120, NE $110–150, West $100–140</td><td><a href="https://homeguide.com/costs/asphalt-prices" target="_blank" style="color:var(--accent)">HomeGuide Asphalt Prices</a></td></tr>
+          <tr><td><strong>Cement pricing forecast</strong></td><td>US forecast +3.9% to $169/metric ton in 2026; global +3–4%</td><td><a href="https://www.imarcgroup.com/cement-pricing-report" target="_blank" style="color:var(--accent)">IMARC Group</a></td></tr>
+          <tr><td><strong>Concrete/cement inflation</strong></td><td>4–6% increase projected for 2026; dense urban/coastal: 8–10%</td><td><a href="https://trinitystreetcp.com/commercial-real-estate/first-quarter-2026-outlook-for-construction-materials/" target="_blank" style="color:var(--accent)">Trinity Street Capital Q1 Outlook</a></td></tr>
+          <tr><td><strong>VMC freight-adj. ASP</strong></td><td>+20% YoY in recent quarters despite -2% volume decline</td><td><a href="https://finance.yahoo.com/markets/stocks/articles/know-ahead-vulcan-materials-earnings-113029911.html" target="_blank" style="color:var(--accent)">Yahoo Finance VMC</a></td></tr>
+          <tr><td><strong>MLM aggregate ASP</strong></td><td>$23.30/ton in 2025 (+22.6% YoY); 2026 guide +5% organic</td><td><a href="https://ir.martinmarietta.com/news-releases/news-release-details/martin-marietta-reports-fourth-quarter-and-full-year-2025" target="_blank" style="color:var(--accent)">MLM Q4 2025 Results</a></td></tr>
+          <tr><td><strong>ACA aggregate ASP</strong></td><td>$18.09/ton (+8.2% YoY); cash gross profit/ton $8.21 (+9.7%)</td><td><a href="https://www.pitandquarry.com/arcosa-shares-2025-fourth-quarter-full-year-performance/" target="_blank" style="color:var(--accent)">Pit & Quarry – Arcosa</a></td></tr>
+          <tr><td><strong>KNF aggregate pricing</strong></td><td>+9% pricing improvement in 2025; continued optimization expected 2026</td><td><a href="https://www.pitandquarry.com/knife-river-reports-record-fourth-quarter-performance/" target="_blank" style="color:var(--accent)">Pit & Quarry – KNF</a></td></tr>
+          <tr><td><strong>Tariff impact on costs</strong></td><td>Steel/aluminum tariffs up to 50%; aggregate construction costs est. +8% under current policy</td><td><a href="https://www.agc.org/news/2026/04/14/onstruction-materials-costs-climb-march-driven-near-record-jump-diesel-fuel-price-and-further" target="_blank" style="color:var(--accent)">AGC News</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VOLUME INDICATORS -->
+  <div class="subsection">
+    <h3>Volume & Demand Indicators</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicator</th><th>Detail</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Dodge construction starts (Jan)</strong></td><td>+0.7% MoM to $1.24T SAAR</td><td><a href="https://www.construction.com/company-news/construction-starts-grow-1-in-january-2/" target="_blank" style="color:var(--accent)">Dodge Jan 2026</a></td></tr>
+          <tr><td><strong>Dodge starts (Feb)</strong></td><td>-13.2% MoM to $1.08T SAAR. Without 3 energy megaprojects, Q1 negative</td><td><a href="https://www.construction.com/company-news/construction-starts-slow-by-13-in-february/" target="_blank" style="color:var(--accent)">Dodge Feb 2026</a></td></tr>
+          <tr><td><strong>Housing starts (Jan)</strong></td><td>1.487M SAAR (+7.2% MoM); FY2026 forecast 1.34M (-1% vs 2025)</td><td><a href="https://forisk.com/u-s-housing-starts-outlook-q1-2026-update/" target="_blank" style="color:var(--accent)">Forisk Q1 2026</a></td></tr>
+          <tr><td><strong>Nonresidential starts (Jan)</strong></td><td>$80.3B — highest January on record. Feb plunged to $49.4B (-40%)</td><td><a href="https://imacorp.com/insights/construction-markets-in-focus-q1-2026" target="_blank" style="color:var(--accent)">IMA Corp Q1 Outlook</a></td></tr>
+          <tr><td><strong>Data center starts (Jan)</strong></td><td>Historic $25.2B milestone (20 projects). TTM: $103.7B. Pipeline: 65 projects / $92.1B</td><td><a href="https://news.constructconnect.com/january-2026-data-center-report-spending-surges-fivefold-in-two-years" target="_blank" style="color:var(--accent)">ConstructConnect DC Report</a></td></tr>
+          <tr><td><strong>Construction backlog</strong></td><td>Jan: 8.0 months (4-year low) → Mar: 8.6 months. DC contractors: 11.2 mo; non-DC: 7.6 mo</td><td><a href="https://www.constructiondive.com/news/construction-backlog-hit-4-year-low/812020/" target="_blank" style="color:var(--accent)">Construction Dive</a></td></tr>
+          <tr><td><strong>Highway construction spending (Jan)</strong></td><td>$148.5B SAAR (+3.3% from December)</td><td><a href="https://www.census.gov/construction/c30/pdf/release.pdf" target="_blank" style="color:var(--accent)">Census Bureau</a></td></tr>
+          <tr><td><strong>ENR Confidence Index</strong></td><td>Rose to 54 in Q1 2026 (+2 from Q4 2025, +7 since Q2 2025)</td><td><a href="https://www.enr.com/articles/62729-1q-2026-cost-report-non-building-work-leads-industry-starts-through-first-quarter" target="_blank" style="color:var(--accent)">ENR Q1 2026 Cost Report</a></td></tr>
+          <tr><td><strong>ENR: Highway/bridge starts</strong></td><td>-25% YoY (Jan 2025 vs Jan 2026) — concerning for public works</td><td><a href="https://www.enr.com/articles/62729-1q-2026-cost-report-non-building-work-leads-industry-starts-through-first-quarter" target="_blank" style="color:var(--accent)">ENR Q1 2026</a></td></tr>
+          <tr><td><strong>Construction jobs (Mar)</strong></td><td>+26K rebound in March; total construction employment rising</td><td><a href="https://www.enr.com/articles/62771-construction-jobs-rebound-jumping-by-26k-in-march" target="_blank" style="color:var(--accent)">ENR March Jobs</a></td></tr>
+          <tr><td><strong>Megaproject dominance</strong></td><td>Up 500% YTD; data centers dominate. Without DC, nonresidential down 12.7%</td><td><a href="https://www.planetizen.com/news/2026/04/137339-without-data-centers-nonresidential-construction-would-be-down-127" target="_blank" style="color:var(--accent)">Planetizen April 2026</a></td></tr>
+          <tr><td><strong>Total 2026 spending forecast</strong></td><td>~$2.2T (flat); 8 of 19 construction segments expected to decline</td><td><a href="https://www.constructiondive.com/news/constructions-economic-outlook-increasingly-cloudy-beyond-data-centers/817245/" target="_blank" style="color:var(--accent)">Construction Dive</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- WEATHER IMPACTS -->
+  <div class="subsection">
+    <h3>Weather Impacts — Q1 2026</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event</th><th>Impact</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Winter Storm Fern (Jan 23–27)</strong></td><td>173+ fatalities across 20+ states. 11,000+ flights canceled Jan 25. Widespread construction shutdown from Mexico to NE US</td><td><a href="https://en.wikipedia.org/wiki/January_2026_North_American_winter_storm" target="_blank" style="color:var(--accent)">Wikipedia</a></td></tr>
+          <tr><td><strong>Bomb Cyclone Gianna (Jan 30–Feb 2)</strong></td><td>Heavy precipitation and gusty winds in Carolinas; construction delays across Southeast</td><td><a href="https://en.wikipedia.org/wiki/January_30_%E2%80%93_February_2,_2026_North_American_bomb_cyclone" target="_blank" style="color:var(--accent)">Wikipedia</a></td></tr>
+          <tr><td><strong>NE Blizzard (Feb 22–24)</strong></td><td>1–2 feet Philadelphia to Boston, 3 feet in SE New England. Vehicle bans in MA, PA, NJ, CT — 48–96 hr material delivery delays</td><td><a href="https://www.constructiondive.com/news/project-delays-construction-stress-up-2026/812673/" target="_blank" style="color:var(--accent)">Construction Dive</a></td></tr>
+          <tr><td><strong>Northeast overall</strong></td><td>Extended winter at 9 of 11 Insteel facilities. Arcosa CFO: "severe cold/snow" hit Stavola (NY-NJ) operations; Q1 EBITDA % below normal</td><td><a href="https://www.fool.com/earnings/call-transcripts/2026/02/27/arcosa-aca-q4-2025-earnings-call-transcript/" target="_blank" style="color:var(--accent)">Motley Fool – ACA Call</a></td></tr>
+          <tr><td><strong>Southeast</strong></td><td>Mild weather; favorable for aggregates demand. Strong Q1 conditions vs other regions</td><td><a href="https://www.pitandquarry.com/producers-overcome-adverse-weather-with-price-management/" target="_blank" style="color:var(--accent)">Pit & Quarry</a></td></tr>
+          <tr><td><strong>Texas</strong></td><td>January ice events, spring hailstorms. ERCOT issued cold weather advisories. Construction intermittently disrupted</td><td><a href="https://www.dallasfed.org/research/swe/2026/swe2609" target="_blank" style="color:var(--accent)">Dallas Fed</a></td></tr>
+          <tr><td><strong>California</strong></td><td>"Historically wet" Q1 impacted aggregate shipments significantly</td><td><a href="https://www.pitandquarry.com/producers-overcome-adverse-weather-with-price-management/" target="_blank" style="color:var(--accent)">Pit & Quarry</a></td></tr>
+          <tr><td><strong>Midwest</strong></td><td>Routine winter; MnDOT planning 200+ road/bridge projects for 2026 season. ND DOT $750M in bids</td><td><a href="https://www.kttc.com/2026/03/31/mndot-outlines-2026-state-construction-projects/" target="_blank" style="color:var(--accent)">KTTC News</a></td></tr>
+          <tr><td><strong>Construction cost inputs</strong></td><td>Rose 12.6% annualized rate during first two months of 2026</td><td><a href="https://www.constructiondive.com/news/staggering-construction-prices-february-2026/815257/" target="_blank" style="color:var(--accent)">Construction Dive</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FUEL/INPUT COSTS -->
+  <div class="subsection">
+    <h3>Fuel & Input Costs</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Data Point</th><th>Detail</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Diesel — January 2026</strong></td><td>$3.52/gal national average</td><td><a href="https://www.bts.gov/newsroom/motor-fuel-prices-january-2026-1" target="_blank" style="color:var(--accent)">BTS Fuel Prices</a></td></tr>
+          <tr><td><strong>Diesel — February 2026</strong></td><td>$3.72/gal (+5.6% MoM)</td><td><a href="https://www.bts.gov/newsroom/motor-fuel-prices-february-2026-0" target="_blank" style="color:var(--accent)">BTS Fuel Prices</a></td></tr>
+          <tr><td><strong>Diesel — March 2026</strong></td><td>$4.92/gal (+32.2% MoM) — Strait of Hormuz closure impact</td><td><a href="https://www.bts.gov/newsroom/motor-fuel-prices-march-2026-0" target="_blank" style="color:var(--accent)">BTS Fuel Prices</a></td></tr>
+          <tr><td><strong>Diesel — late March peak</strong></td><td>$5.40/gal (highest in real terms in 2+ years)</td><td><a href="https://www.eia.gov/todayinenergy/detail.php?id=67424" target="_blank" style="color:var(--accent)">EIA Today in Energy</a></td></tr>
+          <tr><td><strong>EIA Q2 2026 forecast</strong></td><td>$5.61/gal average; peak >$5.80 in April. Full-year 2026: $4.80/gal</td><td><a href="https://www.eia.gov/outlooks/steo/pdf/steo_full.pdf" target="_blank" style="color:var(--accent)">EIA STEO</a></td></tr>
+          <tr><td><strong>EIA forecast revision</strong></td><td>Full-year 2026 raised to $4.12/gal — 20.1% above prior estimate</td><td><a href="https://www.marketscreener.com/news/eia-raises-its-retail-diesel-price-forecast-for-2026-to-4-12-per-gallon-20-1-above-prior-estimate-ce7e5fdfdb81f621" target="_blank" style="color:var(--accent)">Market Screener</a></td></tr>
+          <tr><td><strong>Brent crude</strong></td><td>$103/bbl average March; expected peak $115/bbl in Q2</td><td><a href="https://www.eia.gov/outlooks/steo/pdf/steo_full.pdf" target="_blank" style="color:var(--accent)">EIA STEO</a></td></tr>
+          <tr><td><strong>Trucking fuel surcharges</strong></td><td>Van +20¢ to 61¢/mile; flatbed +24¢ to 73¢/mile — highest since late 2022</td><td><a href="https://markets.financialcontent.com/stocks/article/gnwcq-2026-4-14-dat-truckload-freight-rates-hit-two-year-highs-as-diesel-costs-surge" target="_blank" style="color:var(--accent)">DAT Truckload Rates</a></td></tr>
+          <tr><td><strong>Root cause</strong></td><td>Strait of Hormuz closure (~20% world oil traffic). Military action Feb 28. Iran conflict</td><td><a href="https://www.eia.gov/todayinenergy/detail.php?id=67424" target="_blank" style="color:var(--accent)">EIA Analysis</a></td></tr>
+          <tr><td><strong>ENR Cost Index</strong></td><td>+4.2% in Q1 2026 — highest since Q2 2023. Metals +20–30% YoY</td><td><a href="https://www.enr.com/articles/62846-construction-economics-for-april-20-2026" target="_blank" style="color:var(--accent)">ENR Construction Economics</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- REGIONAL CONDITIONS -->
+  <div class="subsection">
+    <h3>Regional Conditions</h3>
+    <div class="cards-grid">
+      <div class="company-card">
+        <div class="card-header"><h3>Southeast</h3><span class="ticker" style="background:rgba(34,197,94,.15);color:var(--green);">STRONG</span></div>
+        <div style="font-size:13px; color:var(--text-dim); margin-bottom:10px;">FL, GA, NC, SC, AL</div>
+        <div style="font-size:13px; line-height:1.8;">
+          <strong>FL DOT:</strong> $9.4B FY2026 work program; $32.8B over 5 years — <a href="https://fdotewp1.dot.state.fl.us/fmsupportapps/Documents/pra/FiveYearWorkProgramCharts.pdf" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>GA DOT:</strong> $1.82B FY2026 contracts awarded; SR 400 $4.6B P3 starts Apr 2026 — <a href="https://www.dot.ga.gov/GDOT/Pages/MajorProjects.aspx" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>NC DOT:</strong> I-26 Connector construction starts summer 2026; Fayetteville Loop $152M — <a href="https://www.ncdot.gov/initiatives-policies/Transportation/stip/Pages/stip-projects-map.aspx" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Hurricane rebuild:</strong> $30.5B+ Helene damage; debris cleared 107M+ cubic yards; Samaritan's Purse expanding to 19 new locations — <a href="https://www.constructiondive.com/news/hurricane-helene-damage-infrastructure-cost/729232/" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Weather:</strong> Mild Q1 — most favorable region for aggregates demand
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="card-header"><h3>Texas</h3><span class="ticker" style="background:rgba(34,197,94,.15);color:var(--green);">STRONG</span></div>
+        <div style="font-size:13px; color:var(--text-dim); margin-bottom:10px;">TX</div>
+        <div style="font-size:13px; line-height:1.8;">
+          <strong>TxDOT:</strong> $146B 10-year plan; ~$33.5B in 2026 project development — <a href="https://gov.texas.gov/news/post/governor-abbott-announces-over-146-billion-texas-transportation-investment" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Energy demand:</strong> ERCOT peak demand to reach 368 GW within 6 years; 5% YoY growth — <a href="https://www.dallasfed.org/research/swe/2026/swe2609" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>KNF backlog:</strong> Central segment +83% YoY, driven by Texas; ND DOT $750M in bids — <a href="https://www.businesswire.com/news/home/20260217431690/en/Knife-River-Corporation-Reports-Fourth-Quarter-and-Full-Year-2025-Financial-Results" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Weather:</strong> January ice events; spring hailstorms; intermittent disruptions
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="card-header"><h3>Mid-Atlantic / Northeast</h3><span class="ticker" style="background:rgba(247,185,85,.15);color:var(--accent3);">MIXED</span></div>
+        <div style="font-size:13px; color:var(--text-dim); margin-bottom:10px;">VA, MD, PA, NY, NJ</div>
+        <div style="font-size:13px; line-height:1.8;">
+          <strong>IIJA projects:</strong> VA Long Bridge $2B+; NY Hell Gate $1B+; PA Montgomery Lock $1B — <a href="https://www.transportation.gov/infrastructure-investment-and-jobs-act/iija-funded-infrastructure-projects" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Stavola impact:</strong> Severe winter weather hit ACA's NY-NJ operations; Q1 EBITDA contribution below normal — <a href="https://www.fool.com/earnings/call-transcripts/2026/02/27/arcosa-aca-q4-2025-earnings-call-transcript/" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>MLM expansion:</strong> QUIKRETE exchange adds VA aggregates (20M tons/yr); CRH MN acquisition — <a href="https://ir.martinmarietta.com/news-releases/news-release-details/martin-marietta-completes-asset-exchange-quikrete-holdings-inc" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Weather:</strong> Worst-hit region. Three major storms Jan–Feb; 48–96 hr delivery delays — <a href="https://www.constructiondive.com/news/project-delays-construction-stress-up-2026/812673/" style="color:var(--accent)" target="_blank">Source</a>
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="card-header"><h3>West / Mountain</h3><span class="ticker" style="background:rgba(247,185,85,.15);color:var(--accent3);">MIXED</span></div>
+        <div style="font-size:13px; color:var(--text-dim); margin-bottom:10px;">CA, CO, AZ, OR, UT, MT</div>
+        <div style="font-size:13px; line-height:1.8;">
+          <strong>CA DOT:</strong> $2.7B STIP priority projects; $17.9B SHOPP over 4 years; 904 active contracts — <a href="https://dot.ca.gov/caltrans-near-me/district-4/d4-news/2026-03-25-press-release-california-investing-nearly-900-million" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Data centers:</strong> AZ emerging as top hub; Denver moratorium debate; CA Imperial County mega-project — <a href="https://www.swlaw.com/publication/building-in-arizonas-data-center-boom-how-federal-executive-orders-state-regulation-and-national-security-policy-are-reshaping-the-rules-for-developers/" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>KNF expansion:</strong> Morgan Asphalt (UT), Donaldson Brothers (MT) acquisitions; OR $4.3B transport pkg — <a href="https://www.businesswire.com/news/home/20260227328016/en/Knife-River-Expands-into-Utah-with-Acquisition-of-Morgan-Asphalt-in-Salt-Lake-City" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Weather:</strong> CA "historically wet" Q1 — significant shipment impact
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="card-header"><h3>Midwest</h3><span class="ticker" style="background:rgba(247,185,85,.15);color:var(--accent3);">MODERATE</span></div>
+        <div style="font-size:13px; color:var(--text-dim); margin-bottom:10px;">OH, IN, IL, MN, ND</div>
+        <div style="font-size:13px; line-height:1.8;">
+          <strong>MnDOT:</strong> 200+ road/bridge projects planned for 2026 season — <a href="https://www.kttc.com/2026/03/31/mndot-outlines-2026-state-construction-projects/" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>ND DOT:</strong> $750M construction bids planned for 2026 (benefits KNF Central segment)<br>
+          <strong>MLM Minnesota:</strong> CRH MN aggregates acquisition adds Twin Cities/St. Cloud reserves — <a href="https://ir.martinmarietta.com/news-releases/news-release-details/martin-marietta-reports-fourth-quarter-and-full-year-2025" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Data centers:</strong> $12.2B in MW DC starts (MN, IL, MI, OH) — <a href="https://news.constructconnect.com/january-2026-data-center-report-spending-surges-fivefold-in-two-years" style="color:var(--accent)" target="_blank">Source</a><br>
+          <strong>Weather:</strong> Routine winter; construction season ramp expected Q2
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGEMENT COMMENTARY -->
+  <div class="subsection">
+    <h3>Management Commentary — Q4 2025 Earnings Calls</h3>
+    <div class="news-list">
+      <div class="news-item">
+        <span class="news-tag tag-guidance">VMC</span>
+        <div class="news-body">
+          <h4>Tom Hill, CEO — Vulcan Materials Q4 2025 Call</h4>
+          <p>Q4 EPS: $1.70 (missed $2.12 est). Adj. EBITDA $2.3B (+13% YoY). Cash gross profit/ton: $11.33. 50% of IIJA funds remain unspent. Guided 1–3% shipment growth, 4–6% pricing. Investor Day target: $4.5–5.0B EBITDA at 260–270M tons, $20/ton cash gross profit. Expanding Charleston/Myrtle Beach from 3 to 9 locations. — <a href="https://finance.yahoo.com/news/vulcan-materials-co-vmc-q4-210309352.html" style="color:var(--accent)" target="_blank">Source</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-guidance">MLM</span>
+        <div class="news-body">
+          <h4>Ward Nye, CEO — Martin Marietta Q4 2025 Call</h4>
+          <p>"2025 was an outstanding year...marked by record financial, operational, and safety performance." 2026 guide: 2% midpoint shipment growth in "balanced macro environment" — infrastructure & data centers offset private softness. QUIKRETE exchange adds 20M tons/yr capacity. Revenue guide $7.16B, EBITDA $2.43B. — <a href="https://www.fool.com/earnings/call-transcripts/2026/02/11/martin-marietta-mlm-q4-2025-earnings-transcript/" style="color:var(--accent)" target="_blank">Source</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-guidance">CRH</span>
+        <div class="news-body">
+          <h4>Jim Mintern, CEO — CRH Q4 2025 Call</h4>
+          <p>"CRH enters 2026 with confidence." FY2025: Revenue $37.4B (+5%), EBITDA $7.7B (+11%). Three strategic pillars: (1) 50% of IIJA highway funds still to deploy — expects record year, (2) Active on 100+ data center sites, (3) $200M incremental EBITDA from 2026 M&A. $8.4B available for acquisitions. — <a href="https://www.crh.com/media/press-releases/2026/crh-reports-q4-and-fy-2025-results/" style="color:var(--accent)" target="_blank">Source</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-guidance">KNF</span>
+        <div class="news-body">
+          <h4>Brian Gray, CEO — Knife River Q4 2025 Call</h4>
+          <p>"Most profitable year ever." Adj. EBITDA $497M (+7%). Q4: revenue $755M (+15%), EBITDA $119M (+47%). Record $1B backlog (+38%). "Competitive EDGE" driving high-single-digit pricing. 2026: $3.3–3.5B revenue, $520–560M EBITDA. Agg volumes & pricing both up mid-single-digits. — <a href="https://seekingalpha.com/article/4871016-knife-river-corporation-knf-q4-2025-earnings-call-transcript" style="color:var(--accent)" target="_blank">Source</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-guidance">ACA</span>
+        <div class="news-body">
+          <h4>Gail Peck, CFO — Arcosa Q4 2025 Call</h4>
+          <p>"Q1 will likely have tough comp in unit profitability YoY" — severe NE winter weather impacts Stavola. Agg guide: mid-single-digit pricing, low single-digit volume. Barge sale ($450M) "raises overall margin profile." Wind towers -25% in 2026, recovery 2027. Double-digit EBITDA growth in core segments. FY guide: $590–640M EBITDA. — <a href="https://www.fool.com/earnings/call-transcripts/2026/02/27/arcosa-aca-q4-2025-earnings-call-transcript/" style="color:var(--accent)" target="_blank">Source</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDUSTRY CONFERENCES -->
+  <div class="subsection">
+    <h3>Industry Conferences & Events — Q1 2026</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event</th><th>Date</th><th>Location</th><th>Relevance</th></tr></thead>
+        <tbody>
+          <tr><td><strong>NSSGA Annual Convention</strong></td><td>Mar 1–3, 2026</td><td>Fontainebleau, Las Vegas</td><td>700+ aggregates members; joint events with NRMCA. <a href="https://www.nssga.org/event/annual-convention-2026" style="color:var(--accent)" target="_blank">Link</a></td></tr>
+          <tr><td><strong>BMO Global Metals & Mining</strong></td><td>Feb 22–25, 2026</td><td>Hollywood, FL</td><td>35th annual; building materials coverage. <a href="https://newsroom.bmo.com/2026-02-11-BMO-Capital-Markets-to-Host-35th-Annual-Global-Metals,-Mining-Critical-Minerals-Conference,-Feb-22-Feb-25" style="color:var(--accent)" target="_blank">Link</a></td></tr>
+          <tr><td><strong>CONEXPO-CON/AGG 2026</strong></td><td>Mar 3–7, 2026</td><td>Las Vegas Convention Center</td><td>2,000+ exhibitors; 130K+ attendees. Aggregates processing tech showcase. <a href="https://www.conexpoconagg.com/" style="color:var(--accent)" target="_blank">Link</a></td></tr>
+          <tr><td><strong>MI Aggregates Assn Conference</strong></td><td>Feb 11–13, 2026</td><td>Battle Creek, MI</td><td>Regulatory changes, permitting, safety, transport funding. <a href="https://www.constructionequipmentguide.com/michigan-aggregates-association-holds-2026-conference/70538" style="color:var(--accent)" target="_blank">Link</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COMPETITOR BENCHMARKS -->
+  <div class="subsection">
+    <h3>Competitor / Adjacent Benchmarks</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Company</th><th>Key Data</th><th>2026 Guidance/Outlook</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Eagle Materials (EXP)</strong></td><td>Q1 FY26 record revenue $635M (+4%). Agg sales vol +117% (acquisitions). EPS $3.76 (-5%)</td><td>CapEx doubled to $76M; aggressive agg expansion</td><td><a href="https://www.investing.com/news/company-news/eagle-materials-q1-fy2026-slides-record-revenue-growth-despite-eps-decline-93CH-4287514" style="color:var(--accent)" target="_blank">Investing.com</a></td></tr>
+          <tr><td><strong>Holcim (post-Amrize spinoff)</strong></td><td>FY25: CHF 15.72B revenue, EBIT CHF 2.88B (+10.3%), record 18.3% margin</td><td>3–5% organic sales growth, 8–10% EBIT growth</td><td><a href="https://www.cemnet.com/News/story/180889/holcim-reports-strong-2025-earnings-and-sets-2026-growth-guidance.html" style="color:var(--accent)" target="_blank">CemNet</a></td></tr>
+          <tr><td><strong>Heidelberg Materials</strong></td><td>FY25: €21.5B revenue, RCO €3.4B (+6%) record. ROIC 10.4%</td><td>2026 RCO €3.40–3.75B. "Optimistic about 2026"</td><td><a href="https://www.heidelbergmaterials.com/en/pr-2026-02-25" style="color:var(--accent)" target="_blank">Heidelberg IR</a></td></tr>
+          <tr><td><strong>CEMEX (CX)</strong></td><td>Q1 2026 expected April 27. Estimates: EPS $0.10, Rev $3.81B</td><td>Pending</td><td><a href="https://www.marketbeat.com/instant-alerts/cemex-cx-expected-to-announce-earnings-on-thursday-2026-04-16/" style="color:var(--accent)" target="_blank">MarketBeat</a></td></tr>
+          <tr><td><strong>Summit/Quikrete</strong></td><td>Merged Feb 2025 for $11.5B. Now private — no public reporting</td><td>N/A</td><td><a href="https://www.prnewswire.com/news-releases/summit-materials-completes-merger-with-quikrete-302372579.html" style="color:var(--accent)" target="_blank">PR Newswire</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TRADE PUBLICATION COVERAGE -->
+  <div class="subsection">
+    <h3>Trade Publication Coverage</h3>
+    <div class="news-list">
+      <div class="news-item">
+        <span class="news-tag tag-industry">P&Q</span>
+        <div class="news-body">
+          <h4>Pit & Quarry: Six Trends in Aggregates for 2026</h4>
+          <p>Autonomy expanding beyond haul trucks; digital connectivity adoption; continued M&A platform deals; pricing over volumes driving profitability; safety focus after 27% fatality increase in 2025; supply chain digitalization. — <a href="https://www.pitandquarry.com/six-trends-in-aggregates-for-2026/" style="color:var(--accent)" target="_blank">Read article</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-industry">P&Q</span>
+        <div class="news-body">
+          <h4>Pit & Quarry: Resilience Drives Growth as Aggregates Leaders Look to 2026</h4>
+          <p>Industry optimism entering 2026 after solid Q4/FY 2025. Infrastructure market strong; producers have pricing power. Volumes trended down in H1 2025, recovered in H2. — <a href="https://www.pitandquarry.com/resilience-drives-growth-as-aggregates-leaders-look-to-2026/" style="color:var(--accent)" target="_blank">Read article</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-industry">Rock</span>
+        <div class="news-body">
+          <h4>Rock Products: The Real Foundation of the Data Center Boom</h4>
+          <p>Data centers require massive quantities of concrete, aggregates, and steel. CRH within 25 miles of 85% of US data sites. Multi-year supply agreements becoming industry norm. Cement demand: ~1M metric tons over 3 years. — <a href="https://rockproducts.com/2026/03/16/concrete-conduit-and-code-the-real-foundation-of-the-data-center-boom/" style="color:var(--accent)" target="_blank">Read article</a></p>
+        </div>
+      </div>
+      <div class="news-item">
+        <span class="news-tag tag-industry">ENR</span>
+        <div class="news-body">
+          <h4>ENR Q1 2026: Data Centers Propping Up a Fragile Construction Market</h4>
+          <p>Non-building sector +46% YoY (electric power +300%). Highway/bridge starts -25% YoY. Healthcare -39%, Education -18%. Without data centers, market would be down significantly. Cost index +4.2% (highest since Q2 2023). — <a href="https://www.enr.com/articles/62730-1q-2026-cost-report-data-centers-propping-up-a-fragile-construction-market" style="color:var(--accent)" target="_blank">Read article</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- /container -->
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Find corresponding tab
+  const tabs = document.querySelectorAll('.tab');
+  const names = ['overview','earnings','pricing','industry','analysts','timeline','news','research'];
+  const idx = names.indexOf(id);
+  if (idx >= 0 && tabs[idx]) tabs[idx].classList.add('active');
+}
+</script>
+
+</body>
+</html>
