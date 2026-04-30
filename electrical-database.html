@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Electrical Infrastructure & Power Services Database — Quarryme</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0f1e;--card:#111827;--border:#1e2a45;--gold:#d4a843;--gold-dim:#b8922e;--text:#e2e8f0;--text-dim:#94a3b8;--accent:#1e3a5f;--hover:#162240;--green:#22c55e;--red:#ef4444;--star:#eab308}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.header{background:linear-gradient(135deg,#0d1529 0%,#162240 50%,#0d1529 100%);border-bottom:2px solid var(--gold);padding:2rem 2rem 1.5rem;text-align:center}
+.header h1{font-size:1.8rem;color:var(--gold);font-weight:700;letter-spacing:.5px;margin-bottom:.3rem}
+.header p{color:var(--text-dim);font-size:.95rem}
+.header .subtitle{color:var(--text);font-size:1rem;margin-bottom:.2rem}
+
+.controls{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.controls input[type=text]{background:#0f172a;border:1px solid var(--border);color:var(--text);padding:.5rem .85rem;border-radius:6px;font-size:.85rem;width:280px;outline:none;transition:border .2s}
+.controls input[type=text]:focus{border-color:var(--gold)}
+.controls select{background:#0f172a;border:1px solid var(--border);color:var(--text);padding:.5rem .7rem;border-radius:6px;font-size:.85rem;outline:none;cursor:pointer;appearance:auto}
+.controls select:focus{border-color:var(--gold)}
+.controls .count{margin-left:auto;color:var(--text-dim);font-size:.82rem;white-space:nowrap}
+.excel-btn{background:#1d6f42;color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;font-size:.85rem;cursor:pointer;font-weight:600;white-space:nowrap}
+.excel-btn:hover{background:#155e36}
+
+.table-wrap{overflow-x:auto;padding:0 1rem 2rem}
+table{width:100%;border-collapse:collapse;min-width:2200px;margin-top:.5rem}
+thead{position:sticky;top:0;z-index:10}
+th{background:#162240;color:var(--gold);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;padding:.7rem .6rem;text-align:left;border-bottom:2px solid var(--gold);cursor:pointer;white-space:nowrap;user-select:none;transition:background .15s}
+th:hover{background:#1e3050}
+th .sort-icon{display:inline-block;width:14px;text-align:center;margin-left:3px;font-size:.7rem;color:var(--text-dim)}
+th.sorted-asc .sort-icon::after{content:'▲';color:var(--gold)}
+th.sorted-desc .sort-icon::after{content:'▼';color:var(--gold)}
+
+td{padding:.55rem .6rem;font-size:.82rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
+tr{transition:background .1s}
+tr:hover{background:var(--hover)}
+tr:nth-child(even){background:rgba(17,24,39,.5)}
+tr:nth-child(even):hover{background:var(--hover)}
+
+.rank{text-align:center;font-weight:700;color:var(--gold);min-width:40px}
+.name{font-weight:600;color:#f1f5f9;white-space:nowrap}
+.ceo{color:var(--text);max-width:180px}
+.hq{color:var(--text-dim);white-space:nowrap;font-size:.78rem}
+.revenue{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.employees{text-align:right;font-variant-numeric:tabular-nums}
+.founded{text-align:center;color:var(--text-dim)}
+.locations{text-align:right;color:var(--text-dim);font-variant-numeric:tabular-nums}
+.services-col{font-size:.78rem;max-width:240px}
+.cat-tag{display:inline-block;background:var(--accent);color:var(--text);padding:1px 7px;border-radius:10px;font-size:.72rem;margin:1px 2px;white-space:nowrap}
+.ownership{font-size:.78rem;max-width:140px;white-space:nowrap}
+.sponsor{font-size:.78rem;color:var(--text-dim);max-width:160px}
+.website-col{text-align:center}
+.website-col a{font-size:.75rem;background:#0a66c2;color:#fff;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.website-col a:hover{background:#0958a8;text-decoration:none}
+.website-na{color:var(--text-dim);font-size:.75rem}
+.ownership-public{color:#22c55e;font-weight:600}
+.ownership-pe{color:#d4a843;font-weight:600}
+.ownership-private{color:#94a3b8;font-weight:600}
+.ownership-sub{color:#60a5fa;font-weight:600}
+
+.footer{text-align:center;padding:1.5rem;color:var(--text-dim);font-size:.78rem;border-top:1px solid var(--border)}
+
+@media(max-width:768px){
+  .header h1{font-size:1.3rem}
+  .controls{flex-direction:column;align-items:stretch}
+  .controls input[type=text]{width:100%}
+  .controls .count{margin-left:0;margin-top:.25rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>US Electrical Infrastructure &amp; Power Services Database</h1>
+  <p class="subtitle">T&amp;D Construction · Substations · Transformers · Testing &amp; Maintenance · Grid Services</p>
+  <p>Comprehensive database of 65 US electrical infrastructure leaders ranked by revenue and strategic scale</p>
+</div>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="Search company, CEO, services, sponsor...">
+  <select id="filterCategory"><option value="">All Categories</option></select>
+  <select id="filterOwnership">
+    <option value="">All Ownership Types</option>
+    <option value="Public">Public</option>
+    <option value="PE-Backed">PE-Backed</option>
+    <option value="Private">Private</option>
+    <option value="Subsidiary">Subsidiary</option>
+  </select>
+  <select id="filterRevenue">
+    <option value="">All Revenue Ranges</option>
+    <option value="10000">$10B+</option>
+    <option value="5000">$5B+</option>
+    <option value="2000">$2B+</option>
+    <option value="1000">$1B–$2B</option>
+    <option value="500">$500M–$1B</option>
+    <option value="0">Under $500M</option>
+  </select>
+  <button class="excel-btn" onclick="exportExcel()">⬇ Download Excel</button>
+  <span class="count" id="rowCount">Loading...</span>
+</div>
+
+<div class="table-wrap">
+<table id="execTable">
+<thead>
+<tr>
+  <th data-col="rank" data-type="num">Rank<span class="sort-icon"></span></th>
+  <th data-col="company" data-type="str">Company<span class="sort-icon"></span></th>
+  <th data-col="hq" data-type="str">HQ (City, State)<span class="sort-icon"></span></th>
+  <th data-col="ceo" data-type="str">CEO / President<span class="sort-icon"></span></th>
+  <th data-col="revenue" data-type="num">Revenue ($mm)<span class="sort-icon"></span></th>
+  <th data-col="employees" data-type="num">Employees<span class="sort-icon"></span></th>
+  <th data-col="ownership" data-type="str">Ownership<span class="sort-icon"></span></th>
+  <th data-col="sponsor" data-type="str">PE Sponsor<span class="sort-icon"></span></th>
+  <th data-col="services" data-type="str">Key Services / Category<span class="sort-icon"></span></th>
+  <th data-col="locations" data-type="num">Locations<span class="sort-icon"></span></th>
+  <th data-col="founded" data-type="num">Founded<span class="sort-icon"></span></th>
+  <th data-col="website" data-type="str">Website<span class="sort-icon"></span></th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<div class="footer">
+  US Electrical Infrastructure &amp; Power Services Database &mdash; 65 companies &mdash; Compiled from public filings, press releases, and industry reports &mdash; April 2026 &mdash; <a href="https://quarryme.com">quarryme.com</a>
+</div>
+
+<script>
+const DATA=[
+// === MAJOR PUBLIC ===
+{rank:1,company:"Quanta Services",ticker:"PWR",hq:"Houston, TX",ceo:"Duke Austin",revenue:29900,employees:53000,ownership:"Public",sponsor:"",categories:["T&D Construction","Substations","Grid Services","Utility Services"],services:"T&D, substations, renewables, communications infrastructure",locations:200,founded:1997,website:"https://www.quantaservices.com"},
+{rank:2,company:"EMCOR Group",ticker:"EME",hq:"Norwalk, CT",ceo:"Tony Guzzi",revenue:17000,employees:40000,ownership:"Public",sponsor:"",categories:["Industrial","Utility Services"],services:"Electrical & mechanical construction, facilities services",locations:170,founded:1994,website:"https://www.emcorgroup.com"},
+{rank:3,company:"MasTec",ticker:"MTZ",hq:"Coral Gables, FL",ceo:"Jose Mas",revenue:13800,employees:32000,ownership:"Public",sponsor:"",categories:["T&D Construction","Utility Services","Grid Services"],services:"T&D, clean energy, communications, pipeline infrastructure",locations:400,founded:1929,website:"https://www.mastec.com"},
+{rank:4,company:"Vertiv Holdings",ticker:"VRT",hq:"Westerville, OH",ceo:"Giordano Albertazzi",revenue:8400,employees:28000,ownership:"Public",sponsor:"",categories:["Industrial","Testing & Maintenance"],services:"Critical power, thermal management, switchgear, UPS",locations:130,founded:2016,website:"https://www.vertiv.com"},
+{rank:5,company:"Primoris Services",ticker:"PRIM",hq:"Dallas, TX",ceo:"Tom McCormick",revenue:6400,employees:16000,ownership:"Public",sponsor:"",categories:["T&D Construction","Utility Services","Grid Services"],services:"Utility infrastructure, T&D, renewables, pipeline",locations:50,founded:1960,website:"https://www.prim.com"},
+{rank:6,company:"MYR Group",ticker:"MYRG",hq:"Henderson, CO",ceo:"Rick Swartz",revenue:3800,employees:9500,ownership:"Public",sponsor:"",categories:["T&D Construction","Substations","Industrial"],services:"T&D construction, substations, commercial & industrial electrical",locations:50,founded:1891,website:"https://www.myrgroup.com"},
+{rank:7,company:"Eaton Corporation",ticker:"ETN",hq:"Beachwood, OH",ceo:"Craig Arnold",revenue:24900,employees:92000,ownership:"Public",sponsor:"",categories:["Substations","Transformers","Industrial"],services:"Power management, switchgear, breakers, transformers",locations:175,founded:1911,website:"https://www.eaton.com"},
+{rank:8,company:"Hubbell Incorporated",ticker:"HUBB",hq:"Shelton, CT",ceo:"Gerben Bakker",revenue:5600,employees:17500,ownership:"Public",sponsor:"",categories:["Transformers","Substations","Utility Services"],services:"Utility & electrical solutions, T&D components, lighting",locations:80,founded:1888,website:"https://www.hubbell.com"},
+{rank:9,company:"GE Vernova",ticker:"GEV",hq:"Cambridge, MA",ceo:"Scott Strazik",revenue:34000,employees:75000,ownership:"Public",sponsor:"",categories:["Transformers","Substations","Grid Services"],services:"Grid solutions, large power transformers, HVDC, switchgear",locations:100,founded:2024,website:"https://www.gevernova.com"},
+{rank:10,company:"nVent Electric",ticker:"NVT",hq:"London / Solon, OH",ceo:"Beth Wozniak",revenue:3400,employees:11400,ownership:"Public",sponsor:"",categories:["Industrial","Substations"],services:"Enclosures, electrical fastening, thermal management",locations:60,founded:2018,website:"https://www.nvent.com"},
+{rank:11,company:"Atkore Inc.",ticker:"ATKR",hq:"Harvey, IL",ceo:"Bill Waltz",revenue:3200,employees:4400,ownership:"Public",sponsor:"",categories:["Industrial"],services:"Conduit, cable, electrical raceway",locations:65,founded:2010,website:"https://www.atkore.com"},
+{rank:12,company:"Dycom Industries",ticker:"DY",hq:"Palm Beach Gardens, FL",ceo:"Daniel Peyovich",revenue:4700,employees:15000,ownership:"Public",sponsor:"",categories:["Utility Services","T&D Construction"],services:"Telecom & utility infrastructure, locating, T&D support",locations:50,founded:1969,website:"https://www.dycomind.com"},
+{rank:13,company:"Powell Industries",ticker:"POWL",hq:"Houston, TX",ceo:"Brett Cope",revenue:1100,employees:3500,ownership:"Public",sponsor:"",categories:["Substations","Transformers","Industrial"],services:"Switchgear, bus duct, packaged substations, control systems",locations:8,founded:1947,website:"https://www.powellind.com"},
+{rank:14,company:"Centuri Holdings",ticker:"CTRI",hq:"Phoenix, AZ",ceo:"William Fehrman",revenue:2700,employees:11600,ownership:"Public",sponsor:"",categories:["Utility Services","T&D Construction"],services:"Gas & electric utility infrastructure construction",locations:45,founded:2014,website:"https://www.centuri.com"},
+{rank:15,company:"IES Holdings",ticker:"IESC",hq:"Houston, TX",ceo:"Jeffrey Gendell",revenue:2900,employees:8400,ownership:"Public",sponsor:"",categories:["Industrial","Utility Services"],services:"Electrical contracting, communications, residential",locations:130,founded:1997,website:"https://www.ies-co.com"},
+{rank:16,company:"Comfort Systems USA",ticker:"FIX",hq:"Houston, TX",ceo:"Brian Lane",revenue:5200,employees:14500,ownership:"Public",sponsor:"",categories:["Industrial"],services:"Mechanical & electrical contracting, modular fabrication",locations:170,founded:1997,website:"https://www.comfortsystemsusa.com"},
+{rank:17,company:"Encore Wire (Prysmian)",ticker:"PRY.MI",hq:"McKinney, TX",ceo:"Massimo Battaini",revenue:2800,employees:1500,ownership:"Public",sponsor:"",categories:["Industrial"],services:"Copper electrical building wire & cable (Prysmian sub since 2024)",locations:3,founded:1989,website:"https://www.encorewire.com"},
+{rank:18,company:"Southwire Company",ticker:"",hq:"Carrollton, GA",ceo:"Rich Stinson",revenue:8000,employees:8500,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Wire, cable, conductors for utility & construction markets",locations:32,founded:1950,website:"https://www.southwire.com"},
+{rank:19,company:"Babcock & Wilcox",ticker:"BW",hq:"Akron, OH",ceo:"Kenneth Young",revenue:680,employees:2200,ownership:"Public",sponsor:"",categories:["Industrial","Grid Services"],services:"Power generation services, environmental, thermal & energy systems",locations:25,founded:1867,website:"https://www.babcock.com"},
+
+// === PE-BACKED ===
+{rank:20,company:"Artera Services",ticker:"",hq:"Atlanta, GA",ceo:"Bill Reid",revenue:4000,employees:12000,ownership:"PE-Backed",sponsor:"Clayton Dubilier & Rice",categories:["Utility Services","T&D Construction"],services:"Gas & electric utility infrastructure (PowerTeam Services holding co)",locations:75,founded:2019,website:"https://www.arteraservices.com"},
+{rank:21,company:"Pike Corporation",ticker:"",hq:"Mount Airy, NC",ceo:"Eric Pike",revenue:3000,employees:10000,ownership:"PE-Backed",sponsor:"Lindsay Goldberg",categories:["T&D Construction","Substations","Utility Services"],services:"T&D construction, storm restoration, substations, engineering",locations:200,founded:1945,website:"https://www.pike.com"},
+{rank:22,company:"Shermco Industries",ticker:"",hq:"Irving, TX",ceo:"Ron Widup",revenue:600,employees:3000,ownership:"PE-Backed",sponsor:"Gryphon Investors",categories:["Testing & Maintenance","Substations"],services:"NETA-accredited testing, commissioning, maintenance, rotating apparatus",locations:40,founded:1974,website:"https://www.shermco.com"},
+{rank:23,company:"RESA Power",ticker:"",hq:"Dallas, TX",ceo:"Tim Kessler",revenue:250,employees:1200,ownership:"PE-Backed",sponsor:"AE Industrial Partners",categories:["Testing & Maintenance","Transformers"],services:"Power systems testing, life-extension services, parts, transformer service",locations:40,founded:2013,website:"https://www.resapower.com"},
+{rank:24,company:"INTREN",ticker:"",hq:"Union, IL",ceo:"Loretta Rosenmayer",revenue:700,employees:2000,ownership:"PE-Backed",sponsor:"Tower Arch Capital",categories:["T&D Construction","Utility Services"],services:"Electric T&D, gas distribution, telecom infrastructure",locations:30,founded:1988,website:"https://www.intren.com"},
+{rank:25,company:"CE Power Engineered Services",ticker:"",hq:"Cincinnati, OH",ceo:"Richard Sheppard",revenue:180,employees:700,ownership:"PE-Backed",sponsor:"Tailwind Capital",categories:["Testing & Maintenance","Substations"],services:"NETA testing, substation engineering, transformer maintenance",locations:18,founded:2005,website:"https://www.cepower.net"},
+{rank:26,company:"Davis H. Elliot Company",ticker:"",hq:"Lexington, KY",ceo:"David Elliot",revenue:450,employees:1800,ownership:"PE-Backed",sponsor:"Court Square Capital",categories:["T&D Construction","Utility Services"],services:"Electric utility line construction, fiber, substation",locations:25,founded:1946,website:"https://www.elliotco.com"},
+{rank:27,company:"PowerSecure",ticker:"",hq:"Wake Forest, NC",ceo:"Eric Dupont",revenue:600,employees:1400,ownership:"Subsidiary",sponsor:"Southern Company",categories:["Grid Services","Substations","Utility Services"],services:"Distributed generation, microgrids, utility infrastructure, lighting",locations:20,founded:2000,website:"https://www.powersecure.com"},
+{rank:28,company:"APTIM",ticker:"",hq:"The Woodlands, TX",ceo:"Mark Fallon",revenue:750,employees:3500,ownership:"PE-Backed",sponsor:"Bernhard Capital",categories:["Industrial","Grid Services"],services:"Energy infrastructure, power delivery, environmental, federal",locations:40,founded:2017,website:"https://www.aptim.com"},
+{rank:29,company:"Bernhard LLC",ticker:"",hq:"Metairie, LA",ceo:"Jeff Yuknis",revenue:550,employees:1300,ownership:"PE-Backed",sponsor:"Bernhard Capital",categories:["Industrial"],services:"Electrical & mechanical contracting, energy-as-a-service",locations:15,founded:1919,website:"https://www.bernhard.com"},
+{rank:30,company:"Trees, Inc.",ticker:"",hq:"Houston, TX",ceo:"Tim Walsh",revenue:600,employees:5500,ownership:"PE-Backed",sponsor:"Endeavour Capital",categories:["Utility Services","Grid Services"],services:"Vegetation management for electric utilities",locations:80,founded:1968,website:"https://www.trees-inc.com"},
+{rank:31,company:"Asplundh Tree Expert",ticker:"",hq:"Willow Grove, PA",ceo:"Scott Asplundh",revenue:6200,employees:36000,ownership:"PE-Backed",sponsor:"Carlyle Group (minority)",categories:["Utility Services","Grid Services"],services:"Vegetation management, infrastructure construction, storm response",locations:550,founded:1928,website:"https://www.asplundh.com"},
+{rank:32,company:"Wright Tree Service",ticker:"",hq:"West Des Moines, IA",ceo:"Scott Packard",revenue:700,employees:5000,ownership:"PE-Backed",sponsor:"Wright Service Corp (ESOP/PE)",categories:["Utility Services"],services:"Vegetation management, line clearance for utilities",locations:80,founded:1933,website:"https://www.wrighttree.com"},
+
+// === LARGE PRIVATE / ESOP ===
+{rank:33,company:"Rosendin Electric",ticker:"",hq:"San Jose, CA",ceo:"Mike Greenawalt",revenue:4000,employees:7500,ownership:"Private",sponsor:"100% ESOP",categories:["Industrial","Substations"],services:"Electrical construction, data centers, renewables, mission critical",locations:20,founded:1919,website:"https://www.rosendin.com"},
+{rank:34,company:"Faith Technologies",ticker:"",hq:"Menasha, WI",ceo:"Mike Jansen",revenue:2500,employees:5500,ownership:"Private",sponsor:"",categories:["Industrial","Substations"],services:"Electrical planning, engineering, construction, energy services",locations:30,founded:1972,website:"https://www.faithtechnologies.com"},
+{rank:35,company:"Cupertino Electric",ticker:"",hq:"San Jose, CA",ceo:"Tom Schott",revenue:2500,employees:4000,ownership:"Private",sponsor:"100% ESOP",categories:["Industrial","Substations"],services:"Electrical engineering & construction for tech, data center, renewables",locations:8,founded:1954,website:"https://www.cupertinoelectric.com"},
+{rank:36,company:"M.C. Dean",ticker:"",hq:"Tysons, VA",ceo:"William H. Dean",revenue:1500,employees:5500,ownership:"Private",sponsor:"",categories:["Industrial","Substations"],services:"Electrical, electronic, security & cyber-physical engineering",locations:35,founded:1949,website:"https://www.mcdean.com"},
+{rank:37,company:"Henkels & McCoy",ticker:"",hq:"Blue Bell, PA",ceo:"Ross Myers",revenue:2500,employees:4500,ownership:"Private",sponsor:"",categories:["T&D Construction","Utility Services","Grid Services"],services:"Power, communications, gas distribution, oil & gas pipeline",locations:90,founded:1923,website:"https://www.henkels.com"},
+{rank:38,company:"Davey Tree Expert",ticker:"",hq:"Kent, OH",ceo:"Pat Covey",revenue:2000,employees:12000,ownership:"Private",sponsor:"100% ESOP",categories:["Utility Services","Grid Services"],services:"Utility vegetation management, line clearance, consulting",locations:135,founded:1880,website:"https://www.davey.com"},
+{rank:39,company:"Helix Electric",ticker:"",hq:"San Diego, CA",ceo:"Victor Fuchs",revenue:350,employees:3000,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Electrical construction, design-build, renewables",locations:7,founded:1985,website:"https://www.helixelectric.com"},
+{rank:40,company:"Sturgeon Electric",ticker:"",hq:"Henderson, CO",ceo:"Joe Vidiri",revenue:900,employees:2500,ownership:"Subsidiary",sponsor:"MYR Group",categories:["T&D Construction","Industrial"],services:"T&D, substation, commercial & industrial electrical (MYR Group)",locations:15,founded:1912,website:"https://www.sturgeonelectric.com"},
+{rank:41,company:"Interstates",ticker:"",hq:"Sioux Center, IA",ceo:"Greg Granneman",revenue:400,employees:1100,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Industrial electrical construction, instrumentation, control systems",locations:8,founded:1953,website:"https://www.interstates.com"},
+{rank:42,company:"Wachter Inc.",ticker:"",hq:"Lenexa, KS",ceo:"Eric Wachter",revenue:550,employees:1700,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Electrical, technology, life-safety contracting",locations:25,founded:1930,website:"https://www.wachter.com"},
+{rank:43,company:"Bergelectric",ticker:"",hq:"Carlsbad, CA",ceo:"Doug Berger",revenue:850,employees:2200,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Commercial & industrial electrical contracting, design-build",locations:14,founded:1946,website:"https://www.bergelectric.com"},
+{rank:44,company:"Lewis Tree Service",ticker:"",hq:"West Henrietta, NY",ceo:"Jay Doherty",revenue:600,employees:4500,ownership:"Private",sponsor:"100% ESOP",categories:["Utility Services"],services:"Utility vegetation management, line clearance",locations:40,founded:1928,website:"https://www.lewistree.com"},
+{rank:45,company:"Lemartec / EllisDon Electrical",ticker:"",hq:"Miami, FL",ceo:"Carlos Sablon",revenue:300,employees:600,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Industrial electrical & EPC for power generation",locations:5,founded:1973,website:"https://www.lemartec.com"},
+
+// === TRANSFORMERS ===
+{rank:46,company:"ERMCO",ticker:"",hq:"Dyersburg, TN",ceo:"Jeff Davis",revenue:774,employees:1500,ownership:"Subsidiary",sponsor:"Marmon Group / Berkshire Hathaway",categories:["Transformers"],services:"Distribution transformers, pad-mount, pole-type",locations:3,founded:1955,website:"https://www.ermco-eci.com"},
+{rank:47,company:"Howard Industries",ticker:"",hq:"Laurel, MS",ceo:"Michael Howard",revenue:1200,employees:4000,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Distribution transformers, electrical equipment",locations:8,founded:1968,website:"https://www.howard.com"},
+{rank:48,company:"Virginia Transformer Corp",ticker:"",hq:"Roanoke, VA",ceo:"Prabhat Jain",revenue:400,employees:1200,ownership:"Private",sponsor:"",categories:["Transformers","Substations"],services:"Power transformers up to 500MVA, substation transformers",locations:5,founded:1971,website:"https://www.vatransformer.com"},
+{rank:49,company:"Solomon Corporation",ticker:"",hq:"Solomon, KS",ceo:"Pat Roberts",revenue:180,employees:550,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Transformer remanufacturing, refurbishment, recycling",locations:6,founded:1960,website:"https://www.solomoncorp.com"},
+{rank:50,company:"Pennsylvania Transformer Tech",ticker:"",hq:"Pittsburgh, PA",ceo:"Pier Luca Tomei",revenue:300,employees:850,ownership:"Subsidiary",sponsor:"Tamini / Terna Plus",categories:["Transformers","Substations"],services:"Power transformers, substation transformers up to 1200MVA",locations:2,founded:1923,website:"https://www.pa-transformer.com"},
+{rank:51,company:"Niagara Transformer Corp",ticker:"",hq:"Buffalo, NY",ceo:"Casey VanArsdale",revenue:120,employees:300,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Medium & large power transformers",locations:1,founded:1922,website:"https://www.niagaratransformer.com"},
+{rank:52,company:"Olsun Electrics",ticker:"",hq:"Richmond, IL",ceo:"Larry Bryant",revenue:90,employees:280,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Dry-type & cast-coil transformers, reactors",locations:1,founded:1979,website:"https://www.olsun.com"},
+{rank:53,company:"Prolec GE (Waukesha)",ticker:"",hq:"Waukesha, WI",ceo:"Carlos Turner",revenue:1300,employees:3500,ownership:"Subsidiary",sponsor:"GE Vernova / Xignux JV",categories:["Transformers","Substations"],services:"Large power transformers, distribution transformers",locations:6,founded:1995,website:"https://www.prolecge.com"},
+
+// === TESTING & MAINTENANCE ===
+{rank:54,company:"High Voltage Maintenance",ticker:"",hq:"Indianapolis, IN",ceo:"Kris Walters",revenue:280,employees:900,ownership:"Subsidiary",sponsor:"Emerson Electric",categories:["Testing & Maintenance","Substations"],services:"NETA testing, commissioning, maintenance, retrofit",locations:18,founded:1957,website:"https://www.hvmcorp.com"},
+{rank:55,company:"Electrical Reliability Services",ticker:"",hq:"Reno, NV",ceo:"Jim Schaefer",revenue:220,employees:850,ownership:"Subsidiary",sponsor:"Vertiv Holdings",categories:["Testing & Maintenance","Substations"],services:"NETA-accredited testing, engineering, commissioning",locations:25,founded:1971,website:"https://www.electricalreliability.com"},
+{rank:56,company:"American Electrical Testing Co.",ticker:"",hq:"Woburn, MA",ceo:"Scott M. Blizard",revenue:55,employees:200,ownership:"Private",sponsor:"",categories:["Testing & Maintenance"],services:"NETA testing, infrared, transformer oil analysis",locations:6,founded:1976,website:"https://www.aetco.us"},
+{rank:57,company:"National Field Services",ticker:"",hq:"Lewisville, TX",ceo:"Doug Brown",revenue:90,employees:350,ownership:"Private",sponsor:"",categories:["Testing & Maintenance","Substations"],services:"Field testing, commissioning, engineering, switchgear repair",locations:10,founded:1946,website:"https://www.natlfield.com"},
+{rank:58,company:"Power Products & Solutions",ticker:"",hq:"Charlotte, NC",ceo:"Joe Kelly",revenue:45,employees:160,ownership:"Subsidiary",sponsor:"Shermco Industries (2025)",categories:["Testing & Maintenance"],services:"NETA testing, PEARL-certified breaker reconditioning",locations:4,founded:1986,website:"https://www.ppsindy.com"},
+{rank:59,company:"Magna IV Engineering",ticker:"",hq:"Edmonton, AB / Phoenix, AZ",ceo:"Jordan Cove",revenue:140,employees:450,ownership:"Private",sponsor:"",categories:["Testing & Maintenance","Substations"],services:"Power systems engineering, testing, commissioning",locations:11,founded:1983,website:"https://www.magnaiv.com"},
+{rank:60,company:"Premier Power Maintenance",ticker:"",hq:"Indianapolis, IN",ceo:"Bryan Cave",revenue:60,employees:230,ownership:"Private",sponsor:"",categories:["Testing & Maintenance"],services:"NETA testing, switchgear maintenance, breaker rebuild",locations:7,founded:1986,website:"https://www.premierpower.us"},
+{rank:61,company:"Halco Electrical Testing",ticker:"",hq:"Glendale Heights, IL",ceo:"Greg Halinski",revenue:35,employees:130,ownership:"Private",sponsor:"",categories:["Testing & Maintenance"],services:"NETA-accredited acceptance & maintenance testing",locations:3,founded:1985,website:"https://www.halcotest.com"},
+
+// === SUBSTATION / GRID ENGINEERING ===
+{rank:62,company:"Dashiell Corporation",ticker:"",hq:"Houston, TX",ceo:"Brian Kelley",revenue:600,employees:1300,ownership:"PE-Backed",sponsor:"Quanta Services (acquired 2022)",categories:["Substations","Grid Services","T&D Construction"],services:"Substation EPC, T&D engineering, construction",locations:12,founded:1974,website:"https://www.dashiell.com"},
+{rank:63,company:"POWER Engineers",ticker:"",hq:"Hailey, ID",ceo:"Bret Moffett",revenue:850,employees:4400,ownership:"Subsidiary",sponsor:"WSP Global (acquired 2025)",categories:["Substations","Grid Services","T&D Construction"],services:"T&D engineering, substations, generation, environmental",locations:50,founded:1976,website:"https://www.powereng.com"},
+{rank:64,company:"Burns & McDonnell",ticker:"",hq:"Kansas City, MO",ceo:"Ray Kowalik",revenue:7600,employees:14000,ownership:"Private",sponsor:"100% ESOP",categories:["Substations","Grid Services","T&D Construction"],services:"T&D engineering, substations, EPC, generation",locations:60,founded:1898,website:"https://www.burnsmcd.com"},
+{rank:65,company:"Ulteig Engineers",ticker:"",hq:"Fargo, ND",ceo:"Doug Jaeger",revenue:200,employees:850,ownership:"Private",sponsor:"100% ESOP",categories:["Substations","Grid Services","T&D Construction"],services:"T&D engineering, substations, renewables, distribution",locations:14,founded:1944,website:"https://www.ulteig.com"},
+];
+
+// Build category dropdown
+const catSet=new Set();
+DATA.forEach(d=>d.categories.forEach(c=>catSet.add(c)));
+const catSel=document.getElementById('filterCategory');
+[...catSet].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o)});
+
+function ownershipClass(o){
+  if(o==='Public')return 'ownership-public';
+  if(o==='PE-Backed')return 'ownership-pe';
+  if(o==='Subsidiary')return 'ownership-sub';
+  return 'ownership-private';
+}
+
+function ownershipLabel(d){
+  let label=d.ownership;
+  if(d.ticker) label+=` (${d.ticker})`;
+  return label;
+}
+
+function websiteCell(url){
+  if(!url||url==='N/A') return `<span class="website-na">—</span>`;
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer">Visit ↗</a>`;
+}
+
+function renderRows(rows){
+  const tb=document.getElementById('tbody');
+  tb.innerHTML=rows.map(d=>`<tr>
+    <td class="rank">${d.rank}</td>
+    <td class="name">${d.company}</td>
+    <td class="hq">${d.hq}</td>
+    <td class="ceo">${d.ceo||'—'}</td>
+    <td class="revenue">$${d.revenue.toLocaleString()}</td>
+    <td class="employees">${d.employees>0?d.employees.toLocaleString():'—'}</td>
+    <td class="ownership"><span class="${ownershipClass(d.ownership)}">${ownershipLabel(d)}</span></td>
+    <td class="sponsor">${d.sponsor||'—'}</td>
+    <td class="services-col">
+      <div>${d.categories.map(c=>`<span class="cat-tag">${c}</span>`).join('')}</div>
+      <div style="margin-top:3px">${d.services}</div>
+    </td>
+    <td class="locations">${d.locations||'—'}</td>
+    <td class="founded">${d.founded||'—'}</td>
+    <td class="website-col">${websiteCell(d.website)}</td>
+  </tr>`).join('');
+  document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${DATA.length}`;
+}
+
+let sortCol=null, sortDir=1;
+
+function getFiltered(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const fc=document.getElementById('filterCategory').value;
+  const fo=document.getElementById('filterOwnership').value;
+  const fr=document.getElementById('filterRevenue').value;
+  return DATA.filter(d=>{
+    if(q){const blob=(d.company+d.ceo+d.hq+d.services+d.categories.join(' ')+d.ownership+(d.sponsor||'')+(d.ticker||'')).toLowerCase();if(!blob.includes(q))return false}
+    if(fc&&!d.categories.includes(fc))return false;
+    if(fo&&d.ownership!==fo)return false;
+    if(fr){
+      const rv=+fr;
+      if(rv>=10000&&d.revenue<10000)return false;
+      if(rv===5000&&(d.revenue<5000||d.revenue>=10000))return false;
+      if(rv===2000&&(d.revenue<2000||d.revenue>=5000))return false;
+      if(rv===1000&&(d.revenue<1000||d.revenue>=2000))return false;
+      if(rv===500&&(d.revenue<500||d.revenue>=1000))return false;
+      if(rv===0&&d.revenue>=500)return false;
+    }
+    return true;
+  });
+}
+
+function sortAndRender(){
+  let rows=getFiltered();
+  if(sortCol){
+    rows.sort((a,b)=>{
+      let va=a[sortCol],vb=b[sortCol];
+      if(Array.isArray(va))va=va.join(',');
+      if(Array.isArray(vb))vb=vb.join(',');
+      if(va==null)va='';
+      if(vb==null)vb='';
+      if(typeof va==='string')return va.localeCompare(vb)*sortDir;
+      return (va-vb)*sortDir;
+    });
+  }
+  renderRows(rows);
+}
+
+document.querySelectorAll('th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col=th.dataset.col;
+    document.querySelectorAll('th').forEach(t=>t.classList.remove('sorted-asc','sorted-desc'));
+    if(sortCol===col){sortDir*=-1}else{sortCol=col;sortDir=1}
+    th.classList.add(sortDir===1?'sorted-asc':'sorted-desc');
+    sortAndRender();
+  });
+});
+
+document.getElementById('search').addEventListener('input',sortAndRender);
+document.getElementById('filterCategory').addEventListener('change',sortAndRender);
+document.getElementById('filterOwnership').addEventListener('change',sortAndRender);
+document.getElementById('filterRevenue').addEventListener('change',sortAndRender);
+
+function exportExcel(){
+  const rows=getFiltered();
+  const headers=['Rank','Company','Ticker','HQ','CEO/President','Revenue ($mm)','Employees','Ownership','PE Sponsor','Categories','Key Services','Locations','Founded','Website'];
+  const csvRows=[headers,...rows.map(d=>[
+    d.rank,d.company,d.ticker||'',d.hq,d.ceo,d.revenue,d.employees||'',d.ownership,d.sponsor||'',
+    d.categories.join('; '),d.services,d.locations||'',d.founded||'',d.website||''
+  ])];
+  const csv=csvRows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='US_Electrical_Infrastructure_Database.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+renderRows(DATA);
+</script>
+</body>
+</html>
