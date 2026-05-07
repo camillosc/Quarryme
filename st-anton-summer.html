@@ -78,23 +78,35 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:
   font-family:'Fraunces',serif;
   font-style:italic;
   font-weight:400;
-  font-size:1.05rem;
+  font-size:clamp(1.6rem, 3vw, 2.4rem);
+  line-height:1.15;
   color:#ffd58a;
-  letter-spacing:.02em;
-  margin-bottom:1.4rem;
+  letter-spacing:-.005em;
+  margin-bottom:1.8rem;
   display:flex;
   align-items:center;
-  gap:.9rem;
-  text-shadow:0 1px 20px rgba(0,0,0,.5);
+  gap:1.1rem;
+  text-shadow:0 2px 28px rgba(0,0,0,.55);
 }
 .welcome-mark::before,
 .welcome-mark::after{
   content:"";
-  flex:0 0 28px;
-  height:1px;
-  background:rgba(255,213,138,.5);
+  flex:0 0 44px;
+  height:2px;
+  background:linear-gradient(90deg, transparent, rgba(255,213,138,.85));
+  border-radius:2px;
 }
-.welcome-mark b{font-weight:500;color:#fff;font-style:normal;letter-spacing:.04em}
+.welcome-mark::after{background:linear-gradient(90deg, rgba(255,213,138,.85), transparent)}
+.welcome-mark b{
+  font-weight:600;
+  color:#fff;
+  font-style:normal;
+  letter-spacing:.005em;
+  background:linear-gradient(180deg, #fff 0%, #ffe9b8 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 
 .eyebrow{
   display:inline-block;
@@ -435,8 +447,8 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
 @media (max-width:560px){
   .hero-inner{padding:4rem 1.4rem 5rem}
   .hero-meta{gap:1rem 1.6rem;font-size:.85rem}
-  .welcome-mark{font-size:.95rem}
-  .welcome-mark::before,.welcome-mark::after{flex-basis:18px}
+  .welcome-mark{font-size:1.4rem;gap:.7rem}
+  .welcome-mark::before,.welcome-mark::after{flex-basis:22px}
   .act-grid{grid-template-columns:1fr}
   .gallery-grid{grid-template-columns:1fr}
   .gallery-grid .g.wide{grid-column:span 1}
