@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Summer in St. Anton am Arlberg — alpine hiking, mountain biking, family adventures, and how easy it is to reach from Zurich.">
+<meta name="description" content="Summer in St. Anton am Arlberg — alpine hiking, mountain biking, family adventures, and how easy it is to reach from Zurich. A welcome guide for the Alowedi family.">
 <meta name="robots" content="noindex">
-<title>Summer in St. Anton am Arlberg — Alpine Adventures for Families</title>
+<title>For the Alowedi Family · Summer in St. Anton am Arlberg</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
+<link rel="preconnect" href="https://commons.wikimedia.org" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -56,13 +58,13 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:
 .hero-img{
   position:absolute;inset:0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.05) 40%, rgba(10,20,40,.65) 100%),
-    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=80') center/cover no-repeat;
+    linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.05) 35%, rgba(10,20,40,.7) 100%),
+    url('https://commons.wikimedia.org/wiki/Special:FilePath/Sommer_in_St._Anton_am_Arlberg.jpg?width=2000') center/cover no-repeat;
   z-index:0;
 }
 .hero-img::after{
   content:"";position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.08), transparent 60%);
+  background:radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.06), transparent 60%);
 }
 .hero-inner{
   position:relative;z-index:2;
@@ -71,6 +73,29 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:
   padding:5rem 2rem 4.5rem;
   width:100%;
 }
+
+.welcome-mark{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-weight:400;
+  font-size:1.05rem;
+  color:#ffd58a;
+  letter-spacing:.02em;
+  margin-bottom:1.4rem;
+  display:flex;
+  align-items:center;
+  gap:.9rem;
+  text-shadow:0 1px 20px rgba(0,0,0,.5);
+}
+.welcome-mark::before,
+.welcome-mark::after{
+  content:"";
+  flex:0 0 28px;
+  height:1px;
+  background:rgba(255,213,138,.5);
+}
+.welcome-mark b{font-weight:500;color:#fff;font-style:normal;letter-spacing:.04em}
+
 .eyebrow{
   display:inline-block;
   font-size:.78rem;
@@ -93,21 +118,23 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:
   letter-spacing:-.025em;
   line-height:1.02;
   margin-bottom:1.2rem;
-  text-shadow:0 2px 30px rgba(0,0,0,.35);
+  text-shadow:0 2px 30px rgba(0,0,0,.45);
 }
 .hero h1 em{font-style:italic;color:#ffd58a;font-weight:400}
 .hero-tag{
   font-size:clamp(1rem, 1.6vw, 1.25rem);
-  max-width:640px;
+  max-width:680px;
   font-weight:300;
-  color:rgba(255,255,255,.92);
+  color:rgba(255,255,255,.94);
   margin-bottom:2rem;
-  text-shadow:0 1px 20px rgba(0,0,0,.4);
+  text-shadow:0 1px 20px rgba(0,0,0,.5);
 }
+.hero-tag b{font-weight:500;color:#fff}
 .hero-meta{
   display:flex;flex-wrap:wrap;gap:1.4rem 2.5rem;
-  font-size:.92rem;color:rgba(255,255,255,.88);
+  font-size:.92rem;color:rgba(255,255,255,.92);
   font-weight:400;
+  text-shadow:0 1px 12px rgba(0,0,0,.5);
 }
 .hero-meta span{display:flex;align-items:center;gap:.55rem}
 .hero-meta b{font-weight:600;color:#fff}
@@ -120,6 +147,41 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:
 }
 .scroll-hint::after{content:"";width:1px;height:32px;background:rgba(255,255,255,.5)}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ---------- PERSONAL CARD ---------- */
+.greeting{
+  background:linear-gradient(180deg, var(--cream) 0%, #f3ede1 100%);
+  padding:5rem 2rem 4rem;
+}
+.greeting-card{
+  max-width:760px;margin:0 auto;
+  background:#fff;border-radius:18px;padding:3rem 3rem 2.6rem;
+  box-shadow:var(--shadow);
+  border:1px solid #ebe5d8;
+  position:relative;
+  text-align:center;
+}
+.greeting-card::before{
+  content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  width:80px;height:4px;background:linear-gradient(90deg,var(--sun),var(--berry));
+  border-radius:2px;
+}
+.greeting-card .salutation{
+  font-family:'Fraunces',serif;font-style:italic;font-size:1rem;color:var(--sun-deep);
+  letter-spacing:.04em;margin-bottom:1rem;
+}
+.greeting-card h2{
+  font-size:clamp(1.7rem, 3vw, 2.4rem);
+  margin-bottom:1rem;
+}
+.greeting-card h2 em{font-style:italic;color:var(--berry);font-weight:500}
+.greeting-card p{
+  color:var(--ink-soft);font-size:1.05rem;line-height:1.65;
+}
+.greeting-card .signoff{
+  margin-top:1.6rem;font-family:'Fraunces',serif;font-style:italic;
+  color:var(--stone);font-size:.95rem;
+}
 
 /* ---------- SECTIONS ---------- */
 section{padding:6rem 2rem;position:relative}
@@ -135,7 +197,7 @@ h2 em{font-style:italic;color:var(--berry);font-weight:400}
 .lede{font-size:1.18rem;color:var(--ink-soft);font-weight:300;line-height:1.6;max-width:700px}
 
 /* ---------- INTRO ---------- */
-.intro{background:var(--cream);padding-bottom:3rem}
+.intro{background:var(--cream);padding-top:3rem;padding-bottom:3rem}
 .intro-grid{
   display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center;
 }
@@ -143,7 +205,7 @@ h2 em{font-style:italic;color:var(--berry);font-weight:400}
 .intro-image{
   border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);
   aspect-ratio:4/5;
-  background:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80') center/cover;
+  background:url('https://commons.wikimedia.org/wiki/Special:FilePath/Almajurtal_mit_Valluga_2023a.jpg?width=1200') center/cover;
   position:relative;
 }
 .intro-image::after{
@@ -184,13 +246,13 @@ h2 em{font-style:italic;color:var(--berry);font-weight:400}
 .act-card:hover .img{transform:scale(1.06)}
 .act-card .grad{
   position:absolute;inset:0;
-  background:linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 75%, rgba(0,0,0,.85) 100%);
+  background:linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,.6) 75%, rgba(0,0,0,.88) 100%);
 }
 .act-card .body{
   position:absolute;left:0;right:0;bottom:0;padding:1.6rem 1.5rem;color:#fff;
 }
 .act-card h3{color:#fff;font-size:1.4rem;margin-bottom:.4rem;font-weight:600}
-.act-card p{font-size:.92rem;color:rgba(255,255,255,.86);font-weight:300;line-height:1.45}
+.act-card p{font-size:.92rem;color:rgba(255,255,255,.88);font-weight:300;line-height:1.45}
 .act-card .badge{
   position:absolute;top:1rem;left:1rem;
   background:rgba(255,255,255,.92);color:var(--forest);
@@ -208,11 +270,11 @@ h2 em{font-style:italic;color:var(--berry);font-weight:400}
 }
 .banner::before{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(135deg, rgba(45,90,61,.55), rgba(20,30,40,.4));
+  background:linear-gradient(135deg, rgba(45,90,61,.55), rgba(20,30,40,.45));
 }
 .banner .inner{position:relative;z-index:2;max-width:780px;padding:0 2rem}
 .banner h2{color:#fff;font-size:clamp(2rem,4.5vw,3.4rem);text-shadow:0 2px 30px rgba(0,0,0,.4)}
-.banner p{font-size:1.15rem;color:rgba(255,255,255,.94);font-weight:300;margin-top:1.2rem}
+.banner p{font-size:1.15rem;color:rgba(255,255,255,.94);font-weight:300;margin-top:1.2rem;text-shadow:0 1px 16px rgba(0,0,0,.5)}
 .banner .section-label{color:#ffd58a}
 
 /* ---------- FAMILY ---------- */
@@ -263,7 +325,7 @@ h2 em{font-style:italic;color:var(--berry);font-weight:400}
 }
 .route::before{
   content:"";position:absolute;inset:0;opacity:.18;
-  background:url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=70') center/cover;
+  background:url('https://commons.wikimedia.org/wiki/Special:FilePath/Arlbergpass_-_panoramio.jpg?width=2000') center/cover;
 }
 .route .wrap{position:relative;z-index:2}
 .route h2{color:#fff}
@@ -331,6 +393,18 @@ h2 em{font-style:italic;color:var(--berry);font-weight:400}
 .season .vibe{font-size:.78rem;color:var(--sun-deep);letter-spacing:.15em;text-transform:uppercase;margin:.4rem 0 .8rem;font-weight:600}
 .season p{font-size:.9rem;color:var(--ink-soft);line-height:1.5}
 
+/* ---------- CLOSING NOTE ---------- */
+.closing{
+  background:linear-gradient(180deg, var(--cream) 0%, #ede5d3 100%);
+  text-align:center;padding:4rem 2rem 5rem;
+}
+.closing h2{font-size:clamp(1.7rem, 3vw, 2.4rem);margin-bottom:1rem}
+.closing p{max-width:580px;margin:0 auto;color:var(--ink-soft);font-size:1.05rem;line-height:1.65}
+.closing .signoff{
+  margin-top:1.8rem;font-family:'Fraunces',serif;font-style:italic;
+  color:var(--stone);font-size:1rem;
+}
+
 /* ---------- FOOTER ---------- */
 footer{
   background:#0f1a2c;color:rgba(255,255,255,.7);
@@ -343,6 +417,8 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:980px){
   section{padding:4rem 1.5rem}
+  .greeting{padding:3.5rem 1.5rem 2.5rem}
+  .greeting-card{padding:2.2rem 1.8rem}
   .intro-grid{grid-template-columns:1fr;gap:2.5rem}
   .intro-image{aspect-ratio:5/4;max-height:420px}
   .stats-grid{grid-template-columns:repeat(2,1fr);gap:2.5rem 2rem}
@@ -359,6 +435,8 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
 @media (max-width:560px){
   .hero-inner{padding:4rem 1.4rem 5rem}
   .hero-meta{gap:1rem 1.6rem;font-size:.85rem}
+  .welcome-mark{font-size:.95rem}
+  .welcome-mark::before,.welcome-mark::after{flex-basis:18px}
   .act-grid{grid-template-columns:1fr}
   .gallery-grid{grid-template-columns:1fr}
   .gallery-grid .g.wide{grid-column:span 1}
@@ -372,9 +450,10 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
 <header class="hero">
   <div class="hero-img"></div>
   <div class="hero-inner">
+    <div class="welcome-mark">— Welcome, <b>Alowedi family</b> —</div>
     <span class="eyebrow">Summer in the Tirolean Alps</span>
-    <h1>St. Anton<br><em>am Arlberg</em></h1>
-    <p class="hero-tag">When the snow recedes, an entire alpine playground opens up — wildflower meadows, glassy mountain lakes, and 300&nbsp;km of marked trails just three hours from Zurich.</p>
+    <h1>Your Summer in<br><em>St. Anton am Arlberg</em></h1>
+    <p class="hero-tag">When the snow recedes, an entire alpine playground opens up — wildflower meadows, glassy mountain lakes, and 300&nbsp;km of marked trails just three hours from Zurich. <b>This guide is yours.</b></p>
     <div class="hero-meta">
       <span><span class="dot"></span> <b>1,304&nbsp;m</b> elevation</span>
       <span><span class="dot"></span> <b>~3&nbsp;h</b> from Zurich</span>
@@ -384,6 +463,17 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
   </div>
   <div class="scroll-hint">Scroll</div>
 </header>
+
+<!-- ============== PERSONAL GREETING ============== -->
+<section class="greeting">
+  <div class="greeting-card">
+    <div class="salutation">A note for the Alowedi family</div>
+    <h2>We thought of <em>your summer</em> when we put this together.</h2>
+    <p>Three hours by car, three-and-a-half by train, and you're in one of the loveliest alpine valleys in Europe — quieter than Zermatt, warmer than Saas-Fee, and built for the way you travel: a balance of long meadow walks for the grown-ups, water and wildlife for the kids, and a village small enough that everyone gets to sleep in.</p>
+    <p>Everything below was chosen with you in mind — the lifts that take strollers, the trails that end at a swing, the river crossings that pass for an adventure, and the rainy-day plans that don't feel like consolation prizes.</p>
+    <div class="signoff">— with love, your friends</div>
+  </div>
+</section>
 
 <!-- ============== INTRO ============== -->
 <section class="intro">
@@ -396,7 +486,7 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
         <p>This is a slower, greener, more affordable St. Anton. Family-owned guesthouses replace ski-week crowds. The Galzigbahn lift pass costs a fraction of a winter day pass. And on a clear July afternoon, you can summit Valluga at 2,811&nbsp;m without seeing another soul.</p>
         <p>It's everything Switzerland sells you on, ten minutes across the Austrian border — and at half the price.</p>
       </div>
-      <div class="intro-image" role="img" aria-label="Alpine wildflower meadow with mountain backdrop"></div>
+      <div class="intro-image" role="img" aria-label="Alpine meadow looking up to the Valluga"></div>
     </div>
   </div>
 </section>
@@ -420,112 +510,112 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
 
     <div class="act-grid">
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/View_from_Valluga.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge">Hike</span>
         <div class="body"><h3>High-alpine hiking</h3><p>Over 300&nbsp;km of marked routes from gentle valley walks to the 3-Seen-Tour and Verwall traverses.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1517400508447-f8dd518b86db?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Skiroute_3_Galzig_-_panoramio.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge adv">Adventure</span>
         <div class="body"><h3>Mountain biking</h3><p>Arlberg Trail, Rendl flow lines, and the legendary Stanton Loop — singletrack for every skill level, with bike-friendly gondolas.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1527142879-95b61a0b8226?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Blick_auf_St._Anton_-_Gondel_der_Galzig-Bahn.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge family">Family</span>
         <div class="body"><h3>Galzigbahn gondola rides</h3><p>The signature spinning cabins lift you to 2,185&nbsp;m in eight minutes — no effort, all the views. Strollers welcome.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Lake_in_St._Anton_am_Arlberg,_Stubiger_Alps.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge family">Family</span>
         <div class="body"><h3>Swimming &amp; alpine lakes</h3><p>The free WellCom pool in the village, plus crystal-clear lakes like Verwallsee and Kartellsee for a wild dip.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Valluga_Schindlergrat_Schindlerrinnen.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge adv">Adventure</span>
         <div class="body"><h3>Via ferrata</h3><p>The Arlberger Klettersteig is one of Austria's most spectacular — a 700-metre ridge traverse for confident climbers age 12+.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1601024445121-e5b82f020549?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/View_from_Rendl_-_panoramio_(1).jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge adv">Adventure</span>
         <div class="body"><h3>Paragliding tandems</h3><p>Launch from Gampen at 1,850&nbsp;m and float for 20 minutes over the village. No experience required — kids from age 5.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1564769662533-4f00a87b4056?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Rosannaschlucht3.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge adv">Adventure</span>
         <div class="body"><h3>Whitewater rafting</h3><p>The Rosanna and Trisanna rivers feed grade II–III rapids 20 minutes down-valley. Family rafts run from age 6.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1568661925040-d5c2c8b7c993?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Rosannaschlucht5.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge adv">Adventure</span>
-        <div class="body"><h3>Canyoning</h3><p>Rope down hidden gorges with certified guides — the Mooserboden tour is the regional classic.</p></div>
+        <div class="body"><h3>Canyoning</h3><p>Rope down hidden gorges with certified guides — the Rosanna gorge tour is the regional classic.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Erlachalpe_mit_Valluga_und_Roggspitze.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge family">Family</span>
         <div class="body"><h3>Alm visits &amp; cheese making</h3><p>Hike up to a working dairy alm, watch the cows come in, and taste Tirolean Bergkäse hours after it's pressed.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Verwalltal_-_panoramio.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge">Hike</span>
         <div class="body"><h3>Verwall valley</h3><p>The wildest corner of the region — a protected nature reserve with hidden lakes, waterfalls, and ibex sightings.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1502101872923-d48509bff386?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Park_n%C3%A4chst_dem_Hannes-Schneider-Weg,_St._Anton_am_Arlberg,_23.02.2019.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge family">Family</span>
         <div class="body"><h3>Adventure playgrounds</h3><p>The Murmli-Trail at the Gampen mid-station is a 2&nbsp;km themed kids' loop with marmot stations, water games, and a giant slide.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1533240332313-0db49b459ad5?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Dorfstra%C3%9Fe,_Sankt_Anton_am_Arlberg,_2014.JPG?width=900')"></div>
         <div class="grad"></div>
         <span class="badge">Sport</span>
         <div class="body"><h3>Tennis, golf &amp; e-bikes</h3><p>Outdoor courts in the village, an 18-hole course in nearby Mieming, and rental e-bikes that flatten every climb.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/View_from_Kapall.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge adv">Adventure</span>
         <div class="body"><h3>Trail running</h3><p>The Arlberg Giro, Run-the-Stanton, and a maze of marked routes — every July the village hosts one of Europe's top mountain races.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Almajurtal_mit_Valluga_2023b.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge family">Family</span>
         <div class="body"><h3>Wildlife spotting</h3><p>Marmots, ibex, chamois, and golden eagles — a 6 a.m. ride up the Galzigbahn is the region's best-kept wildlife secret.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/St._Anton_am_Arlberg_-_Haflinger_01.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge">Sport</span>
         <div class="body"><h3>Horseback riding</h3><p>Beginner-friendly stables in nearby Pettneu offer pony rides for kids and half-day Haflinger treks through the forest.</p></div>
       </div>
 
       <div class="act-card">
-        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1467173572019-4a8b367c0879?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="img" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Salzh%C3%BCtte-Verwall.jpg?width=900')"></div>
         <div class="grad"></div>
         <span class="badge family">Family</span>
         <div class="body"><h3>Hut overnights</h3><p>Sleep under the stars at the Konstanzer Hütte or Edmund-Graf-Hütte — fairytale stone refuges accessible by an easy day's walk.</p></div>
@@ -535,7 +625,7 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
 </section>
 
 <!-- ============== BANNER ============== -->
-<div class="banner" style="background-image:url('https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=2000&q=80')">
+<div class="banner" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Verwalltal_-_panoramio_(2).jpg?width=2000')">
   <div class="inner">
     <div class="section-label">Made for small humans</div>
     <h2>The mountain meets <em>your kids</em> halfway</h2>
@@ -611,18 +701,18 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
     <p class="lede">No filters, no winter tropes — these are the colours of an Arlberg summer between June and October.</p>
 
     <div class="gallery-grid">
-      <div class="g wide" style="background-image:url('https://images.unsplash.com/photo-1469122312224-c5846569feb1?auto=format&fit=crop&w=1600&q=80')"></div>
-      <div class="g tall" style="background-image:url('https://images.unsplash.com/photo-1454942901704-3c44c11b2ad1?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1490902931801-d6f80ca94fe4?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1527142879-95b61a0b8226?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g tall" style="background-image:url('https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g wide" style="background-image:url('https://images.unsplash.com/photo-1517400508447-f8dd518b86db?auto=format&fit=crop&w=1600&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1502920514313-52581002a659?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1000&q=80')"></div>
-      <div class="g" style="background-image:url('https://images.unsplash.com/photo-1482330093588-ab10a09baf28?auto=format&fit=crop&w=1000&q=80')"></div>
+      <div class="g wide" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Stuben_am_Arlberg_Panorama.jpg?width=1600')"></div>
+      <div class="g tall" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Valluga_aus_Almajurtal.jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Sankt_Anton_am_Arlberg_(Schlosshof).jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Rosana-Fluss_in_St._Anton_am_Arlberg,_23.02.2019.jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Verwalltal_-_panoramio_(3).jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/View_to_Rendl_from_Verwallstube_at_Galzig_-_panoramio.jpg?width=1000')"></div>
+      <div class="g tall" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Rosannaschlucht4.jpg?width=1000')"></div>
+      <div class="g wide" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/View_to_Galzig_2185_m_-_panoramio.jpg?width=1600')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Blick-Patteriol.jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Hotel_maiensee_MDSC04784.jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/St.-Anton-am-Arlberg-mit-Galzigbahn.jpg?width=1000')"></div>
+      <div class="g" style="background-image:url('https://commons.wikimedia.org/wiki/Special:FilePath/Verwall_Verwalltal.jpg?width=1000')"></div>
     </div>
   </div>
 </section>
@@ -719,11 +809,21 @@ footer .fine{margin-top:1.5rem;font-size:.78rem;color:rgba(255,255,255,.45);max-
   </div>
 </section>
 
+<!-- ============== CLOSING NOTE ============== -->
+<section class="closing">
+  <div class="wrap-narrow">
+    <div class="section-label">A last word</div>
+    <h2>Have the loveliest <em>summer</em>, Alowedi family.</h2>
+    <p>If there's anything you'd like added — a particular trail, a recommendation that didn't make this page, or an itinerary for a single day — just say the word and we'll fold it in. Until then: pack good shoes, leave the schedule loose, and let the mountain do the rest.</p>
+    <div class="signoff">— see you on the trails</div>
+  </div>
+</section>
+
 <!-- ============== FOOTER ============== -->
 <footer>
   <div class="mark">Quarryme · Travel Notes</div>
-  <div>An unaffiliated guide to summer in St.&nbsp;Anton am Arlberg</div>
-  <div class="fine">All photographs are illustrative and sourced from Unsplash; trail and lift information is summarised from the official tourism office at <a href="https://www.stantonamarlberg.com" rel="noopener">stantonamarlberg.com</a> and was accurate at time of writing. Prices and lift schedules vary by season — confirm directly before travel.</div>
+  <div>An unaffiliated guide to summer in St.&nbsp;Anton am Arlberg, prepared for the Alowedi family.</div>
+  <div class="fine">All photographs sourced from Wikimedia Commons under their respective free licences (mostly CC BY-SA / CC BY / Public Domain). Trail and lift information is summarised from the official tourism office at <a href="https://www.stantonamarlberg.com" rel="noopener">stantonamarlberg.com</a> and was accurate at time of writing. Prices and lift schedules vary by season — confirm directly before travel.</div>
 </footer>
 
 </body>
