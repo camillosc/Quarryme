@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US Electrical Infrastructure Executive Tracker — Power Services, T&amp;D, Substations, Testing</title>
+<title>US Electrical Infrastructure & Power Services Database — Quarryme</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0f1e;--card:#111827;--border:#1e2a45;--gold:#d4a843;--gold-dim:#b8922e;--text:#e2e8f0;--text-dim:#94a3b8;--accent:#1e3a5f;--hover:#162240;--green:#22c55e;--red:#ef4444;--star:#eab308}
@@ -42,23 +42,24 @@ tr:nth-child(even):hover{background:var(--hover)}
 
 .rank{text-align:center;font-weight:700;color:var(--gold);min-width:40px}
 .name{font-weight:600;color:#f1f5f9;white-space:nowrap}
-.title-col{color:var(--text-dim);max-width:200px}
-.company{color:var(--gold);font-weight:500;white-space:nowrap}
-.revenue{text-align:right;font-variant-numeric:tabular-nums}
-.acq{text-align:center}
-.years{text-align:center}
-.subsector-col{font-size:.78rem;max-width:180px}
-.subsector-tag{display:inline-block;background:var(--accent);color:var(--text);padding:1px 7px;border-radius:10px;font-size:.72rem;margin:1px 2px;white-space:nowrap}
-.prev-col{font-size:.78rem;max-width:240px;color:var(--text-dim);line-height:1.4}
-.education-col{font-size:.78rem;max-width:200px;color:var(--text-dim);line-height:1.4}
-.status-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap}
-.status-current{background:#166534;color:#bbf7d0}
-.status-former{background:#374151;color:#9ca3af}
+.ceo{color:var(--text);max-width:180px}
+.hq{color:var(--text-dim);white-space:nowrap;font-size:.78rem}
+.revenue{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.employees{text-align:right;font-variant-numeric:tabular-nums}
+.founded{text-align:center;color:var(--text-dim)}
+.locations{text-align:right;color:var(--text-dim);font-variant-numeric:tabular-nums}
+.services-col{font-size:.78rem;max-width:240px}
+.cat-tag{display:inline-block;background:var(--accent);color:var(--text);padding:1px 7px;border-radius:10px;font-size:.72rem;margin:1px 2px;white-space:nowrap}
 .ownership{font-size:.78rem;max-width:140px;white-space:nowrap}
-.linkedin-col{text-align:center}
-.linkedin-col a{font-size:.75rem;background:#0a66c2;color:#fff;padding:2px 8px;border-radius:4px;white-space:nowrap}
-.linkedin-col a:hover{background:#0958a8;text-decoration:none}
-.linkedin-na{color:var(--text-dim);font-size:.75rem}
+.sponsor{font-size:.78rem;color:var(--text-dim);max-width:160px}
+.website-col{text-align:center}
+.website-col a{font-size:.75rem;background:#0a66c2;color:#fff;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.website-col a:hover{background:#0958a8;text-decoration:none}
+.website-na{color:var(--text-dim);font-size:.75rem}
+.ownership-public{color:#22c55e;font-weight:600}
+.ownership-pe{color:#d4a843;font-weight:600}
+.ownership-private{color:#94a3b8;font-weight:600}
+.ownership-sub{color:#60a5fa;font-weight:600}
 
 .footer{text-align:center;padding:1.5rem;color:var(--text-dim);font-size:.78rem;border-top:1px solid var(--border)}
 
@@ -73,34 +74,21 @@ tr:nth-child(even):hover{background:var(--hover)}
 <body>
 
 <div class="header">
-  <h1>US Electrical Infrastructure Executive Tracker</h1>
-  <p class="subtitle">T&amp;D Construction · Substations · Transformers · Testing &amp; Maintenance · Grid Services · Industrial · Utility Services</p>
-  <p>Comprehensive database of 155 US electrical infrastructure leaders ranked by scale of operations, M&amp;A activity, and strategic impact</p>
+  <h1>US Electrical Infrastructure &amp; Power Services Database</h1>
+  <p class="subtitle">T&amp;D Construction · Substations · Transformers · Testing &amp; Maintenance · Grid Services</p>
+  <p>Comprehensive database of 65 US electrical infrastructure leaders ranked by revenue and strategic scale</p>
 </div>
 
 <div class="controls">
-  <input type="text" id="search" placeholder="Search executives, companies, prior roles, education...">
-  <select id="filterStatus">
-    <option value="">All Status</option>
-    <option value="Current">Current</option>
-    <option value="Former">Former</option>
+  <input type="text" id="search" placeholder="Search company, CEO, services, sponsor...">
+  <select id="filterCategory"><option value="">All Categories</option></select>
+  <select id="filterOwnership">
+    <option value="">All Ownership Types</option>
+    <option value="Public">Public</option>
+    <option value="PE-Backed">PE-Backed</option>
+    <option value="Private">Private</option>
+    <option value="Subsidiary">Subsidiary</option>
   </select>
-  <select id="filterSubsector"><option value="">All Sub-sectors</option></select>
-  <select id="filterTitle">
-    <option value="">All Titles</option>
-    <option value="CEO">CEO</option>
-    <option value="President">President</option>
-    <option value="Chairman">Chairman</option>
-    <option value="COO">COO</option>
-    <option value="CFO">CFO</option>
-    <option value="EVP">EVP</option>
-    <option value="SVP">SVP</option>
-    <option value="VP">VP</option>
-    <option value="Division">Division Head</option>
-    <option value="Former">Former</option>
-    <option value="Founder">Founder</option>
-  </select>
-  <select id="filterOwnership"><option value="">All Ownership Types</option></select>
   <select id="filterRevenue">
     <option value="">All Revenue Ranges</option>
     <option value="10000">$10B+</option>
@@ -119,18 +107,17 @@ tr:nth-child(even):hover{background:var(--hover)}
 <thead>
 <tr>
   <th data-col="rank" data-type="num">Rank<span class="sort-icon"></span></th>
-  <th data-col="name" data-type="str">Executive Name<span class="sort-icon"></span></th>
-  <th data-col="title" data-type="str">Title<span class="sort-icon"></span></th>
   <th data-col="company" data-type="str">Company<span class="sort-icon"></span></th>
-  <th data-col="status" data-type="str">Status<span class="sort-icon"></span></th>
-  <th data-col="subsector" data-type="str">Sub-sector<span class="sort-icon"></span></th>
+  <th data-col="hq" data-type="str">HQ (City, State)<span class="sort-icon"></span></th>
+  <th data-col="ceo" data-type="str">CEO / President<span class="sort-icon"></span></th>
   <th data-col="revenue" data-type="num">Revenue ($mm)<span class="sort-icon"></span></th>
-  <th data-col="acquisitions" data-type="num">Acq (#)<span class="sort-icon"></span></th>
-  <th data-col="years" data-type="num">Tenure (Yrs)<span class="sort-icon"></span></th>
-  <th data-col="prevRole" data-type="str">Previous Role / Company<span class="sort-icon"></span></th>
-  <th data-col="education" data-type="str">Education<span class="sort-icon"></span></th>
+  <th data-col="employees" data-type="num">Employees<span class="sort-icon"></span></th>
   <th data-col="ownership" data-type="str">Ownership<span class="sort-icon"></span></th>
-  <th data-col="linkedin" data-type="str">LinkedIn<span class="sort-icon"></span></th>
+  <th data-col="sponsor" data-type="str">PE Sponsor<span class="sort-icon"></span></th>
+  <th data-col="services" data-type="str">Key Services / Category<span class="sort-icon"></span></th>
+  <th data-col="locations" data-type="num">Locations<span class="sort-icon"></span></th>
+  <th data-col="founded" data-type="num">Founded<span class="sort-icon"></span></th>
+  <th data-col="website" data-type="str">Website<span class="sort-icon"></span></th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -138,323 +125,131 @@ tr:nth-child(even):hover{background:var(--hover)}
 </div>
 
 <div class="footer">
-  US Electrical Infrastructure Executive Tracker &mdash; 155 Executives &mdash; Compiled from public filings, press releases, LinkedIn, and industry reports &mdash; April 2026
+  US Electrical Infrastructure &amp; Power Services Database &mdash; 65 companies &mdash; Compiled from public filings, press releases, and industry reports &mdash; April 2026 &mdash; <a href="https://quarryme.com">quarryme.com</a>
 </div>
 
 <script>
 const DATA=[
-// === QUANTA SERVICES (PWR) ===
-{rank:1,name:"Earl C. \"Duke\" Austin Jr.",title:"President & CEO",company:"Quanta Services",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:23700,acquisitions:35,years:5,prevRole:"COO Quanta Services (2014-2021); President of Infrastructure Services",education:"BS Civil Engineering, Texas A&M",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/duke-austin-quanta/"},
-{rank:2,name:"Earl C. Austin Sr.",title:"Founder & Former Chairman",company:"Quanta Services",status:"Former",subsector:["T&D Construction"],revenue:23700,acquisitions:30,years:25,prevRole:"Founded Quanta Services 1997 from PAR Electrical roll-up",education:"Industry-trained; lineman background",ownership:"Public (PWR)",linkedin:"—"},
-{rank:3,name:"Jayshree Desai",title:"EVP & CFO",company:"Quanta Services",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:23700,acquisitions:0,years:3,prevRole:"CFO Clean Energy Capital, Pattern Energy",education:"BS Mech Engineering, Lehigh; MBA Wharton",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/jayshree-desai/"},
-{rank:4,name:"Donald C. Wayne",title:"EVP, General Counsel & Secretary",company:"Quanta Services",status:"Current",subsector:["T&D Construction"],revenue:23700,acquisitions:0,years:8,prevRole:"General Counsel U.S. Concrete Inc",education:"JD South Texas College of Law",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/donald-wayne-quanta/"},
-{rank:5,name:"James F. O'Neil III",title:"Former President & CEO",company:"Quanta Services",status:"Former",subsector:["T&D Construction"],revenue:7900,acquisitions:25,years:5,prevRole:"CEO 2011-2015; Vice Chairman until 2017",education:"BS Construction Mgmt, Univ of Houston",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/james-oneil-quanta/"},
-{rank:6,name:"James H. Haddox",title:"Former CFO",company:"Quanta Services",status:"Former",subsector:["T&D Construction"],revenue:5500,acquisitions:20,years:9,prevRole:"CFO 1999-2008; led IPO and roll-up financing",education:"BBA Accounting, Stephen F. Austin State",ownership:"Public (PWR)",linkedin:"—"},
-{rank:7,name:"Derek Trostle",title:"President, Electric Power Infrastructure",company:"Quanta Services",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:18000,acquisitions:5,years:4,prevRole:"President PAR Electrical Contractors",education:"BS Construction Mgmt, Penn State",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/derek-trostle-quanta/"},
-{rank:8,name:"Doyle N. Beneby",title:"Independent Director",company:"Quanta Services",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:23700,acquisitions:0,years:7,prevRole:"CEO CPS Energy; SVP Exelon Power",education:"BSEE Florida A&M; MBA Univ of Pennsylvania",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/doyle-beneby-7b58aa14/"},
-{rank:9,name:"David M. Calhoun",title:"Independent Director",company:"Quanta Services",status:"Current",subsector:["T&D Construction"],revenue:23700,acquisitions:0,years:10,prevRole:"CEO Boeing; CEO Nielsen Holdings; Vice Chairman GE",education:"BA Accounting, Virginia Tech",ownership:"Public (PWR)",linkedin:"https://www.linkedin.com/in/dave-calhoun-aerospace/"},
-{rank:10,name:"Vincent D. Foster",title:"Lead Director",company:"Quanta Services",status:"Current",subsector:["T&D Construction"],revenue:23700,acquisitions:0,years:24,prevRole:"Co-founder Main Street Capital; CFO Quanta IPO",education:"BS Accounting, Univ of Akron",ownership:"Public (PWR)",linkedin:"—"},
+// === MAJOR PUBLIC ===
+{rank:1,company:"Quanta Services",ticker:"PWR",hq:"Houston, TX",ceo:"Duke Austin",revenue:29900,employees:53000,ownership:"Public",sponsor:"",categories:["T&D Construction","Substations","Grid Services","Utility Services"],services:"T&D, substations, renewables, communications infrastructure",locations:200,founded:1997,website:"https://www.quantaservices.com"},
+{rank:2,company:"EMCOR Group",ticker:"EME",hq:"Norwalk, CT",ceo:"Tony Guzzi",revenue:17000,employees:40000,ownership:"Public",sponsor:"",categories:["Industrial","Utility Services"],services:"Electrical & mechanical construction, facilities services",locations:170,founded:1994,website:"https://www.emcorgroup.com"},
+{rank:3,company:"MasTec",ticker:"MTZ",hq:"Coral Gables, FL",ceo:"Jose Mas",revenue:13800,employees:32000,ownership:"Public",sponsor:"",categories:["T&D Construction","Utility Services","Grid Services"],services:"T&D, clean energy, communications, pipeline infrastructure",locations:400,founded:1929,website:"https://www.mastec.com"},
+{rank:4,company:"Vertiv Holdings",ticker:"VRT",hq:"Westerville, OH",ceo:"Giordano Albertazzi",revenue:8400,employees:28000,ownership:"Public",sponsor:"",categories:["Industrial","Testing & Maintenance"],services:"Critical power, thermal management, switchgear, UPS",locations:130,founded:2016,website:"https://www.vertiv.com"},
+{rank:5,company:"Primoris Services",ticker:"PRIM",hq:"Dallas, TX",ceo:"Tom McCormick",revenue:6400,employees:16000,ownership:"Public",sponsor:"",categories:["T&D Construction","Utility Services","Grid Services"],services:"Utility infrastructure, T&D, renewables, pipeline",locations:50,founded:1960,website:"https://www.prim.com"},
+{rank:6,company:"MYR Group",ticker:"MYRG",hq:"Henderson, CO",ceo:"Rick Swartz",revenue:3800,employees:9500,ownership:"Public",sponsor:"",categories:["T&D Construction","Substations","Industrial"],services:"T&D construction, substations, commercial & industrial electrical",locations:50,founded:1891,website:"https://www.myrgroup.com"},
+{rank:7,company:"Eaton Corporation",ticker:"ETN",hq:"Beachwood, OH",ceo:"Craig Arnold",revenue:24900,employees:92000,ownership:"Public",sponsor:"",categories:["Substations","Transformers","Industrial"],services:"Power management, switchgear, breakers, transformers",locations:175,founded:1911,website:"https://www.eaton.com"},
+{rank:8,company:"Hubbell Incorporated",ticker:"HUBB",hq:"Shelton, CT",ceo:"Gerben Bakker",revenue:5600,employees:17500,ownership:"Public",sponsor:"",categories:["Transformers","Substations","Utility Services"],services:"Utility & electrical solutions, T&D components, lighting",locations:80,founded:1888,website:"https://www.hubbell.com"},
+{rank:9,company:"GE Vernova",ticker:"GEV",hq:"Cambridge, MA",ceo:"Scott Strazik",revenue:34000,employees:75000,ownership:"Public",sponsor:"",categories:["Transformers","Substations","Grid Services"],services:"Grid solutions, large power transformers, HVDC, switchgear",locations:100,founded:2024,website:"https://www.gevernova.com"},
+{rank:10,company:"nVent Electric",ticker:"NVT",hq:"London / Solon, OH",ceo:"Beth Wozniak",revenue:3400,employees:11400,ownership:"Public",sponsor:"",categories:["Industrial","Substations"],services:"Enclosures, electrical fastening, thermal management",locations:60,founded:2018,website:"https://www.nvent.com"},
+{rank:11,company:"Atkore Inc.",ticker:"ATKR",hq:"Harvey, IL",ceo:"Bill Waltz",revenue:3200,employees:4400,ownership:"Public",sponsor:"",categories:["Industrial"],services:"Conduit, cable, electrical raceway",locations:65,founded:2010,website:"https://www.atkore.com"},
+{rank:12,company:"Dycom Industries",ticker:"DY",hq:"Palm Beach Gardens, FL",ceo:"Daniel Peyovich",revenue:4700,employees:15000,ownership:"Public",sponsor:"",categories:["Utility Services","T&D Construction"],services:"Telecom & utility infrastructure, locating, T&D support",locations:50,founded:1969,website:"https://www.dycomind.com"},
+{rank:13,company:"Powell Industries",ticker:"POWL",hq:"Houston, TX",ceo:"Brett Cope",revenue:1100,employees:3500,ownership:"Public",sponsor:"",categories:["Substations","Transformers","Industrial"],services:"Switchgear, bus duct, packaged substations, control systems",locations:8,founded:1947,website:"https://www.powellind.com"},
+{rank:14,company:"Centuri Holdings",ticker:"CTRI",hq:"Phoenix, AZ",ceo:"William Fehrman",revenue:2700,employees:11600,ownership:"Public",sponsor:"",categories:["Utility Services","T&D Construction"],services:"Gas & electric utility infrastructure construction",locations:45,founded:2014,website:"https://www.centuri.com"},
+{rank:15,company:"IES Holdings",ticker:"IESC",hq:"Houston, TX",ceo:"Jeffrey Gendell",revenue:2900,employees:8400,ownership:"Public",sponsor:"",categories:["Industrial","Utility Services"],services:"Electrical contracting, communications, residential",locations:130,founded:1997,website:"https://www.ies-co.com"},
+{rank:16,company:"Comfort Systems USA",ticker:"FIX",hq:"Houston, TX",ceo:"Brian Lane",revenue:5200,employees:14500,ownership:"Public",sponsor:"",categories:["Industrial"],services:"Mechanical & electrical contracting, modular fabrication",locations:170,founded:1997,website:"https://www.comfortsystemsusa.com"},
+{rank:17,company:"Encore Wire (Prysmian)",ticker:"PRY.MI",hq:"McKinney, TX",ceo:"Massimo Battaini",revenue:2800,employees:1500,ownership:"Public",sponsor:"",categories:["Industrial"],services:"Copper electrical building wire & cable (Prysmian sub since 2024)",locations:3,founded:1989,website:"https://www.encorewire.com"},
+{rank:18,company:"Southwire Company",ticker:"",hq:"Carrollton, GA",ceo:"Rich Stinson",revenue:8000,employees:8500,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Wire, cable, conductors for utility & construction markets",locations:32,founded:1950,website:"https://www.southwire.com"},
+{rank:19,company:"Babcock & Wilcox",ticker:"BW",hq:"Akron, OH",ceo:"Kenneth Young",revenue:680,employees:2200,ownership:"Public",sponsor:"",categories:["Industrial","Grid Services"],services:"Power generation services, environmental, thermal & energy systems",locations:25,founded:1867,website:"https://www.babcock.com"},
 
-// === MASTEC (MTZ) ===
-{rank:11,name:"Jose R. Mas",title:"CEO",company:"MasTec",status:"Current",subsector:["T&D Construction","Utility Services","Industrial"],revenue:13800,acquisitions:25,years:18,prevRole:"President MasTec; co-built family enterprise from $200M",education:"BBA Univ of Miami",ownership:"Public (MTZ)",linkedin:"https://www.linkedin.com/in/jose-r-mas/"},
-{rank:12,name:"Jorge Mas",title:"Chairman",company:"MasTec",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:13800,acquisitions:30,years:30,prevRole:"Co-founder; converted Burnup & Sims into MasTec",education:"BA Communications, Univ of Miami",ownership:"Public (MTZ)",linkedin:"—"},
-{rank:13,name:"Paul DiMarco",title:"EVP & Chief Strategic Officer",company:"MasTec",status:"Current",subsector:["T&D Construction","Industrial"],revenue:13800,acquisitions:5,years:6,prevRole:"CFO MasTec",education:"BS Industrial Eng, Univ of Miami",ownership:"Public (MTZ)",linkedin:"https://www.linkedin.com/in/paul-dimarco-mastec/"},
-{rank:14,name:"George L. Pita",title:"Former EVP & CFO",company:"MasTec",status:"Former",subsector:["T&D Construction"],revenue:8200,acquisitions:15,years:8,prevRole:"CFO Watsco Inc; led MasTec finance through Pumpco/Big Country acquisitions",education:"BBA Accounting, Univ of Miami",ownership:"Public (MTZ)",linkedin:"https://www.linkedin.com/in/george-pita-2007036/"},
-{rank:15,name:"Robert Apple",title:"Former COO",company:"MasTec",status:"Former",subsector:["T&D Construction"],revenue:7000,acquisitions:18,years:12,prevRole:"COO until 2020; oversaw operations during major M&A wave",education:"BS Engineering, Auburn",ownership:"Public (MTZ)",linkedin:"—"},
-{rank:16,name:"Paul Caudill",title:"President, Clean Energy & Infrastructure Group",company:"MasTec",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:3000,acquisitions:3,years:3,prevRole:"CEO First Solar; SVP NV Energy",education:"BS Mech Eng, Univ of Tennessee; MBA Univ of Nevada",ownership:"Public (MTZ)",linkedin:"https://www.linkedin.com/in/paulcaudill/"},
-{rank:17,name:"Alberto de Cardenas",title:"EVP, General Counsel & Secretary",company:"MasTec",status:"Current",subsector:["T&D Construction"],revenue:13800,acquisitions:0,years:18,prevRole:"Partner Greenberg Traurig",education:"JD Univ of Miami School of Law",ownership:"Public (MTZ)",linkedin:"https://www.linkedin.com/in/alberto-de-cardenas/"},
+// === PE-BACKED ===
+{rank:20,company:"Artera Services",ticker:"",hq:"Atlanta, GA",ceo:"Bill Reid",revenue:4000,employees:12000,ownership:"PE-Backed",sponsor:"Clayton Dubilier & Rice",categories:["Utility Services","T&D Construction"],services:"Gas & electric utility infrastructure (PowerTeam Services holding co)",locations:75,founded:2019,website:"https://www.arteraservices.com"},
+{rank:21,company:"Pike Corporation",ticker:"",hq:"Mount Airy, NC",ceo:"Eric Pike",revenue:3000,employees:10000,ownership:"PE-Backed",sponsor:"Lindsay Goldberg",categories:["T&D Construction","Substations","Utility Services"],services:"T&D construction, storm restoration, substations, engineering",locations:200,founded:1945,website:"https://www.pike.com"},
+{rank:22,company:"Shermco Industries",ticker:"",hq:"Irving, TX",ceo:"Ron Widup",revenue:600,employees:3000,ownership:"PE-Backed",sponsor:"Gryphon Investors",categories:["Testing & Maintenance","Substations"],services:"NETA-accredited testing, commissioning, maintenance, rotating apparatus",locations:40,founded:1974,website:"https://www.shermco.com"},
+{rank:23,company:"RESA Power",ticker:"",hq:"Dallas, TX",ceo:"Tim Kessler",revenue:250,employees:1200,ownership:"PE-Backed",sponsor:"AE Industrial Partners",categories:["Testing & Maintenance","Transformers"],services:"Power systems testing, life-extension services, parts, transformer service",locations:40,founded:2013,website:"https://www.resapower.com"},
+{rank:24,company:"INTREN",ticker:"",hq:"Union, IL",ceo:"Loretta Rosenmayer",revenue:700,employees:2000,ownership:"PE-Backed",sponsor:"Tower Arch Capital",categories:["T&D Construction","Utility Services"],services:"Electric T&D, gas distribution, telecom infrastructure",locations:30,founded:1988,website:"https://www.intren.com"},
+{rank:25,company:"CE Power Engineered Services",ticker:"",hq:"Cincinnati, OH",ceo:"Richard Sheppard",revenue:180,employees:700,ownership:"PE-Backed",sponsor:"Tailwind Capital",categories:["Testing & Maintenance","Substations"],services:"NETA testing, substation engineering, transformer maintenance",locations:18,founded:2005,website:"https://www.cepower.net"},
+{rank:26,company:"Davis H. Elliot Company",ticker:"",hq:"Lexington, KY",ceo:"David Elliot",revenue:450,employees:1800,ownership:"PE-Backed",sponsor:"Court Square Capital",categories:["T&D Construction","Utility Services"],services:"Electric utility line construction, fiber, substation",locations:25,founded:1946,website:"https://www.elliotco.com"},
+{rank:27,company:"PowerSecure",ticker:"",hq:"Wake Forest, NC",ceo:"Eric Dupont",revenue:600,employees:1400,ownership:"Subsidiary",sponsor:"Southern Company",categories:["Grid Services","Substations","Utility Services"],services:"Distributed generation, microgrids, utility infrastructure, lighting",locations:20,founded:2000,website:"https://www.powersecure.com"},
+{rank:28,company:"APTIM",ticker:"",hq:"The Woodlands, TX",ceo:"Mark Fallon",revenue:750,employees:3500,ownership:"PE-Backed",sponsor:"Bernhard Capital",categories:["Industrial","Grid Services"],services:"Energy infrastructure, power delivery, environmental, federal",locations:40,founded:2017,website:"https://www.aptim.com"},
+{rank:29,company:"Bernhard LLC",ticker:"",hq:"Metairie, LA",ceo:"Jeff Yuknis",revenue:550,employees:1300,ownership:"PE-Backed",sponsor:"Bernhard Capital",categories:["Industrial"],services:"Electrical & mechanical contracting, energy-as-a-service",locations:15,founded:1919,website:"https://www.bernhard.com"},
+{rank:30,company:"Trees, Inc.",ticker:"",hq:"Houston, TX",ceo:"Tim Walsh",revenue:600,employees:5500,ownership:"PE-Backed",sponsor:"Endeavour Capital",categories:["Utility Services","Grid Services"],services:"Vegetation management for electric utilities",locations:80,founded:1968,website:"https://www.trees-inc.com"},
+{rank:31,company:"Asplundh Tree Expert",ticker:"",hq:"Willow Grove, PA",ceo:"Scott Asplundh",revenue:6200,employees:36000,ownership:"PE-Backed",sponsor:"Carlyle Group (minority)",categories:["Utility Services","Grid Services"],services:"Vegetation management, infrastructure construction, storm response",locations:550,founded:1928,website:"https://www.asplundh.com"},
+{rank:32,company:"Wright Tree Service",ticker:"",hq:"West Des Moines, IA",ceo:"Scott Packard",revenue:700,employees:5000,ownership:"PE-Backed",sponsor:"Wright Service Corp (ESOP/PE)",categories:["Utility Services"],services:"Vegetation management, line clearance for utilities",locations:80,founded:1933,website:"https://www.wrighttree.com"},
 
-// === EMCOR GROUP (EME) ===
-{rank:18,name:"Anthony J. \"Tony\" Guzzi",title:"Chairman, President & CEO",company:"EMCOR Group",status:"Current",subsector:["Industrial","Utility Services"],revenue:14600,acquisitions:30,years:14,prevRole:"COO EMCOR; President Carrier Commercial Systems",education:"BS Civil Eng, Notre Dame; MBA Harvard Business School",ownership:"Public (EME)",linkedin:"https://www.linkedin.com/in/tony-guzzi-emcor/"},
-{rank:19,name:"Jason B. Nalbandian",title:"SVP & CFO",company:"EMCOR Group",status:"Current",subsector:["Industrial"],revenue:14600,acquisitions:0,years:2,prevRole:"VP & Chief Accounting Officer EMCOR",education:"BS Accounting, Pace University",ownership:"Public (EME)",linkedin:"https://www.linkedin.com/in/jason-nalbandian/"},
-{rank:20,name:"Mark A. Pompa",title:"Former EVP & CFO",company:"EMCOR Group",status:"Former",subsector:["Industrial"],revenue:11500,acquisitions:20,years:18,prevRole:"CFO 2006-2024; led capital allocation through 25+ deals",education:"BBA Accounting, Pace University",ownership:"Public (EME)",linkedin:"https://www.linkedin.com/in/mark-pompa-emcor/"},
-{rank:21,name:"R. Kevin Matz",title:"EVP, Shared Services",company:"EMCOR Group",status:"Current",subsector:["Industrial"],revenue:14600,acquisitions:0,years:14,prevRole:"EVP Human Resources EMCOR",education:"BBA Iona College",ownership:"Public (EME)",linkedin:"https://www.linkedin.com/in/kevin-matz-emcor/"},
-{rank:22,name:"Maxine Mauricio",title:"EVP, General Counsel",company:"EMCOR Group",status:"Current",subsector:["Industrial"],revenue:14600,acquisitions:0,years:6,prevRole:"Partner Cravath Swaine & Moore",education:"JD Stanford Law",ownership:"Public (EME)",linkedin:"https://www.linkedin.com/in/maxine-mauricio/"},
-{rank:23,name:"Frank T. MacInnis",title:"Former Chairman & CEO",company:"EMCOR Group",status:"Former",subsector:["Industrial"],revenue:5500,acquisitions:25,years:18,prevRole:"Built EMCOR from JWP bankruptcy reorganization 1994; CEO until 2011",education:"BSc Royal Roads Military College; LLB Univ of Alberta",ownership:"Public (EME)",linkedin:"—"},
+// === LARGE PRIVATE / ESOP ===
+{rank:33,company:"Rosendin Electric",ticker:"",hq:"San Jose, CA",ceo:"Mike Greenawalt",revenue:4000,employees:7500,ownership:"Private",sponsor:"100% ESOP",categories:["Industrial","Substations"],services:"Electrical construction, data centers, renewables, mission critical",locations:20,founded:1919,website:"https://www.rosendin.com"},
+{rank:34,company:"Faith Technologies",ticker:"",hq:"Menasha, WI",ceo:"Mike Jansen",revenue:2500,employees:5500,ownership:"Private",sponsor:"",categories:["Industrial","Substations"],services:"Electrical planning, engineering, construction, energy services",locations:30,founded:1972,website:"https://www.faithtechnologies.com"},
+{rank:35,company:"Cupertino Electric",ticker:"",hq:"San Jose, CA",ceo:"Tom Schott",revenue:2500,employees:4000,ownership:"Private",sponsor:"100% ESOP",categories:["Industrial","Substations"],services:"Electrical engineering & construction for tech, data center, renewables",locations:8,founded:1954,website:"https://www.cupertinoelectric.com"},
+{rank:36,company:"M.C. Dean",ticker:"",hq:"Tysons, VA",ceo:"William H. Dean",revenue:1500,employees:5500,ownership:"Private",sponsor:"",categories:["Industrial","Substations"],services:"Electrical, electronic, security & cyber-physical engineering",locations:35,founded:1949,website:"https://www.mcdean.com"},
+{rank:37,company:"Henkels & McCoy",ticker:"",hq:"Blue Bell, PA",ceo:"Ross Myers",revenue:2500,employees:4500,ownership:"Private",sponsor:"",categories:["T&D Construction","Utility Services","Grid Services"],services:"Power, communications, gas distribution, oil & gas pipeline",locations:90,founded:1923,website:"https://www.henkels.com"},
+{rank:38,company:"Davey Tree Expert",ticker:"",hq:"Kent, OH",ceo:"Pat Covey",revenue:2000,employees:12000,ownership:"Private",sponsor:"100% ESOP",categories:["Utility Services","Grid Services"],services:"Utility vegetation management, line clearance, consulting",locations:135,founded:1880,website:"https://www.davey.com"},
+{rank:39,company:"Helix Electric",ticker:"",hq:"San Diego, CA",ceo:"Victor Fuchs",revenue:350,employees:3000,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Electrical construction, design-build, renewables",locations:7,founded:1985,website:"https://www.helixelectric.com"},
+{rank:40,company:"Sturgeon Electric",ticker:"",hq:"Henderson, CO",ceo:"Joe Vidiri",revenue:900,employees:2500,ownership:"Subsidiary",sponsor:"MYR Group",categories:["T&D Construction","Industrial"],services:"T&D, substation, commercial & industrial electrical (MYR Group)",locations:15,founded:1912,website:"https://www.sturgeonelectric.com"},
+{rank:41,company:"Interstates",ticker:"",hq:"Sioux Center, IA",ceo:"Greg Granneman",revenue:400,employees:1100,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Industrial electrical construction, instrumentation, control systems",locations:8,founded:1953,website:"https://www.interstates.com"},
+{rank:42,company:"Wachter Inc.",ticker:"",hq:"Lenexa, KS",ceo:"Eric Wachter",revenue:550,employees:1700,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Electrical, technology, life-safety contracting",locations:25,founded:1930,website:"https://www.wachter.com"},
+{rank:43,company:"Bergelectric",ticker:"",hq:"Carlsbad, CA",ceo:"Doug Berger",revenue:850,employees:2200,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Commercial & industrial electrical contracting, design-build",locations:14,founded:1946,website:"https://www.bergelectric.com"},
+{rank:44,company:"Lewis Tree Service",ticker:"",hq:"West Henrietta, NY",ceo:"Jay Doherty",revenue:600,employees:4500,ownership:"Private",sponsor:"100% ESOP",categories:["Utility Services"],services:"Utility vegetation management, line clearance",locations:40,founded:1928,website:"https://www.lewistree.com"},
+{rank:45,company:"Lemartec / EllisDon Electrical",ticker:"",hq:"Miami, FL",ceo:"Carlos Sablon",revenue:300,employees:600,ownership:"Private",sponsor:"",categories:["Industrial"],services:"Industrial electrical & EPC for power generation",locations:5,founded:1973,website:"https://www.lemartec.com"},
 
-// === MYR GROUP (MYRG) ===
-{rank:24,name:"Richard S. \"Rick\" Swartz",title:"President & CEO",company:"MYR Group",status:"Current",subsector:["T&D Construction","Substations"],revenue:3580,acquisitions:6,years:11,prevRole:"COO MYR Group; SVP Operations Sturgeon Electric",education:"BS Construction Mgmt, Colorado State",ownership:"Public (MYRG)",linkedin:"https://www.linkedin.com/in/rick-swartz-myrg/"},
-{rank:25,name:"Tod M. Cooper",title:"COO, T&D",company:"MYR Group",status:"Current",subsector:["T&D Construction"],revenue:2200,acquisitions:3,years:11,prevRole:"VP Operations The L.E. Myers Company",education:"BS Const Eng, Iowa State",ownership:"Public (MYRG)",linkedin:"https://www.linkedin.com/in/tod-cooper-myrg/"},
-{rank:26,name:"Jeffrey J. Waneka",title:"COO, Commercial & Industrial",company:"MYR Group",status:"Current",subsector:["Industrial","T&D Construction"],revenue:1400,acquisitions:3,years:11,prevRole:"VP Sturgeon Electric",education:"BS Construction Mgmt, Colorado State",ownership:"Public (MYRG)",linkedin:"https://www.linkedin.com/in/jeffrey-waneka-myrg/"},
-{rank:27,name:"Betty R. Johnson",title:"SVP, CFO & Treasurer",company:"MYR Group",status:"Current",subsector:["T&D Construction"],revenue:3580,acquisitions:0,years:5,prevRole:"CFO Cooper Tire & Rubber",education:"BS Accounting, Bowling Green; MBA Univ of Toledo",ownership:"Public (MYRG)",linkedin:"https://www.linkedin.com/in/betty-johnson-myrg/"},
-{rank:28,name:"William A. \"Bill\" Koertner",title:"Former CEO",company:"MYR Group",status:"Former",subsector:["T&D Construction"],revenue:1100,acquisitions:5,years:11,prevRole:"CEO 2003-2014; led 2008 IPO and roll-up of T&D contractors",education:"BS Accounting, Univ of Illinois; MBA Loyola",ownership:"Public (MYRG)",linkedin:"—"},
+// === TRANSFORMERS ===
+{rank:46,company:"ERMCO",ticker:"",hq:"Dyersburg, TN",ceo:"Jeff Davis",revenue:774,employees:1500,ownership:"Subsidiary",sponsor:"Marmon Group / Berkshire Hathaway",categories:["Transformers"],services:"Distribution transformers, pad-mount, pole-type",locations:3,founded:1955,website:"https://www.ermco-eci.com"},
+{rank:47,company:"Howard Industries",ticker:"",hq:"Laurel, MS",ceo:"Michael Howard",revenue:1200,employees:4000,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Distribution transformers, electrical equipment",locations:8,founded:1968,website:"https://www.howard.com"},
+{rank:48,company:"Virginia Transformer Corp",ticker:"",hq:"Roanoke, VA",ceo:"Prabhat Jain",revenue:400,employees:1200,ownership:"Private",sponsor:"",categories:["Transformers","Substations"],services:"Power transformers up to 500MVA, substation transformers",locations:5,founded:1971,website:"https://www.vatransformer.com"},
+{rank:49,company:"Solomon Corporation",ticker:"",hq:"Solomon, KS",ceo:"Pat Roberts",revenue:180,employees:550,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Transformer remanufacturing, refurbishment, recycling",locations:6,founded:1960,website:"https://www.solomoncorp.com"},
+{rank:50,company:"Pennsylvania Transformer Tech",ticker:"",hq:"Pittsburgh, PA",ceo:"Pier Luca Tomei",revenue:300,employees:850,ownership:"Subsidiary",sponsor:"Tamini / Terna Plus",categories:["Transformers","Substations"],services:"Power transformers, substation transformers up to 1200MVA",locations:2,founded:1923,website:"https://www.pa-transformer.com"},
+{rank:51,company:"Niagara Transformer Corp",ticker:"",hq:"Buffalo, NY",ceo:"Casey VanArsdale",revenue:120,employees:300,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Medium & large power transformers",locations:1,founded:1922,website:"https://www.niagaratransformer.com"},
+{rank:52,company:"Olsun Electrics",ticker:"",hq:"Richmond, IL",ceo:"Larry Bryant",revenue:90,employees:280,ownership:"Private",sponsor:"",categories:["Transformers"],services:"Dry-type & cast-coil transformers, reactors",locations:1,founded:1979,website:"https://www.olsun.com"},
+{rank:53,company:"Prolec GE (Waukesha)",ticker:"",hq:"Waukesha, WI",ceo:"Carlos Turner",revenue:1300,employees:3500,ownership:"Subsidiary",sponsor:"GE Vernova / Xignux JV",categories:["Transformers","Substations"],services:"Large power transformers, distribution transformers",locations:6,founded:1995,website:"https://www.prolecge.com"},
 
-// === PRIMORIS SERVICES (PRIM) ===
-{rank:29,name:"Thomas E. \"Tom\" McCormick",title:"President & CEO",company:"Primoris Services",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:6390,acquisitions:8,years:5,prevRole:"COO Primoris; President ARB Inc",education:"BS Construction Eng, Cal Poly Pomona",ownership:"Public (PRIM)",linkedin:"https://www.linkedin.com/in/tom-mccormick-primoris/"},
-{rank:30,name:"Brian Pratt",title:"Founder & Former Chairman",company:"Primoris Services",status:"Former",subsector:["T&D Construction","Utility Services"],revenue:1900,acquisitions:15,years:25,prevRole:"Founded ARB Inc 1980; took Primoris public 2008",education:"USC graduate; industry self-taught",ownership:"Public (PRIM)",linkedin:"—"},
-{rank:31,name:"Kenneth M. Dodgen",title:"EVP & CFO",company:"Primoris Services",status:"Current",subsector:["T&D Construction"],revenue:6390,acquisitions:3,years:6,prevRole:"CFO Patterson-UTI Energy",education:"BBA Accounting, Texas A&M",ownership:"Public (PRIM)",linkedin:"https://www.linkedin.com/in/kenneth-dodgen-prim/"},
-{rank:32,name:"David L. King",title:"COO",company:"Primoris Services",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:6390,acquisitions:2,years:4,prevRole:"President Energy/Renewables Primoris; COO Track Utilities",education:"BS Mechanical Eng, Univ of Wyoming",ownership:"Public (PRIM)",linkedin:"https://www.linkedin.com/in/david-king-prim/"},
-{rank:33,name:"David Z. Nierenberg",title:"Independent Director",company:"Primoris Services",status:"Current",subsector:["T&D Construction"],revenue:6390,acquisitions:0,years:13,prevRole:"Founder Nierenberg Investment Management; long-time Primoris board",education:"BA Yale; JD Yale Law School",ownership:"Public (PRIM)",linkedin:"—"},
+// === TESTING & MAINTENANCE ===
+{rank:54,company:"High Voltage Maintenance",ticker:"",hq:"Indianapolis, IN",ceo:"Kris Walters",revenue:280,employees:900,ownership:"Subsidiary",sponsor:"Emerson Electric",categories:["Testing & Maintenance","Substations"],services:"NETA testing, commissioning, maintenance, retrofit",locations:18,founded:1957,website:"https://www.hvmcorp.com"},
+{rank:55,company:"Electrical Reliability Services",ticker:"",hq:"Reno, NV",ceo:"Jim Schaefer",revenue:220,employees:850,ownership:"Subsidiary",sponsor:"Vertiv Holdings",categories:["Testing & Maintenance","Substations"],services:"NETA-accredited testing, engineering, commissioning",locations:25,founded:1971,website:"https://www.electricalreliability.com"},
+{rank:56,company:"American Electrical Testing Co.",ticker:"",hq:"Woburn, MA",ceo:"Scott M. Blizard",revenue:55,employees:200,ownership:"Private",sponsor:"",categories:["Testing & Maintenance"],services:"NETA testing, infrared, transformer oil analysis",locations:6,founded:1976,website:"https://www.aetco.us"},
+{rank:57,company:"National Field Services",ticker:"",hq:"Lewisville, TX",ceo:"Doug Brown",revenue:90,employees:350,ownership:"Private",sponsor:"",categories:["Testing & Maintenance","Substations"],services:"Field testing, commissioning, engineering, switchgear repair",locations:10,founded:1946,website:"https://www.natlfield.com"},
+{rank:58,company:"Power Products & Solutions",ticker:"",hq:"Charlotte, NC",ceo:"Joe Kelly",revenue:45,employees:160,ownership:"Subsidiary",sponsor:"Shermco Industries (2025)",categories:["Testing & Maintenance"],services:"NETA testing, PEARL-certified breaker reconditioning",locations:4,founded:1986,website:"https://www.ppsindy.com"},
+{rank:59,company:"Magna IV Engineering",ticker:"",hq:"Edmonton, AB / Phoenix, AZ",ceo:"Jordan Cove",revenue:140,employees:450,ownership:"Private",sponsor:"",categories:["Testing & Maintenance","Substations"],services:"Power systems engineering, testing, commissioning",locations:11,founded:1983,website:"https://www.magnaiv.com"},
+{rank:60,company:"Premier Power Maintenance",ticker:"",hq:"Indianapolis, IN",ceo:"Bryan Cave",revenue:60,employees:230,ownership:"Private",sponsor:"",categories:["Testing & Maintenance"],services:"NETA testing, switchgear maintenance, breaker rebuild",locations:7,founded:1986,website:"https://www.premierpower.us"},
+{rank:61,company:"Halco Electrical Testing",ticker:"",hq:"Glendale Heights, IL",ceo:"Greg Halinski",revenue:35,employees:130,ownership:"Private",sponsor:"",categories:["Testing & Maintenance"],services:"NETA-accredited acceptance & maintenance testing",locations:3,founded:1985,website:"https://www.halcotest.com"},
 
-// === VERTIV HOLDINGS (VRT) ===
-{rank:34,name:"Giordano \"Gio\" Albertazzi",title:"CEO",company:"Vertiv Holdings",status:"Current",subsector:["Power Equipment","Industrial"],revenue:8420,acquisitions:5,years:3,prevRole:"COO Vertiv; President Vertiv EMEA; Emerson VP",education:"MS Electronic Eng, Univ of Bologna",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/giordano-albertazzi/"},
-{rank:35,name:"David J. Fallon",title:"CFO",company:"Vertiv Holdings",status:"Current",subsector:["Power Equipment"],revenue:8420,acquisitions:0,years:5,prevRole:"CFO CIRCOR International",education:"BBA Accounting, Notre Dame; MBA Univ of Chicago Booth",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/david-fallon-vertiv/"},
-{rank:36,name:"Robert J. Johnson",title:"Former CEO",company:"Vertiv Holdings",status:"Former",subsector:["Power Equipment"],revenue:5000,acquisitions:8,years:7,prevRole:"CEO 2016-2023; led Vertiv carve-out from Emerson and 2020 SPAC IPO",education:"BS Mech Eng, Drexel; MBA Wharton",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/rob-johnson-vertiv/"},
-{rank:37,name:"Stephanie L. Gill",title:"Chief Legal Counsel & Secretary",company:"Vertiv Holdings",status:"Current",subsector:["Power Equipment"],revenue:8420,acquisitions:0,years:8,prevRole:"VP Associate General Counsel Emerson",education:"JD Capital University Law School",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/stephanie-gill-vertiv/"},
-{rank:38,name:"Gary J. Niederpruem",title:"Chief Strategy & Development Officer",company:"Vertiv Holdings",status:"Current",subsector:["Power Equipment"],revenue:8420,acquisitions:5,years:9,prevRole:"VP Strategy Emerson Network Power",education:"BS Mech Eng, Bucknell; MBA Penn State",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/gary-niederpruem/"},
-{rank:39,name:"Karsten Winther",title:"President, Americas",company:"Vertiv Holdings",status:"Current",subsector:["Power Equipment","Critical Power"],revenue:4500,acquisitions:0,years:4,prevRole:"President Vertiv EMEA; VP Emerson Network Power",education:"MSc Mech Eng, Technical Univ of Denmark; MBA INSEAD",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/karsten-winther/"},
-
-// === POWELL INDUSTRIES (POWL) ===
-{rank:40,name:"Brett A. Cope",title:"Chairman, President & CEO",company:"Powell Industries",status:"Current",subsector:["Substations","Industrial","Power Equipment"],revenue:1100,acquisitions:1,years:7,prevRole:"COO Powell; SVP Engineering",education:"BSEE, Univ of Houston",ownership:"Public (POWL)",linkedin:"https://www.linkedin.com/in/brett-cope-powl/"},
-{rank:41,name:"Michael W. \"Mike\" Metcalf",title:"VP & CFO",company:"Powell Industries",status:"Current",subsector:["Substations"],revenue:1100,acquisitions:0,years:5,prevRole:"VP Finance NCI Building Systems",education:"BBA Accounting, Texas A&M",ownership:"Public (POWL)",linkedin:"https://www.linkedin.com/in/mike-metcalf-powl/"},
-{rank:42,name:"Robert J. Phillips",title:"Former Chairman & CEO",company:"Powell Industries",status:"Former",subsector:["Substations","Industrial"],revenue:550,acquisitions:3,years:13,prevRole:"CEO 2003-2017; led modernization and refocus on engineered electrical equipment",education:"BSEE Univ of New Mexico",ownership:"Public (POWL)",linkedin:"—"},
-
-// === IES HOLDINGS (IESC) ===
-{rank:43,name:"Gary S. Matthews",title:"CEO & President",company:"IES Holdings",status:"Current",subsector:["Industrial","T&D Construction"],revenue:2980,acquisitions:8,years:4,prevRole:"CEO MSX International; senior roles ITT Corporation",education:"BA Princeton; MBA Harvard Business School",ownership:"Public (IESC)",linkedin:"https://www.linkedin.com/in/gary-matthews-iesc/"},
-{rank:44,name:"Jeffrey L. \"Jeff\" Gendell",title:"Chairman",company:"IES Holdings",status:"Current",subsector:["Industrial"],revenue:2980,acquisitions:10,years:9,prevRole:"Founder Tontine Associates (>50% IESC owner since 2006)",education:"BA Wesleyan",ownership:"Public (IESC)",linkedin:"—"},
-{rank:45,name:"Tracy A. McLauchlin",title:"SVP & CFO",company:"IES Holdings",status:"Current",subsector:["Industrial"],revenue:2980,acquisitions:5,years:8,prevRole:"VP Finance IES; PwC senior manager",education:"BBA Univ of Texas; CPA",ownership:"Public (IESC)",linkedin:"https://www.linkedin.com/in/tracy-mclauchlin/"},
-{rank:46,name:"Robert W. Lewey",title:"Former CEO",company:"IES Holdings",status:"Former",subsector:["Industrial"],revenue:1500,acquisitions:6,years:5,prevRole:"CEO 2016-2021; transformed IES via discipline and bolt-on M&A",education:"BS Accounting, Indiana University",ownership:"Public (IESC)",linkedin:"https://www.linkedin.com/in/robert-lewey/"},
-{rank:47,name:"Matt Simmes",title:"Division President, Communications",company:"IES Holdings",status:"Current",subsector:["Industrial"],revenue:600,acquisitions:0,years:6,prevRole:"VP Operations IES Communications",education:"BS Eng, Arizona State",ownership:"Public (IESC)",linkedin:"https://www.linkedin.com/in/matt-simmes-iesc/"},
-
-// === DYCOM INDUSTRIES (DY) ===
-{rank:48,name:"Daniel S. Peyovich",title:"President & CEO",company:"Dycom Industries",status:"Current",subsector:["Utility Services","T&D Construction"],revenue:4730,acquisitions:5,years:3,prevRole:"COO Dycom; President NPL Construction",education:"BSEE Auburn; Master Mgmt, Northwestern Kellogg",ownership:"Public (DY)",linkedin:"https://www.linkedin.com/in/dan-peyovich/"},
-{rank:49,name:"Steven E. Nielsen",title:"Former Chairman & CEO",company:"Dycom Industries",status:"Former",subsector:["Utility Services"],revenue:4500,acquisitions:25,years:24,prevRole:"CEO 1999-2023; built Dycom into largest US telecom/utility services contractor",education:"BSE Civil Eng, Duke",ownership:"Public (DY)",linkedin:"—"},
-{rank:50,name:"H. Andrew DeFerrari",title:"SVP & CFO",company:"Dycom Industries",status:"Current",subsector:["Utility Services"],revenue:4730,acquisitions:5,years:11,prevRole:"VP & CAO Dycom",education:"BS Accounting, Penn State; CPA",ownership:"Public (DY)",linkedin:"https://www.linkedin.com/in/drew-deferrari/"},
-{rank:51,name:"Ryan F. Urness",title:"VP, General Counsel",company:"Dycom Industries",status:"Current",subsector:["Utility Services"],revenue:4730,acquisitions:0,years:13,prevRole:"Senior Counsel Dycom",education:"JD Florida State College of Law",ownership:"Public (DY)",linkedin:"https://www.linkedin.com/in/ryan-urness/"},
-
-// === COMFORT SYSTEMS USA (FIX) ===
-{rank:52,name:"Brian E. Lane",title:"CEO",company:"Comfort Systems USA",status:"Current",subsector:["Industrial"],revenue:5210,acquisitions:18,years:13,prevRole:"COO Comfort Systems; President Halmar International",education:"BS Industrial Eng, Penn State",ownership:"Public (FIX)",linkedin:"https://www.linkedin.com/in/brian-lane-fix/"},
-{rank:53,name:"William F. \"Bill\" Murdy",title:"Former Chairman & CEO",company:"Comfort Systems USA",status:"Former",subsector:["Industrial"],revenue:1200,acquisitions:15,years:11,prevRole:"CEO 2000-2011; managed dot-com era turnaround; LBO Industries Inc",education:"BS West Point; MBA Harvard",ownership:"Public (FIX)",linkedin:"—"},
-{rank:54,name:"William \"Trent\" McKenna",title:"SVP, CFO & Treasurer",company:"Comfort Systems USA",status:"Current",subsector:["Industrial"],revenue:5210,acquisitions:5,years:6,prevRole:"VP & General Counsel Comfort Systems",education:"JD South Texas College of Law; BBA Texas A&M",ownership:"Public (FIX)",linkedin:"https://www.linkedin.com/in/trent-mckenna-fix/"},
-
-// === GE VERNOVA (GEV) ===
-{rank:55,name:"Scott L. Strazik",title:"CEO",company:"GE Vernova",status:"Current",subsector:["Power Equipment","Grid Services","Substations"],revenue:34900,acquisitions:2,years:3,prevRole:"CEO GE Power Portfolio; CEO GE Gas Power",education:"BBA Univ of Notre Dame",ownership:"Public (GEV)",linkedin:"https://www.linkedin.com/in/scott-strazik-gev/"},
-{rank:56,name:"Kenneth Parks",title:"CFO",company:"GE Vernova",status:"Current",subsector:["Power Equipment"],revenue:34900,acquisitions:0,years:2,prevRole:"CFO WESCO International; CFO Wabtec",education:"BBA Accounting, James Madison",ownership:"Public (GEV)",linkedin:"https://www.linkedin.com/in/ken-parks-gev/"},
-{rank:57,name:"Maximilian Schroek",title:"CEO, Electrification Systems",company:"GE Vernova",status:"Current",subsector:["Substations","Grid Services","Power Equipment"],revenue:8500,acquisitions:1,years:2,prevRole:"CEO GE Grid Solutions; SVP ABB",education:"PhD Power Eng, Univ of Stuttgart",ownership:"Public (GEV)",linkedin:"https://www.linkedin.com/in/max-schroek/"},
-{rank:58,name:"Pascal Schweitzer",title:"CEO, Power Conversion",company:"GE Vernova",status:"Current",subsector:["Power Equipment"],revenue:1500,acquisitions:0,years:5,prevRole:"VP Operations GE Power",education:"MS Eng, École Centrale Paris",ownership:"Public (GEV)",linkedin:"https://www.linkedin.com/in/pascal-schweitzer/"},
-
-// === HUBBELL (HUBB) ===
-{rank:59,name:"Gerben W. Bakker",title:"Chairman, President & CEO",company:"Hubbell Incorporated",status:"Current",subsector:["Power Equipment","Substations","Grid Services"],revenue:5390,acquisitions:6,years:5,prevRole:"COO Hubbell; President Hubbell Power Systems",education:"BS Eng, Calvin University",ownership:"Public (HUBB)",linkedin:"https://www.linkedin.com/in/gerben-bakker-hubb/"},
-{rank:60,name:"William R. Sperry",title:"EVP & CFO",company:"Hubbell Incorporated",status:"Current",subsector:["Power Equipment"],revenue:5390,acquisitions:5,years:13,prevRole:"VP M&A Hubbell; investment banker Lehman Brothers",education:"BA Princeton; MBA Wharton",ownership:"Public (HUBB)",linkedin:"https://www.linkedin.com/in/bill-sperry-hubb/"},
-{rank:61,name:"David G. Nord",title:"Former Chairman & CEO",company:"Hubbell Incorporated",status:"Former",subsector:["Power Equipment"],revenue:4500,acquisitions:15,years:7,prevRole:"CEO 2013-2020; led Aclara acquisition ($1.1B) for grid intelligence",education:"BBA Accounting, Pace University",ownership:"Public (HUBB)",linkedin:"—"},
-{rank:62,name:"Allan J. Connolly",title:"Group President, Utility Solutions",company:"Hubbell Incorporated",status:"Current",subsector:["Grid Services","Power Equipment"],revenue:2800,acquisitions:3,years:6,prevRole:"CEO Aclara Technologies; SVP Roper Industries",education:"BSEE Princeton; MBA Wharton",ownership:"Public (HUBB)",linkedin:"https://www.linkedin.com/in/allan-connolly/"},
-
-// === EATON CORPORATION (ETN) — Electrical Sector ===
-{rank:63,name:"Craig Arnold",title:"Chairman & CEO",company:"Eaton Corporation",status:"Current",subsector:["Power Equipment","Industrial"],revenue:24900,acquisitions:8,years:9,prevRole:"COO Eaton; CEO Cooper Industries Lighting",education:"BS Mechanical Eng, Macalester; MBA Univ of Chicago Booth",ownership:"Public (ETN)",linkedin:"https://www.linkedin.com/in/craig-arnold-etn/"},
-{rank:64,name:"Olivier C. Leonetti",title:"EVP & CFO",company:"Eaton Corporation",status:"Current",subsector:["Power Equipment"],revenue:24900,acquisitions:0,years:3,prevRole:"CFO Zebra Technologies; CFO Western Digital",education:"MS Industrial Eng, ESSEC Business School France",ownership:"Public (ETN)",linkedin:"https://www.linkedin.com/in/olivier-leonetti/"},
-{rank:65,name:"Heath B. Monesmith",title:"President, Industrial Sector",company:"Eaton Corporation",status:"Current",subsector:["Industrial","Power Equipment"],revenue:8500,acquisitions:2,years:5,prevRole:"President Eaton Aerospace",education:"BS Mech Eng, Purdue; MBA Univ of Michigan",ownership:"Public (ETN)",linkedin:"https://www.linkedin.com/in/heath-monesmith/"},
-{rank:66,name:"Paulo Ruiz",title:"President & COO, Electrical Sector",company:"Eaton Corporation",status:"Current",subsector:["Power Equipment","Substations","Grid Services"],revenue:16400,acquisitions:5,years:3,prevRole:"President Eaton Electrical Sector Americas",education:"BS Eng, Univ of São Paulo; MBA Insper",ownership:"Public (ETN)",linkedin:"https://www.linkedin.com/in/paulo-ruiz-etn/"},
-{rank:67,name:"Alan Wright",title:"President, Eaton Electrical Sector Americas",company:"Eaton Corporation",status:"Current",subsector:["Power Equipment","Substations"],revenue:9000,acquisitions:2,years:3,prevRole:"VP Eaton Power Distribution; SVP Schneider Electric",education:"BSEE Univ of Michigan",ownership:"Public (ETN)",linkedin:"https://www.linkedin.com/in/alan-wright-eaton/"},
-
-// === GENERAC HOLDINGS (GNRC) ===
-{rank:68,name:"Aaron P. Jagdfeld",title:"Chairman, President & CEO",company:"Generac Holdings",status:"Current",subsector:["Power Equipment","Critical Power"],revenue:4090,acquisitions:14,years:18,prevRole:"CFO Generac; CPA Deloitte",education:"BBA Accounting, Univ of Wisconsin–Whitewater",ownership:"Public (GNRC)",linkedin:"https://www.linkedin.com/in/aaron-jagdfeld/"},
-{rank:69,name:"York A. Ragen",title:"CFO",company:"Generac Holdings",status:"Current",subsector:["Power Equipment"],revenue:4090,acquisitions:5,years:16,prevRole:"VP Finance Generac; KPMG audit",education:"BBA Accounting, Univ of Wisconsin–Whitewater",ownership:"Public (GNRC)",linkedin:"https://www.linkedin.com/in/york-ragen/"},
-
-// === SCHNEIDER ELECTRIC (NA leadership) ===
-{rank:70,name:"Aamir Paul",title:"President, North America Operations",company:"Schneider Electric",status:"Current",subsector:["Power Equipment","Industrial","Substations"],revenue:14500,acquisitions:3,years:5,prevRole:"SVP Schneider US; senior roles GE Industrial",education:"BS Mech Eng, Univ of Pennsylvania; MBA Wharton",ownership:"Public (SU.PA)",linkedin:"https://www.linkedin.com/in/aamir-paul/"},
-{rank:71,name:"Annette K. Clayton",title:"Former CEO, North America",company:"Schneider Electric",status:"Former",subsector:["Power Equipment"],revenue:12000,acquisitions:5,years:7,prevRole:"CEO NA 2014-2021; Dell Inc supply chain SVP",education:"BS Industrial Eng, Ohio State",ownership:"Public (SU.PA)",linkedin:"https://www.linkedin.com/in/annette-clayton/"},
-{rank:72,name:"Mike Calise",title:"VP, Power Products NA",company:"Schneider Electric",status:"Current",subsector:["Power Equipment","Substations"],revenue:5000,acquisitions:0,years:4,prevRole:"President Tritium; CEO Charge Point",education:"BSEE NJIT; MBA Rutgers",ownership:"Public (SU.PA)",linkedin:"https://www.linkedin.com/in/michael-calise/"},
-
-// === ABB NORTH AMERICA ===
-{rank:73,name:"Mike Mustapha",title:"President, US Region",company:"ABB Inc",status:"Current",subsector:["Power Equipment","Substations","Grid Services"],revenue:7800,acquisitions:2,years:5,prevRole:"VP Operations ABB Americas",education:"BSEE Wayne State; MBA Univ of Detroit",ownership:"Public (ABBN.SW)",linkedin:"https://www.linkedin.com/in/mike-mustapha/"},
-{rank:74,name:"Joachim Braun",title:"President, ABB Distribution Solutions Division",company:"ABB Inc",status:"Current",subsector:["Substations","Grid Services"],revenue:3500,acquisitions:1,years:4,prevRole:"SVP ABB Power Grids",education:"PhD Eng, Karlsruhe Institute of Technology",ownership:"Public (ABBN.SW)",linkedin:"https://www.linkedin.com/in/joachim-braun-abb/"},
-
-// === SIEMENS ENERGY NORTH AMERICA ===
-{rank:75,name:"Richard \"Rich\" Voorberg",title:"President, North America",company:"Siemens Energy",status:"Current",subsector:["Power Equipment","Substations","Grid Services"],revenue:9500,acquisitions:1,years:3,prevRole:"SVP Service Generation Siemens Energy",education:"BSME Pennsylvania State University",ownership:"Public (ENR.DE)",linkedin:"https://www.linkedin.com/in/rich-voorberg/"},
-{rank:76,name:"Tim Holt",title:"Member of Executive Board, Americas Region",company:"Siemens Energy",status:"Current",subsector:["Power Equipment","Grid Services"],revenue:9500,acquisitions:1,years:5,prevRole:"CEO Siemens Energy Service",education:"MS Eng, RWTH Aachen",ownership:"Public (ENR.DE)",linkedin:"https://www.linkedin.com/in/tim-holt-energy/"},
-
-// === MITSUBISHI ELECTRIC POWER PRODUCTS ===
-{rank:77,name:"Hideto Honda",title:"President & CEO",company:"Mitsubishi Electric Power Products",status:"Current",subsector:["Substations","Power Equipment","Transformers"],revenue:1100,acquisitions:0,years:3,prevRole:"GM Mitsubishi Electric T&D Systems",education:"MS EE, Osaka University",ownership:"Subsidiary (6503.T)",linkedin:"—"},
-{rank:78,name:"Mark T. Wagner",title:"VP, Sales & Marketing",company:"Mitsubishi Electric Power Products",status:"Current",subsector:["Power Equipment","Substations"],revenue:1100,acquisitions:0,years:8,prevRole:"Senior Sales Director Mitsubishi Electric Power",education:"BSEE Univ of Pittsburgh",ownership:"Subsidiary (6503.T)",linkedin:"https://www.linkedin.com/in/mark-wagner-mepp/"},
-
-// === PIKE CORPORATION ===
-{rank:79,name:"Tony Oosterhouse",title:"CEO",company:"Pike Corporation",status:"Current",subsector:["Utility Services","T&D Construction"],revenue:3000,acquisitions:5,years:2,prevRole:"COO Pike; CEO Henkels & McCoy Utility",education:"BS Construction Mgmt, Western Michigan",ownership:"PE-Backed (Court Square)",linkedin:"https://www.linkedin.com/in/tony-oosterhouse/"},
-{rank:80,name:"J. Eric Pike",title:"Executive Chairman",company:"Pike Corporation",status:"Current",subsector:["Utility Services"],revenue:3000,acquisitions:18,years:23,prevRole:"CEO Pike Corporation 2002-2024; took private 2014 (LDS Holdings)",education:"BS NC State Univ",ownership:"PE-Backed (Court Square)",linkedin:"https://www.linkedin.com/in/eric-pike-pikecorp/"},
-{rank:81,name:"Audie B. Cashion Jr.",title:"COO",company:"Pike Corporation",status:"Current",subsector:["Utility Services","T&D Construction"],revenue:3000,acquisitions:2,years:6,prevRole:"VP Pike Energy Solutions",education:"BS Mech Eng, NC State",ownership:"PE-Backed (Court Square)",linkedin:"https://www.linkedin.com/in/audie-cashion/"},
-{rank:82,name:"Roy E. Mason",title:"CFO",company:"Pike Corporation",status:"Current",subsector:["Utility Services"],revenue:3000,acquisitions:3,years:8,prevRole:"VP Finance Pike",education:"BBA Accounting, NC State; CPA",ownership:"PE-Backed (Court Square)",linkedin:"https://www.linkedin.com/in/roy-mason-pike/"},
-
-// === SHERMCO INDUSTRIES (PE — Gryphon Investors) ===
-{rank:83,name:"Ronnie A. \"Ron\" Widup",title:"Vice Chairman & Senior Advisor",company:"Shermco Industries",status:"Current",subsector:["Testing & Maintenance"],revenue:600,acquisitions:8,years:25,prevRole:"CEO Shermco Industries 1999-2022; led growth from $20M to $600M",education:"BS Industrial Tech, Texas A&M Commerce",ownership:"PE-Backed (Gryphon Investors)",linkedin:"https://www.linkedin.com/in/ron-widup/"},
-{rank:84,name:"Phil Hampton",title:"CEO",company:"Shermco Industries",status:"Current",subsector:["Testing & Maintenance"],revenue:600,acquisitions:3,years:3,prevRole:"COO Shermco; President Tower Engineering",education:"BS Engineering, Univ of Texas Arlington",ownership:"PE-Backed (Gryphon Investors)",linkedin:"https://www.linkedin.com/in/phil-hampton-shermco/"},
-{rank:85,name:"Tim Cothran",title:"CFO",company:"Shermco Industries",status:"Current",subsector:["Testing & Maintenance"],revenue:600,acquisitions:2,years:5,prevRole:"VP Finance industrial services PE-backed roll-up",education:"BBA Accounting, SMU; MBA Univ of Dallas",ownership:"PE-Backed (Gryphon Investors)",linkedin:"https://www.linkedin.com/in/tim-cothran/"},
-
-// === RESA POWER (PE — AE Industrial) ===
-{rank:86,name:"Tim Kessler",title:"CEO",company:"RESA Power",status:"Current",subsector:["Testing & Maintenance","Transformers"],revenue:280,acquisitions:12,years:6,prevRole:"COO RESA; SVP Sentinel Energy Services",education:"BSEE Marquette",ownership:"PE-Backed (AE Industrial)",linkedin:"https://www.linkedin.com/in/tim-kessler-resa/"},
-{rank:87,name:"Vic Cubria",title:"COO",company:"RESA Power",status:"Current",subsector:["Testing & Maintenance"],revenue:280,acquisitions:5,years:4,prevRole:"VP Operations Howard Industries",education:"BS EET, ITT Technical Institute",ownership:"PE-Backed (AE Industrial)",linkedin:"https://www.linkedin.com/in/vic-cubria/"},
-{rank:88,name:"Mary Kallhoff",title:"CFO",company:"RESA Power",status:"Current",subsector:["Testing & Maintenance"],revenue:280,acquisitions:6,years:5,prevRole:"CFO industrial services platform; PwC senior manager",education:"BS Accounting, Creighton Univ",ownership:"PE-Backed (AE Industrial)",linkedin:"https://www.linkedin.com/in/mary-kallhoff/"},
-
-// === ELECTRICAL RELIABILITY SERVICES (Vertiv) ===
-{rank:89,name:"Tim Kazyak",title:"VP & GM, Electrical Reliability Services",company:"Vertiv (ERS Division)",status:"Current",subsector:["Testing & Maintenance"],revenue:300,acquisitions:0,years:6,prevRole:"GM operations Emerson Electrical Reliability",education:"BSEE Univ of Akron",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/tim-kazyak-ers/"},
-{rank:90,name:"David Wood",title:"Director Operations, ERS",company:"Vertiv (ERS Division)",status:"Current",subsector:["Testing & Maintenance"],revenue:300,acquisitions:0,years:8,prevRole:"Regional Manager Electrical Reliability Services",education:"BSEET DeVry Institute",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/david-wood-ers/"},
-
-// === CE POWER (PE — Industrial Opportunity Partners then The Sterling Group) ===
-{rank:91,name:"Greg Reardon",title:"CEO",company:"CE Power Engineered Services",status:"Current",subsector:["Testing & Maintenance","Substations"],revenue:200,acquisitions:6,years:8,prevRole:"COO CE Power; senior roles ABB",education:"BSEE Univ of Cincinnati",ownership:"PE-Backed (Sterling Group)",linkedin:"https://www.linkedin.com/in/greg-reardon-cepower/"},
-{rank:92,name:"Jay Patel",title:"CFO",company:"CE Power Engineered Services",status:"Current",subsector:["Testing & Maintenance"],revenue:200,acquisitions:3,years:4,prevRole:"VP Finance industrial services",education:"BS Accounting, Ohio State; MBA Xavier",ownership:"PE-Backed (Sterling Group)",linkedin:"https://www.linkedin.com/in/jay-patel-cepower/"},
-
-// === HVM (HIGH VOLTAGE MAINTENANCE) — Emerson then Vertiv ===
-{rank:93,name:"Gary Marra",title:"VP, High Voltage Maintenance",company:"HVM Corporation (Vertiv)",status:"Current",subsector:["Testing & Maintenance","Substations"],revenue:140,acquisitions:0,years:11,prevRole:"Regional Manager HVM",education:"BSEE Univ of Cincinnati",ownership:"Public (VRT)",linkedin:"https://www.linkedin.com/in/gary-marra-hvm/"},
-
-// === AMERICAN ELECTRICAL TESTING ===
-{rank:94,name:"Scott M. Blizard",title:"President & COO",company:"American Electrical Testing",status:"Current",subsector:["Testing & Maintenance"],revenue:35,acquisitions:1,years:12,prevRole:"VP Operations American Electrical Testing",education:"BSEE Northeastern Univ",ownership:"Private",linkedin:"https://www.linkedin.com/in/scott-blizard/"},
-{rank:95,name:"Charles A. \"Chuck\" Blizard",title:"Founder & Chairman",company:"American Electrical Testing",status:"Current",subsector:["Testing & Maintenance"],revenue:35,acquisitions:1,years:42,prevRole:"Founded American Electrical Testing 1983",education:"BSEE Northeastern Univ",ownership:"Private",linkedin:"—"},
-
-// === TRC COMPANIES (PE — Warburg Pincus) ===
-{rank:96,name:"Christopher P. Vincze",title:"Chairman & CEO",company:"TRC Companies",status:"Current",subsector:["Grid Services","Utility Services"],revenue:1500,acquisitions:25,years:18,prevRole:"COO Roy F. Weston; SVP IT Group; sold TRC to Warburg Pincus 2017",education:"BS Civil Eng, Worcester Polytechnic; MBA Univ of Hartford",ownership:"PE-Backed (Warburg Pincus)",linkedin:"https://www.linkedin.com/in/christopher-vincze-trc/"},
-{rank:97,name:"Kim Schulze",title:"President, Power",company:"TRC Companies",status:"Current",subsector:["Grid Services","Utility Services","T&D Construction"],revenue:600,acquisitions:5,years:6,prevRole:"SVP Engineering TRC; senior roles Black & Veatch",education:"BS Civil Eng, North Dakota State; PE",ownership:"PE-Backed (Warburg Pincus)",linkedin:"https://www.linkedin.com/in/kim-schulze-trc/"},
-{rank:98,name:"Eric McAuley",title:"CFO",company:"TRC Companies",status:"Current",subsector:["Grid Services"],revenue:1500,acquisitions:8,years:5,prevRole:"CFO Penn Foster; senior roles General Electric",education:"BBA Univ of Notre Dame",ownership:"PE-Backed (Warburg Pincus)",linkedin:"https://www.linkedin.com/in/eric-mcauley-trc/"},
-
-// === ROSENDIN ELECTRIC (Private — Employee Owned) ===
-{rank:99,name:"Mike Greenawalt",title:"CEO",company:"Rosendin Electric",status:"Current",subsector:["Industrial","T&D Construction"],revenue:6800,acquisitions:1,years:10,prevRole:"COO Rosendin; SVP Western Region Rosendin",education:"BS Construction Mgmt, Cal Poly San Luis Obispo",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/mike-greenawalt-rosendin/"},
-{rank:100,name:"Mike Clifton",title:"President & COO",company:"Rosendin Electric",status:"Current",subsector:["Industrial"],revenue:6800,acquisitions:0,years:8,prevRole:"SVP Operations Rosendin; Project Executive",education:"BS Industrial Tech, San Jose State",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/mike-clifton-rosendin/"},
-{rank:101,name:"Jolsna Thomas",title:"CFO",company:"Rosendin Electric",status:"Current",subsector:["Industrial"],revenue:6800,acquisitions:0,years:6,prevRole:"VP Finance Pacific Gas & Electric",education:"BS Accounting, San Jose State; CPA",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/jolsna-thomas/"},
-{rank:102,name:"Tommy Rosendin",title:"Owner & Former Chairman",company:"Rosendin Electric",status:"Former",subsector:["Industrial"],revenue:1500,acquisitions:0,years:50,prevRole:"Grew family business to nation's largest electrical contractor; ESOP'd 2018",education:"Industry-trained",ownership:"Private (ESOP)",linkedin:"—"},
-
-// === FAITH TECHNOLOGIES INCORPORATED ===
-{rank:103,name:"Mike Jansen",title:"CEO",company:"Faith Technologies Incorporated",status:"Current",subsector:["Industrial","T&D Construction"],revenue:2500,acquisitions:3,years:13,prevRole:"COO Faith Technologies; VP Operations",education:"BS Mech Eng, Univ of Wisconsin–Madison",ownership:"Private",linkedin:"https://www.linkedin.com/in/mike-jansen-fti/"},
-{rank:104,name:"Phil Mares",title:"COO",company:"Faith Technologies Incorporated",status:"Current",subsector:["Industrial"],revenue:2500,acquisitions:1,years:7,prevRole:"VP Operations Faith Technologies",education:"BS Construction Mgmt, Univ of Wisconsin–Stout",ownership:"Private",linkedin:"https://www.linkedin.com/in/phil-mares-fti/"},
-{rank:105,name:"Roger E. Roundy",title:"Founder & Chairman Emeritus",company:"Faith Technologies Incorporated",status:"Former",subsector:["Industrial"],revenue:800,acquisitions:5,years:46,prevRole:"Founded Faith Technologies 1972; built into national electrical contractor",education:"Industry-trained",ownership:"Private",linkedin:"—"},
-
-// === INTERSTATES ===
-{rank:106,name:"Jeb Bushur",title:"CEO",company:"Interstates",status:"Current",subsector:["Industrial"],revenue:300,acquisitions:1,years:6,prevRole:"COO Interstates; VP Operations",education:"BS Construction Mgmt, South Dakota State",ownership:"Private",linkedin:"https://www.linkedin.com/in/jeb-bushur/"},
-{rank:107,name:"Marv Ringnalda",title:"Chairman & Former CEO",company:"Interstates",status:"Former",subsector:["Industrial"],revenue:200,acquisitions:0,years:18,prevRole:"CEO Interstates 2000-2018; led national expansion",education:"BS Eng, Dordt College",ownership:"Private",linkedin:"https://www.linkedin.com/in/marv-ringnalda/"},
-
-// === HAUGLAND GROUP ===
-{rank:108,name:"William \"Bill\" Hauglund",title:"CEO",company:"Haugland Group",status:"Current",subsector:["T&D Construction","Substations","Utility Services"],revenue:850,acquisitions:2,years:35,prevRole:"Founded Haugland Energy Group; expanded into transmission",education:"BS Civil Eng, Hofstra Univ",ownership:"Private",linkedin:"https://www.linkedin.com/in/bill-haugland/"},
-{rank:109,name:"Ryan Haugland",title:"President",company:"Haugland Group",status:"Current",subsector:["T&D Construction","Substations"],revenue:850,acquisitions:1,years:8,prevRole:"VP Haugland Energy; Project Manager",education:"BS Construction Mgmt, Long Island Univ",ownership:"Private",linkedin:"https://www.linkedin.com/in/ryan-haugland/"},
-
-// === SOLOMON CORPORATION ===
-{rank:110,name:"David Solomon",title:"CEO",company:"Solomon Corporation",status:"Current",subsector:["Transformers"],revenue:200,acquisitions:0,years:18,prevRole:"COO Solomon; Sales Director Solomon Corp",education:"BS Eng, Kansas State Univ",ownership:"Private",linkedin:"https://www.linkedin.com/in/david-solomon-corp/"},
-{rank:111,name:"Joel Solomon",title:"Chairman",company:"Solomon Corporation",status:"Current",subsector:["Transformers"],revenue:200,acquisitions:0,years:35,prevRole:"Founded Solomon Corporation 1969; transformer remanufacturing leader",education:"BS Industrial Mgmt, Kansas State",ownership:"Private",linkedin:"—"},
-
-// === VIRGINIA TRANSFORMER ===
-{rank:112,name:"Prabhat Jain",title:"Founder & CEO",company:"Virginia Transformer Corp",status:"Current",subsector:["Transformers"],revenue:600,acquisitions:0,years:50,prevRole:"Founded Virginia Transformer 1971; PhD physicist",education:"PhD Physics, Univ of Pittsburgh",ownership:"Private",linkedin:"https://www.linkedin.com/in/prabhat-jain-virginiatransformer/"},
-{rank:113,name:"Anil Jain",title:"President",company:"Virginia Transformer Corp",status:"Current",subsector:["Transformers"],revenue:600,acquisitions:0,years:25,prevRole:"VP Operations Virginia Transformer",education:"MS Eng, IIT; MBA Univ of Pittsburgh",ownership:"Private",linkedin:"https://www.linkedin.com/in/anil-jain-vt/"},
-
-// === CUPERTINO ELECTRIC INC. ===
-{rank:114,name:"Tom Schott",title:"CEO",company:"Cupertino Electric Inc",status:"Current",subsector:["Industrial","T&D Construction"],revenue:1800,acquisitions:0,years:10,prevRole:"COO Cupertino Electric; SVP Operations",education:"BS Construction Mgmt, San Jose State",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/tom-schott-cei/"},
-{rank:115,name:"Kim Yu",title:"CFO",company:"Cupertino Electric Inc",status:"Current",subsector:["Industrial"],revenue:1800,acquisitions:0,years:7,prevRole:"VP Finance Cupertino Electric; Deloitte audit",education:"BS Accounting, Univ of Southern California; CPA",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/kim-yu-cei/"},
-
-// === ASPLUNDH TREE EXPERT ===
-{rank:116,name:"Scott M. Asplundh",title:"Chairman & CEO",company:"Asplundh Tree Expert",status:"Current",subsector:["Utility Services"],revenue:6700,acquisitions:8,years:14,prevRole:"COO Asplundh; family-owned vegetation management for utilities",education:"BBA Hofstra; MBA Wharton",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/scott-asplundh/"},
-{rank:117,name:"Brent Asplundh",title:"President",company:"Asplundh Tree Expert",status:"Current",subsector:["Utility Services"],revenue:6700,acquisitions:3,years:8,prevRole:"VP Asplundh; 4th generation family management",education:"BS Forestry, Penn State",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/brent-asplundh/"},
-{rank:118,name:"Steve Goettsch",title:"CFO",company:"Asplundh Tree Expert",status:"Current",subsector:["Utility Services"],revenue:6700,acquisitions:5,years:11,prevRole:"VP Finance Asplundh; PwC senior manager",education:"BBA Penn State; CPA",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/steve-goettsch/"},
-
-// === WRIGHT TREE SERVICE ===
-{rank:119,name:"Scott Packard",title:"CEO",company:"Wright Tree Service",status:"Current",subsector:["Utility Services"],revenue:850,acquisitions:0,years:7,prevRole:"COO Wright Tree Service; VP Operations",education:"BS Forestry, Iowa State",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/scott-packard-wright/"},
-
-// === ENVIRONMENTAL SOLUTIONS WORLDWIDE / DAVEY TREE ===
-{rank:120,name:"Patrick M. Covey",title:"President & CEO",company:"Davey Tree Expert",status:"Current",subsector:["Utility Services"],revenue:1900,acquisitions:5,years:6,prevRole:"COO Davey Tree; SVP Davey Resource Group",education:"BS Forestry, Univ of Maine",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/patrick-covey-davey/"},
-{rank:121,name:"Joseph R. \"Joe\" Paul",title:"Former Chairman & CEO",company:"Davey Tree Expert",status:"Former",subsector:["Utility Services"],revenue:1100,acquisitions:8,years:11,prevRole:"CEO 2008-2018; led growth and ESOP value creation",education:"BS Forestry, Auburn",ownership:"Private (ESOP)",linkedin:"—"},
-
-// === HENKELS & McCOY GROUP ===
-{rank:122,name:"Edward Goebel III",title:"CEO",company:"Henkels & McCoy Group",status:"Current",subsector:["Utility Services","T&D Construction"],revenue:1300,acquisitions:1,years:5,prevRole:"COO Henkels & McCoy; VP Power Solutions",education:"BS Civil Eng, Drexel",ownership:"Private",linkedin:"https://www.linkedin.com/in/edward-goebel/"},
-{rank:123,name:"Robert E. \"Tim\" Henkels",title:"Chairman",company:"Henkels & McCoy Group",status:"Current",subsector:["Utility Services"],revenue:1300,acquisitions:0,years:30,prevRole:"4th generation family leader; CEO 2002-2018",education:"BSME Drexel",ownership:"Private",linkedin:"—"},
-
-// === MICHELS CORPORATION ===
-{rank:124,name:"Patrick \"Pat\" Michels",title:"CEO",company:"Michels Corporation",status:"Current",subsector:["T&D Construction","Utility Services"],revenue:3500,acquisitions:5,years:18,prevRole:"COO Michels; expanded into T&D from gas pipeline",education:"BS Construction Mgmt, Marquette",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/pat-michels-corp/"},
-{rank:125,name:"Tim Michels",title:"Co-Owner & Former Co-President",company:"Michels Corporation",status:"Former",subsector:["T&D Construction"],revenue:2200,acquisitions:3,years:30,prevRole:"Co-led Michels family enterprise 1990s-2018; ran for WI Governor 2022",education:"BS Eng, Marquette",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/tim-michels/"},
-
-// === MASTEC POWER DELIVERY DIVISION ===
-{rank:126,name:"Marc Lewis",title:"President, Power Delivery",company:"MasTec",status:"Current",subsector:["T&D Construction","Substations"],revenue:3200,acquisitions:2,years:5,prevRole:"VP Operations MasTec; SVP Henkels & McCoy",education:"BS Civil Eng, Auburn",ownership:"Public (MTZ)",linkedin:"https://www.linkedin.com/in/marc-lewis-mastec/"},
-
-// === BURNS & McDONNELL ===
-{rank:127,name:"Ray Kowalik",title:"Chairman & CEO",company:"Burns & McDonnell",status:"Current",subsector:["Substations","T&D Construction","Grid Services"],revenue:7500,acquisitions:0,years:8,prevRole:"President Burns & McDonnell; SVP Energy",education:"BS Civil Eng, Univ of Missouri–Rolla",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/ray-kowalik/"},
-{rank:128,name:"Justin Hill",title:"GM, Transmission & Distribution Group",company:"Burns & McDonnell",status:"Current",subsector:["T&D Construction","Substations"],revenue:1800,acquisitions:0,years:6,prevRole:"VP Burns & McDonnell T&D",education:"BS Electrical Eng, Univ of Kansas",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/justin-hill-bmcd/"},
-{rank:129,name:"Jamie Tritle",title:"GM, Energy Group",company:"Burns & McDonnell",status:"Current",subsector:["Substations","Grid Services"],revenue:2500,acquisitions:0,years:7,prevRole:"VP Energy Burns & McDonnell",education:"BS Mech Eng, Iowa State",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/jamie-tritle/"},
-
-// === BLACK & VEATCH ===
-{rank:130,name:"Mario Azar",title:"Chairman & CEO",company:"Black & Veatch",status:"Current",subsector:["Substations","Grid Services","T&D Construction"],revenue:4300,acquisitions:1,years:3,prevRole:"COO Black & Veatch; President US Power Business",education:"BS EE, Drexel; MBA Wharton",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/mario-azar-bv/"},
-{rank:131,name:"Steve Edwards",title:"Former Chairman & CEO",company:"Black & Veatch",status:"Former",subsector:["Grid Services"],revenue:3500,acquisitions:0,years:13,prevRole:"CEO 2009-2022; led Power business diversification",education:"BSEE Iowa State; MBA Univ of Missouri-Kansas City",ownership:"Private (ESOP)",linkedin:"—"},
-
-// === SARGENT & LUNDY ===
-{rank:132,name:"Brian Bauer",title:"Chairman & CEO",company:"Sargent & Lundy",status:"Current",subsector:["Grid Services","Substations"],revenue:850,acquisitions:0,years:5,prevRole:"COO Sargent & Lundy; SVP Engineering",education:"BSEE Marquette; PE",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/brian-bauer-slc/"},
-
-// === POWER ENGINEERS ===
-{rank:133,name:"Bret Moffett",title:"CEO",company:"POWER Engineers",status:"Current",subsector:["Substations","T&D Construction","Grid Services"],revenue:680,acquisitions:1,years:4,prevRole:"VP POWER Engineers Transmission",education:"BSEE Univ of Idaho; PE",ownership:"Private (ESOP, sale to WSP pending 2024)",linkedin:"https://www.linkedin.com/in/bret-moffett/"},
-{rank:134,name:"Robert Stalick",title:"Chairman",company:"POWER Engineers",status:"Current",subsector:["Substations","Grid Services"],revenue:680,acquisitions:0,years:17,prevRole:"CEO POWER Engineers 2007-2021",education:"BSEE Univ of Idaho",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/bob-stalick/"},
-
-// === HDR INC (Power Practice) ===
-{rank:135,name:"Eric Keen",title:"President",company:"HDR Inc",status:"Current",subsector:["Substations","Grid Services"],revenue:3400,acquisitions:0,years:5,prevRole:"COO HDR; Director of Power Delivery",education:"BS Civil Eng, Univ of Iowa; MBA",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/eric-keen-hdr/"},
-
-// === KIEWIT POWER GROUP ===
-{rank:136,name:"Toby Cosgrove",title:"President, Kiewit Power Engineering",company:"Kiewit Corporation",status:"Current",subsector:["Substations","T&D Construction","Grid Services"],revenue:3000,acquisitions:0,years:6,prevRole:"VP Kiewit Engineering Group",education:"BSEE Univ of Nebraska–Lincoln",ownership:"Private (Employee-owned)",linkedin:"https://www.linkedin.com/in/toby-cosgrove-kiewit/"},
-{rank:137,name:"Bruce Grewcock",title:"Former Chairman & CEO",company:"Kiewit Corporation",status:"Former",subsector:["T&D Construction"],revenue:11000,acquisitions:5,years:16,prevRole:"CEO Kiewit 2005-2021; oversaw expansion of power business",education:"BS Mining Eng, Univ of Missouri-Rolla",ownership:"Private (Employee-owned)",linkedin:"—"},
-
-// === ZACHRY GROUP ===
-{rank:138,name:"David S. Zachry",title:"CEO",company:"Zachry Group",status:"Current",subsector:["Industrial","T&D Construction"],revenue:2700,acquisitions:0,years:11,prevRole:"President Zachry Construction; family enterprise",education:"BS Construction Mgmt, Texas A&M",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/david-zachry/"},
-
-// === FLUOR CORPORATION (POWER & RENEWABLES SEGMENT) ===
-{rank:139,name:"David E. Constable",title:"Chairman & CEO",company:"Fluor Corporation",status:"Current",subsector:["Industrial","Power Equipment"],revenue:16300,acquisitions:1,years:4,prevRole:"CEO Sasol; CEO SNC-Lavalin",education:"BS Chem Eng, Univ of British Columbia",ownership:"Public (FLR)",linkedin:"https://www.linkedin.com/in/david-constable-flr/"},
-
-// === BECHTEL POWER ===
-{rank:140,name:"Brendan Bechtel",title:"Chairman & CEO",company:"Bechtel Corporation",status:"Current",subsector:["Industrial","Power Equipment"],revenue:17500,acquisitions:0,years:9,prevRole:"COO Bechtel; 5th generation family leader",education:"BA Middlebury; MS Stanford; MBA Stanford",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/brendan-bechtel/"},
-{rank:141,name:"Paul Marsden",title:"President, Energy",company:"Bechtel Corporation",status:"Current",subsector:["Power Equipment","Industrial"],revenue:6500,acquisitions:0,years:6,prevRole:"GM Bechtel Power",education:"BS Mech Eng, Univ of Manchester",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/paul-marsden-bechtel/"},
-
-// === SARGENT ELECTRIC ===
-{rank:142,name:"Frederic \"Fred\" Sargent",title:"Chairman & CEO",company:"Sargent Electric",status:"Current",subsector:["Industrial","T&D Construction"],revenue:280,acquisitions:0,years:30,prevRole:"3rd generation family leader; CEO since 1995",education:"BSEE Carnegie Mellon",ownership:"Private (Family)",linkedin:"—"},
-
-// === MILLER ELECTRIC COMPANY ===
-{rank:143,name:"Henry Brown III",title:"CEO",company:"Miller Electric Company",status:"Current",subsector:["Industrial"],revenue:600,acquisitions:0,years:8,prevRole:"COO Miller Electric; VP Operations",education:"BS Construction Mgmt, Univ of Florida",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/henry-brown-miller/"},
-
-// === BAKER ELECTRIC INC ===
-{rank:144,name:"Mike Teresso",title:"President & CEO",company:"Baker Electric",status:"Current",subsector:["Industrial"],revenue:400,acquisitions:0,years:9,prevRole:"COO Baker Electric; VP Operations",education:"BS Eng, San Diego State",ownership:"Private",linkedin:"https://www.linkedin.com/in/mike-teresso/"},
-
-// === MORROW-MEADOWS ===
-{rank:145,name:"Tony Spence",title:"President",company:"Morrow-Meadows Corporation",status:"Current",subsector:["Industrial"],revenue:550,acquisitions:0,years:11,prevRole:"VP Operations Morrow-Meadows",education:"BS Construction Mgmt, Cal State Long Beach",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/tony-spence-mm/"},
-
-// === ENERGY POWERED SOLUTIONS / RAIL WORKS / etc. ===
-{rank:146,name:"John W. Larsen",title:"CEO",company:"Penelec / FirstEnergy Service Co",status:"Current",subsector:["Utility Services","Grid Services"],revenue:13900,acquisitions:0,years:4,prevRole:"COO FirstEnergy; SVP Operations",education:"BSEE Penn State; MBA Univ of Pittsburgh",ownership:"Public (FE)",linkedin:"https://www.linkedin.com/in/john-larsen-fe/"},
-
-// === PE-BACKED MID-MARKET POWER SERVICES ===
-{rank:147,name:"Mark Kasten",title:"CEO",company:"PowerSecure (Southern Company subsidiary)",status:"Current",subsector:["Critical Power","Grid Services"],revenue:550,acquisitions:1,years:4,prevRole:"COO PowerSecure",education:"BS Mech Eng, NC State; MBA Duke Fuqua",ownership:"Subsidiary (SO)",linkedin:"https://www.linkedin.com/in/mark-kasten-ps/"},
-{rank:148,name:"John Bouk",title:"Founder & Former CEO",company:"PowerSecure",status:"Former",subsector:["Critical Power"],revenue:300,acquisitions:5,years:18,prevRole:"Founded PowerSecure 1991; sold to Southern Company $431M 2016",education:"BS Eng, NC State",ownership:"Subsidiary (SO)",linkedin:"https://www.linkedin.com/in/john-bouk/"},
-
-// === GRIDLINER / MERIDIAN POWER / NEW WAVE ===
-{rank:149,name:"Mark Watson",title:"CEO",company:"Power Grid Components Inc",status:"Current",subsector:["Substations","Power Equipment"],revenue:120,acquisitions:1,years:6,prevRole:"VP Operations Howard Industries",education:"BS Eng, Mississippi State",ownership:"Private",linkedin:"https://www.linkedin.com/in/mark-watson-pgc/"},
-
-// === HOWARD INDUSTRIES ===
-{rank:150,name:"Michael J. \"Mike\" Howard Jr.",title:"CEO",company:"Howard Industries",status:"Current",subsector:["Transformers"],revenue:1100,acquisitions:0,years:14,prevRole:"COO Howard Industries; family enterprise (founded 1968)",education:"BS Eng, Mississippi State",ownership:"Private (Family)",linkedin:"—"},
-
-// === ERMCO INC ===
-{rank:151,name:"Dan Krueger",title:"President & CEO",company:"ERMCO Inc",status:"Current",subsector:["Transformers"],revenue:450,acquisitions:0,years:7,prevRole:"VP Operations ERMCO",education:"BS Eng, Purdue",ownership:"Subsidiary (PEMCO)",linkedin:"https://www.linkedin.com/in/dan-krueger-ermco/"},
-
-// === SUNBELT TRANSFORMER ===
-{rank:152,name:"Wayne McCleary",title:"CEO",company:"Sunbelt Solomon Solutions",status:"Current",subsector:["Transformers","Testing & Maintenance"],revenue:280,acquisitions:3,years:5,prevRole:"VP Operations Sunbelt; merged with Solomon 2019",education:"BS Eng, Texas A&M",ownership:"PE-Backed",linkedin:"https://www.linkedin.com/in/wayne-mccleary/"},
-
-// === DELTASTAR ===
-{rank:153,name:"James Pruett",title:"President & CEO",company:"DELTA STAR Inc",status:"Current",subsector:["Transformers"],revenue:200,acquisitions:0,years:6,prevRole:"COO Delta Star; family-owned employee-managed transformer maker",education:"BS Eng, Virginia Tech",ownership:"Private (ESOP)",linkedin:"https://www.linkedin.com/in/james-pruett-deltastar/"},
-
-// === PRYSMIAN GROUP NA ===
-{rank:154,name:"Andrea Pirondini",title:"President, Region North America",company:"Prysmian Group",status:"Current",subsector:["Power Equipment","T&D Construction"],revenue:6500,acquisitions:1,years:4,prevRole:"COO Prysmian; CFO Prysmian Group",education:"BS Eng, Politecnico di Milano; MBA INSEAD",ownership:"Public (PRY.MI)",linkedin:"https://www.linkedin.com/in/andrea-pirondini/"},
-
-// === SOUTHWIRE COMPANY ===
-{rank:155,name:"Rich Stinson",title:"President & CEO",company:"Southwire Company",status:"Current",subsector:["Power Equipment","T&D Construction"],revenue:7800,acquisitions:5,years:7,prevRole:"COO Southwire; SVP Operations",education:"BS Mech Eng, Auburn; MBA Univ of Tennessee",ownership:"Private (Family)",linkedin:"https://www.linkedin.com/in/rich-stinson/"},
+// === SUBSTATION / GRID ENGINEERING ===
+{rank:62,company:"Dashiell Corporation",ticker:"",hq:"Houston, TX",ceo:"Brian Kelley",revenue:600,employees:1300,ownership:"PE-Backed",sponsor:"Quanta Services (acquired 2022)",categories:["Substations","Grid Services","T&D Construction"],services:"Substation EPC, T&D engineering, construction",locations:12,founded:1974,website:"https://www.dashiell.com"},
+{rank:63,company:"POWER Engineers",ticker:"",hq:"Hailey, ID",ceo:"Bret Moffett",revenue:850,employees:4400,ownership:"Subsidiary",sponsor:"WSP Global (acquired 2025)",categories:["Substations","Grid Services","T&D Construction"],services:"T&D engineering, substations, generation, environmental",locations:50,founded:1976,website:"https://www.powereng.com"},
+{rank:64,company:"Burns & McDonnell",ticker:"",hq:"Kansas City, MO",ceo:"Ray Kowalik",revenue:7600,employees:14000,ownership:"Private",sponsor:"100% ESOP",categories:["Substations","Grid Services","T&D Construction"],services:"T&D engineering, substations, EPC, generation",locations:60,founded:1898,website:"https://www.burnsmcd.com"},
+{rank:65,company:"Ulteig Engineers",ticker:"",hq:"Fargo, ND",ceo:"Doug Jaeger",revenue:200,employees:850,ownership:"Private",sponsor:"100% ESOP",categories:["Substations","Grid Services","T&D Construction"],services:"T&D engineering, substations, renewables, distribution",locations:14,founded:1944,website:"https://www.ulteig.com"},
 ];
 
-// Build subsector + ownership dropdowns
-const subSet=new Set(), ownSet=new Set();
-DATA.forEach(d=>{d.subsector.forEach(s=>subSet.add(s)); ownSet.add(d.ownership.split('(')[0].trim().split(' ')[0])});
-const subSel=document.getElementById('filterSubsector');
-[...subSet].sort().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;subSel.appendChild(o)});
-const ownSel=document.getElementById('filterOwnership');
-[...ownSet].sort().forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;ownSel.appendChild(o)});
+// Build category dropdown
+const catSet=new Set();
+DATA.forEach(d=>d.categories.forEach(c=>catSet.add(c)));
+const catSel=document.getElementById('filterCategory');
+[...catSet].sort().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o)});
 
-function statusBadge(s){
-  const cls=s==='Current'?'status-current':'status-former';
-  return `<span class="status-badge ${cls}">${s}</span>`;
+function ownershipClass(o){
+  if(o==='Public')return 'ownership-public';
+  if(o==='PE-Backed')return 'ownership-pe';
+  if(o==='Subsidiary')return 'ownership-sub';
+  return 'ownership-private';
 }
 
-function linkedinCell(url){
-  if(!url||url==='—'||url==='N/A') return `<span class="linkedin-na">N/A</span>`;
-  return `<a href="${url}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`;
+function ownershipLabel(d){
+  let label=d.ownership;
+  if(d.ticker) label+=` (${d.ticker})`;
+  return label;
+}
+
+function websiteCell(url){
+  if(!url||url==='N/A') return `<span class="website-na">—</span>`;
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer">Visit ↗</a>`;
 }
 
 function renderRows(rows){
   const tb=document.getElementById('tbody');
   tb.innerHTML=rows.map(d=>`<tr>
     <td class="rank">${d.rank}</td>
-    <td class="name">${d.name}</td>
-    <td class="title-col">${d.title}</td>
-    <td class="company">${d.company}</td>
-    <td>${statusBadge(d.status)}</td>
-    <td class="subsector-col">${d.subsector.map(s=>`<span class="subsector-tag">${s}</span>`).join('')}</td>
+    <td class="name">${d.company}</td>
+    <td class="hq">${d.hq}</td>
+    <td class="ceo">${d.ceo||'—'}</td>
     <td class="revenue">$${d.revenue.toLocaleString()}</td>
-    <td class="acq">${d.acquisitions>0?d.acquisitions+'+':'—'}</td>
-    <td class="years">${d.years>0?d.years:'—'}</td>
-    <td class="prev-col">${d.prevRole||'—'}</td>
-    <td class="education-col">${d.education||'—'}</td>
-    <td class="ownership">${d.ownership}</td>
-    <td class="linkedin-col">${linkedinCell(d.linkedin)}</td>
+    <td class="employees">${d.employees>0?d.employees.toLocaleString():'—'}</td>
+    <td class="ownership"><span class="${ownershipClass(d.ownership)}">${ownershipLabel(d)}</span></td>
+    <td class="sponsor">${d.sponsor||'—'}</td>
+    <td class="services-col">
+      <div>${d.categories.map(c=>`<span class="cat-tag">${c}</span>`).join('')}</div>
+      <div style="margin-top:3px">${d.services}</div>
+    </td>
+    <td class="locations">${d.locations||'—'}</td>
+    <td class="founded">${d.founded||'—'}</td>
+    <td class="website-col">${websiteCell(d.website)}</td>
   </tr>`).join('');
   document.getElementById('rowCount').textContent=`Showing ${rows.length} of ${DATA.length}`;
 }
@@ -463,33 +258,13 @@ let sortCol=null, sortDir=1;
 
 function getFiltered(){
   const q=document.getElementById('search').value.toLowerCase();
-  const fs=document.getElementById('filterStatus').value;
-  const fsub=subSel.value;
-  const ft=document.getElementById('filterTitle').value;
-  const fo=ownSel.value;
+  const fc=document.getElementById('filterCategory').value;
+  const fo=document.getElementById('filterOwnership').value;
   const fr=document.getElementById('filterRevenue').value;
   return DATA.filter(d=>{
-    if(q){const blob=(d.name+d.title+d.company+d.subsector.join(' ')+(d.prevRole||'')+(d.education||'')+d.ownership+d.status).toLowerCase();if(!blob.includes(q))return false}
-    if(fs&&d.status!==fs)return false;
-    if(fsub&&!d.subsector.includes(fsub))return false;
-    if(ft){
-      const t=d.title.toLowerCase();
-      const matchers={
-        'CEO':()=>t.includes('ceo'),
-        'President':()=>t.includes('president')&&!t.includes('former'),
-        'Chairman':()=>t.includes('chairman'),
-        'COO':()=>t.includes('coo'),
-        'CFO':()=>t.includes('cfo'),
-        'EVP':()=>t.includes('evp'),
-        'SVP':()=>t.includes('svp'),
-        'VP':()=>t.includes('vp')&&!t.includes('evp')&&!t.includes('svp'),
-        'Division':()=>t.includes('division')||t.includes('president,')||t.includes('group')||t.includes('gm'),
-        'Former':()=>t.includes('former')||d.status==='Former',
-        'Founder':()=>t.includes('founder')
-      };
-      if(matchers[ft]&&!matchers[ft]())return false;
-    }
-    if(fo&&!d.ownership.startsWith(fo))return false;
+    if(q){const blob=(d.company+d.ceo+d.hq+d.services+d.categories.join(' ')+d.ownership+(d.sponsor||'')+(d.ticker||'')).toLowerCase();if(!blob.includes(q))return false}
+    if(fc&&!d.categories.includes(fc))return false;
+    if(fo&&d.ownership!==fo)return false;
     if(fr){
       const rv=+fr;
       if(rv>=10000&&d.revenue<10000)return false;
@@ -510,6 +285,8 @@ function sortAndRender(){
       let va=a[sortCol],vb=b[sortCol];
       if(Array.isArray(va))va=va.join(',');
       if(Array.isArray(vb))vb=vb.join(',');
+      if(va==null)va='';
+      if(vb==null)vb='';
       if(typeof va==='string')return va.localeCompare(vb)*sortDir;
       return (va-vb)*sortDir;
     });
@@ -528,25 +305,22 @@ document.querySelectorAll('th').forEach(th=>{
 });
 
 document.getElementById('search').addEventListener('input',sortAndRender);
-document.getElementById('filterStatus').addEventListener('change',sortAndRender);
-subSel.addEventListener('change',sortAndRender);
-document.getElementById('filterTitle').addEventListener('change',sortAndRender);
-ownSel.addEventListener('change',sortAndRender);
+document.getElementById('filterCategory').addEventListener('change',sortAndRender);
+document.getElementById('filterOwnership').addEventListener('change',sortAndRender);
 document.getElementById('filterRevenue').addEventListener('change',sortAndRender);
 
 function exportExcel(){
   const rows=getFiltered();
-  const headers=['Rank','Name','Title','Company','Status','Sub-sector','Revenue ($mm)','Acquisitions','Tenure (Yrs)','Previous Role / Company','Education','Ownership','LinkedIn'];
+  const headers=['Rank','Company','Ticker','HQ','CEO/President','Revenue ($mm)','Employees','Ownership','PE Sponsor','Categories','Key Services','Locations','Founded','Website'];
   const csvRows=[headers,...rows.map(d=>[
-    d.rank,d.name,d.title,d.company,d.status,d.subsector.join('; '),
-    d.revenue,d.acquisitions||'',d.years||'',d.prevRole||'',d.education||'',
-    d.ownership,d.linkedin||''
+    d.rank,d.company,d.ticker||'',d.hq,d.ceo,d.revenue,d.employees||'',d.ownership,d.sponsor||'',
+    d.categories.join('; '),d.services,d.locations||'',d.founded||'',d.website||''
   ])];
   const csv=csvRows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url; a.download='US_Electrical_Infrastructure_Executive_Tracker.csv'; a.click();
+  a.href=url; a.download='US_Electrical_Infrastructure_Database.csv'; a.click();
   URL.revokeObjectURL(url);
 }
 
