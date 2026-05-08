@@ -3,1202 +3,1645 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tri-State Quarry Acquisition Targets | QuarryMe.com</title>
+<title>QuarryMe — Tri-State Acquisition Target Database</title>
 <style>
   :root {
-    --primary: #1a2332;
-    --accent: #c8822a;
-    --accent-light: #f5e6d0;
-    --bg: #f8f6f3;
-    --card-bg: #ffffff;
-    --text: #2c2c2c;
-    --text-light: #6b7280;
-    --border: #e5e1dc;
-    --green: #16a34a;
-    --green-bg: #dcfce7;
-    --blue: #2563eb;
-    --blue-bg: #dbeafe;
-    --red: #dc2626;
-    --red-bg: #fee2e2;
-    --yellow: #ca8a04;
-    --yellow-bg: #fef9c3;
+    --bg: #0d1117;
+    --card: #161b22;
+    --card-hover: #1c2330;
+    --border: #30363d;
+    --accent: #e8a735;
+    --accent2: #3b82f6;
+    --green: #2ea043;
+    --red: #f85149;
+    --orange: #d29922;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --tier1: #e8a735;
+    --tier2: #3b82f6;
+    --tier3: #8b949e;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
   }
-  .header {
-    background: linear-gradient(135deg, var(--primary) 0%, #2d3748 100%);
-    color: white;
-    padding: 48px 0 40px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; }
-  .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
-  .header .subtitle { font-size: 1.1rem; opacity: 0.85; margin-bottom: 16px; }
-  .header .meta { display: flex; gap: 24px; font-size: 0.85rem; opacity: 0.7; flex-wrap: wrap; }
-  .header .meta span { display: flex; align-items: center; gap: 6px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
 
-  .exec-summary {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    margin: -24px 24px 32px;
-    position: relative;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #161b22 0%, #1a1f2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0;
   }
-  .exec-summary h2 { color: var(--primary); font-size: 1.3rem; margin-bottom: 16px; border-bottom: 2px solid var(--accent); padding-bottom: 8px; display: inline-block; }
-  .exec-summary p { color: var(--text); margin-bottom: 12px; }
-
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin: 24px 0;
+  header .logo {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
   }
-  .kpi-card {
-    background: var(--bg);
-    border-radius: 8px;
-    padding: 20px;
+  header .logo span { color: var(--accent); }
+  header .subtitle {
+    color: var(--text2);
+    font-size: 14px;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .header-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .header-stat {
     text-align: center;
-    border: 1px solid var(--border);
   }
-  .kpi-card .value { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
-  .kpi-card .label { font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .header-stat .num {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .header-stat .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text2);
+  }
 
-  .section-title {
-    font-size: 1.5rem;
-    color: var(--primary);
+  /* Executive Summary */
+  .exec-summary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin: 32px 0;
+  }
+  .exec-summary h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+  .exec-summary p {
+    color: var(--text2);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  /* Market Context */
+  .market-ctx {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 24px 0 32px;
+  }
+  .market-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+  .market-card h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .market-card p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+  .market-card .big-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  /* Section Headers */
+  .section-header {
     margin: 40px 0 20px;
-    padding-bottom: 8px;
-    border-bottom: 3px solid var(--accent);
-    display: inline-block;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .section-header .desc {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 4px;
   }
 
-  .quarry-card {
-    background: var(--card-bg);
+  /* Target Cards */
+  .target-card {
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 28px;
+    border-radius: 10px;
+    margin-bottom: 24px;
     overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    transition: box-shadow 0.2s;
+    transition: border-color 0.2s;
   }
-  .quarry-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-
-  .quarry-header {
-    background: linear-gradient(135deg, var(--primary), #2d3748);
-    color: white;
-    padding: 20px 28px;
+  .target-card:hover {
+    border-color: var(--accent);
+  }
+  .target-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    padding: 24px 28px 16px;
     flex-wrap: wrap;
     gap: 12px;
   }
-  .quarry-header h3 { font-size: 1.25rem; }
-  .quarry-header .rank {
-    background: var(--accent);
-    color: white;
-    font-size: 0.8rem;
+  .target-name {
+    font-size: 22px;
     font-weight: 700;
+  }
+  .target-location {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .tier-badge {
+    display: inline-block;
     padding: 4px 14px;
     border-radius: 20px;
-    white-space: nowrap;
-  }
-  .quarry-header .location { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
-
-  .quarry-body { padding: 24px 28px; }
-
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  .info-block h4 {
-    font-size: 0.75rem;
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
+  }
+  .tier-1 { background: rgba(232,167,53,0.15); color: var(--tier1); border: 1px solid rgba(232,167,53,0.3); }
+  .tier-2 { background: rgba(59,130,246,0.15); color: var(--tier2); border: 1px solid rgba(59,130,246,0.3); }
+  .tier-3 { background: rgba(139,148,158,0.15); color: var(--tier3); border: 1px solid rgba(139,148,158,0.3); }
+
+  .target-body {
+    padding: 0 28px 24px;
+  }
+
+  /* Data Grid */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .data-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .data-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+  .data-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .data-value.highlight { color: var(--accent); }
+  .data-value.green { color: var(--green); }
+  .data-value.red { color: var(--red); }
+
+  /* Subsections */
+  .sub-section {
+    margin-top: 16px;
+  }
+  .sub-section h4 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
     color: var(--accent);
     margin-bottom: 8px;
-    font-weight: 700;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(232,167,53,0.2);
   }
-  .info-block p { font-size: 0.9rem; color: var(--text); }
-  .info-block ul { list-style: none; padding: 0; }
-  .info-block ul li { font-size: 0.9rem; padding: 3px 0; padding-left: 16px; position: relative; }
-  .info-block ul li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+  .sub-section p, .sub-section ul {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .sub-section ul {
+    padding-left: 20px;
+  }
+  .sub-section li {
+    margin-bottom: 4px;
+  }
 
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
   .tag {
     display: inline-block;
     padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    border-radius: 4px;
+    font-size: 11px;
     font-weight: 600;
-    margin: 2px 4px 2px 0;
   }
-  .tag-green { background: var(--green-bg); color: var(--green); }
-  .tag-blue { background: var(--blue-bg); color: var(--blue); }
-  .tag-yellow { background: var(--yellow-bg); color: var(--yellow); }
-  .tag-red { background: var(--red-bg); color: var(--red); }
+  .tag-green { background: rgba(46,160,67,0.15); color: var(--green); }
+  .tag-orange { background: rgba(210,153,34,0.15); color: var(--orange); }
+  .tag-red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-blue { background: rgba(59,130,246,0.15); color: var(--accent2); }
+  .tag-gray { background: rgba(139,148,158,0.15); color: var(--text2); }
 
-  .metrics-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin: 16px 0;
-    padding: 16px;
-    background: var(--bg);
-    border-radius: 8px;
-  }
-  .metric { text-align: center; }
-  .metric .val { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
-  .metric .lbl { font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; }
-
-  .thesis-box {
-    background: linear-gradient(135deg, var(--accent-light), #fef3e2);
-    border-left: 4px solid var(--accent);
-    padding: 16px 20px;
-    border-radius: 0 8px 8px 0;
-    margin-top: 16px;
-  }
-  .thesis-box h4 { color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-  .thesis-box p { font-size: 0.88rem; }
-
-  .comps-table {
+  /* Valuation Table */
+  .val-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 0.85rem;
+    margin-top: 8px;
+    font-size: 13px;
   }
-  .comps-table th {
-    background: var(--primary);
-    color: white;
-    padding: 12px 16px;
+  .val-table th {
     text-align: left;
-    font-size: 0.75rem;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .comps-table td {
-    padding: 10px 16px;
+    letter-spacing: 1px;
+    color: var(--text3);
+    padding: 6px 12px;
     border-bottom: 1px solid var(--border);
   }
-  .comps-table tr:nth-child(even) { background: var(--bg); }
+  .val-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text2);
+  }
+  .val-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
 
-  .disclaimer {
-    background: var(--card-bg);
+  /* Approach Strategy */
+  .approach-box {
+    background: rgba(232,167,53,0.05);
+    border: 1px solid rgba(232,167,53,0.15);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-top: 14px;
+  }
+  .approach-box h4 {
+    color: var(--accent);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    border: none;
+    padding: 0;
+  }
+  .approach-box p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  /* Comps Section */
+  .comps-section {
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 20px;
-    margin: 40px 0;
-    font-size: 0.8rem;
-    color: var(--text-light);
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .comps-section h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
   }
 
-  .toc {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px 28px;
-    margin: 24px 0;
-  }
-  .toc h3 { font-size: 0.9rem; color: var(--primary); margin-bottom: 12px; }
-  .toc ol { padding-left: 20px; }
-  .toc li { padding: 4px 0; }
-  .toc a { color: var(--blue); text-decoration: none; font-size: 0.9rem; }
-  .toc a:hover { text-decoration: underline; }
-
-  .score-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .score-bar .bar-bg {
-    flex: 1;
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    overflow: hidden;
-    max-width: 120px;
-  }
-  .score-bar .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: var(--accent);
-  }
-  .score-bar .score-val {
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: var(--primary);
-    min-width: 32px;
-  }
-
+  /* Footer */
   footer {
-    background: var(--primary);
-    color: rgba(255,255,255,0.6);
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
     text-align: center;
-    padding: 24px;
-    font-size: 0.8rem;
-    margin-top: 40px;
+    color: var(--text3);
+    font-size: 12px;
+    margin-top: 48px;
   }
-  footer a { color: var(--accent); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Risk indicator */
+  .risk-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .risk-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .risk-low { background: var(--green); }
+  .risk-med { background: var(--orange); }
+  .risk-high { background: var(--red); }
 
   @media (max-width: 768px) {
-    .header h1 { font-size: 1.5rem; }
-    .info-grid { grid-template-columns: 1fr; }
-    .metrics-row { grid-template-columns: repeat(2, 1fr); }
-    .quarry-body { padding: 16px; }
+    .data-grid { grid-template-columns: 1fr 1fr; }
+    .header-stats { gap: 24px; }
+    .target-header { padding: 16px 20px 12px; }
+    .target-body { padding: 0 20px 20px; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
+<header>
   <div class="container">
-    <h1>Tri-State Quarry Acquisition Targets</h1>
-    <div class="subtitle">Investment Memo: Top 10 Independent Quarry Operations in New York, New Jersey & Connecticut</div>
-    <div class="meta">
-      <span>Prepared for QuarryMe.com</span>
-      <span>May 2026</span>
-      <span>Roll-Up Strategy Analysis</span>
+    <div class="logo">Quarry<span>Me</span></div>
+    <div class="subtitle">Tri-State Acquisition Target Database &mdash; Confidential</div>
+    <div class="header-stats">
+      <div class="header-stat">
+        <div class="num">13</div>
+        <div class="label">Total Targets</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">5</div>
+        <div class="label">Primary Targets</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">8</div>
+        <div class="label">Additional Targets</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">$85-215M</div>
+        <div class="label">Est. Total Platform Value</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">3</div>
+        <div class="label">States Covered</div>
+      </div>
     </div>
   </div>
-</div>
+</header>
 
 <div class="container">
 
-<div class="exec-summary">
-  <h2>Executive Summary</h2>
-  <p>This report identifies and profiles the <strong>10 most attractive independent quarry acquisition targets</strong> in the tri-state area (New York, New Jersey, Connecticut) for a quarry roll-up strategy. All targets are family-owned or privately held, with strategic locations near major demand centers, proven reserves, and operational characteristics that would benefit from consolidation and professionalization.</p>
-  <p>The tri-state aggregate market benefits from exceptional demand fundamentals (proximity to 20M+ population), extreme barriers to new entrants (permitting takes 10-20+ years), and a fragmented base of aging family-owned operators. The recent <strong>Arcosa/Stavola transaction ($1.2B, ~12x EBITDA)</strong> validates premium valuations in this market.</p>
+  <!-- Executive Summary -->
+  <div class="exec-summary">
+    <h2>Executive Summary</h2>
+    <p>
+      This database profiles 13 independent quarry operations across the NY-NJ-CT tri-state area as acquisition targets for a roll-up platform strategy. The targets range from single-quarry family operations with $1-5M revenue to mid-size multi-site producers approaching $30M revenue. The thesis is straightforward: the tri-state aggregate market is supply-constrained (permitting is near-impossible for new greenfield quarries), demand is structurally supported by NYC metro infrastructure spend, and fragmented ownership among aging family operators creates a generational acquisition window. Recent comp transactions &mdash; Arcosa's $1.2B acquisition of Stavola (12x EBITDA) and CRH's acquisition of North American Aggregates &mdash; validate premium valuations for strategically located Northeast aggregate reserves. Small independents can be acquired at 6-8x EBITDA, with platform synergies (shared equipment, centralized sales, blended insurance) driving post-acquisition margin expansion of 300-500 bps.
+    </p>
+  </div>
 
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="value">10</div>
-      <div class="label">Acquisition Targets Identified</div>
+  <!-- Market Context -->
+  <div class="market-ctx">
+    <div class="market-card">
+      <h3>Market Pricing</h3>
+      <div class="big-num">$20-25/ton</div>
+      <p>Northeast crushed stone pricing, with trap rock commanding $22-28/ton premium. NYC metro pricing 15-20% above national average due to supply constraints and transportation costs.</p>
     </div>
-    <div class="kpi-card">
-      <div class="value">9.4x</div>
-      <div class="label">Avg. Industry EV/EBITDA (2024-26)</div>
+    <div class="market-card">
+      <h3>M&A Multiples</h3>
+      <div class="big-num">9.4x EV/EBITDA</div>
+      <p>Industry average 2024-YTD 2026. Small bolt-ons at 6-8x; strategic acquisitions 12-15x. Stavola traded at 12x on $100M EBITDA. Small independents targetable at 6-8x.</p>
     </div>
-    <div class="kpi-card">
-      <div class="value">$20-25</div>
-      <div class="label">NE Crushed Stone $/Ton</div>
+    <div class="market-card">
+      <h3>Supply Dynamics</h3>
+      <div class="big-num">Near Zero</div>
+      <p>New quarry permits in the tri-state area. Zoning restrictions, environmental reviews, and community opposition make greenfield development virtually impossible near population centers.</p>
     </div>
-    <div class="kpi-card">
-      <div class="value">25-35%</div>
-      <div class="label">Crushed Stone EBITDA Margins</div>
+    <div class="market-card">
+      <h3>Consolidation Wave</h3>
+      <div class="big-num">Active</div>
+      <p>CRH acquired North American Aggregates (Perth Amboy, NJ) in Dec 2025. Arcosa closed Stavola ($1.2B) in 2024. Knife River deployed $129M across 6 bolt-ons at 6-8x. Window is now.</p>
     </div>
   </div>
-</div>
 
-<div class="toc">
-  <h3>Table of Contents</h3>
-  <ol>
-    <li><a href="#t1">Weldon Materials &mdash; Watchung & Lake Hopatcong, NJ</a></li>
-    <li><a href="#t2">Braen Stone &mdash; Haledon / Franklin / Sparta, NJ</a></li>
-    <li><a href="#t3">O&G Industries &mdash; Torrington, CT (6 Quarries Statewide)</a></li>
-    <li><a href="#t4">Suzio York Hill &mdash; Meriden, CT</a></li>
-    <li><a href="#t5">Peckham Industries &mdash; Brewster, NY (26 Quarries, 5 States)</a></li>
-    <li><a href="#t6">Haynes Group &mdash; Seymour / Deep River / Naugatuck, CT</a></li>
-    <li><a href="#t7">Callahan &amp; Nannini Quarry &mdash; Salisbury Mills, NY</a></li>
-    <li><a href="#t8">Eastern Materials &mdash; Kingston, NY</a></li>
-    <li><a href="#t9">Liberty Stone &amp; Aggregates &mdash; Clinton, NJ</a></li>
-    <li><a href="#t10">Peter K. Frueh, Inc. &mdash; Feura Bush, NY</a></li>
-    <li><a href="#comps">Comparable Transactions &amp; Valuation</a></li>
-    <li><a href="#methodology">Market Context &amp; Methodology</a></li>
-  </ol>
-</div>
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('primary')">Primary Targets (5)</div>
+    <div class="tab" onclick="switchTab('additional')">Additional Targets (8)</div>
+    <div class="tab" onclick="switchTab('comps')">Transaction Comps</div>
+  </div>
 
-<!-- ============================================================ -->
-<!-- TARGET 1: WELDON MATERIALS -->
-<!-- ============================================================ -->
-<div id="t1" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Weldon Materials, Inc.</h3>
-      <div class="location">Watchung (trap rock) & Lake Hopatcong (granite), New Jersey</div>
-    </div>
-    <div class="rank">#1 &mdash; Top Pick</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$75-100M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">2</div><div class="lbl">Active Quarries</div></div>
-      <div class="metric"><div class="val">~130 yrs</div><div class="lbl">In Operation</div></div>
-      <div class="metric"><div class="val">Family</div><div class="lbl">Ownership</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>Established in the 1890s, Weldon Materials is a leading NJ producer of crushed aggregates, hot-mix asphalt, and ready-mix concrete. The Weldon family has owned and operated the Fanwood/Watchung trap rock quarry continuously since the company's founding. Vertically integrated with 2 quarries, 9 HMA plants, 3 ready-mix plants, and 2 contractor supply yards.</p>
-      </div>
-      <div class="info-block">
-        <h4>Products &amp; Materials</h4>
-        <ul>
-          <li>Trap rock (basalt) &mdash; Watchung quarry, Somerset County</li>
-          <li>Granite &mdash; Lake Hopatcong quarry, Sussex County</li>
-          <li>NJ & NY DOT-approved aggregates</li>
-          <li>Hot-mix asphalt, ready-mix concrete</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Succession</h4>
-        <p>Multi-generational family ownership (Weldon family) since the 1890s. Privately held with no outside investors. As one of the oldest continuously family-operated quarries in NJ, succession planning is a key consideration. Revenue estimated at $10-100M per third-party databases, likely in the $75-100M range given the scale of integrated operations.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Watchung quarry sits in the First Watchung Mountain basalt &mdash; premium trap rock deposit</li>
-          <li>Prime location serving northern NJ metro and NYC demand</li>
-          <li>Vertically integrated (aggregates + asphalt + concrete)</li>
-          <li>Two quarries provide material diversification (trap rock + granite)</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-green">Vertically Integrated</span>
-      <span class="tag tag-blue">Trap Rock</span>
-      <span class="tag tag-blue">Granite</span>
-      <span class="tag tag-yellow">Multi-Gen Family</span>
-      <span class="tag tag-green">NYC Metro Proximity</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Premier NJ target.</strong> The Weldon Watchung trap rock quarry is one of the most strategically valuable hard rock deposits in the state &mdash; sitting atop the First Watchung basalt formation with direct highway access to the densely populated northern NJ corridor. The 130+ year family ownership creates natural succession risk. The vertically integrated model (quarries + 9 asphalt plants + 3 concrete plants) provides immediate revenue synergies in a roll-up. Comparable to the Stavola operation that Arcosa acquired for $1.2B, though smaller in scale. This is essentially a "mini-Stavola" opportunity.</p>
-    </div>
-  </div>
-</div>
+  <!-- PRIMARY TARGETS -->
+  <div id="tab-primary" class="tab-content active">
 
-<!-- ============================================================ -->
-<!-- TARGET 2: BRAEN STONE -->
-<!-- ============================================================ -->
-<div id="t2" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Braen Stone Company</h3>
-      <div class="location">Haledon, Franklin, Sparta, Ringwood (NJ) & Whitehall (NY)</div>
-    </div>
-    <div class="rank">#2 &mdash; High Priority</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$65M+</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">4-5</div><div class="lbl">Active Quarries</div></div>
-      <div class="metric"><div class="val">1M+</div><div class="lbl">Tons/Year</div></div>
-      <div class="metric"><div class="val">5th Gen</div><div class="lbl">Family Ownership</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>One of the largest independent producers of construction materials in northern NJ. Founded in 1904 by Samuel Braen's Sons, now in its 5th generation of family ownership. Processes over 1 million tons of aggregate annually. Operates 20+ locations including quarries, asphalt plants, and supply yards across NJ and NY. Employs an estimated 200-350 people.</p>
+    <!-- Target 1: Callahan & Nannini -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">1. Callahan & Nannini Quarry, Inc.</div>
+          <div class="target-location">Salisbury Mills, Orange County, NY &mdash; Town of Blooming Grove</div>
+        </div>
+        <span class="tier-badge tier-1">Tier 1 &mdash; Top Priority</span>
       </div>
-      <div class="info-block">
-        <h4>Quarry Locations &amp; Materials</h4>
-        <ul>
-          <li><strong>Haledon, NJ</strong> &mdash; Basalt/trap rock (flagship, since 1948)</li>
-          <li><strong>Franklin, NJ</strong> &mdash; Limestone (acquired 2006)</li>
-          <li><strong>Sparta, NJ</strong> &mdash; Limestone & granite (Limecrest Quarry)</li>
-          <li><strong>Ringwood, NJ</strong> &mdash; Additional NJ quarry</li>
-          <li><strong>Whitehall, NY</strong> &mdash; Granite (acquired 2022, opened 2023)</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Succession</h4>
-        <p>Braen family ownership since 1904, now in the 5th generation. The family's Dutch-American heritage traces to an immigrant shoemaker who arrived in Paterson, NJ in 1851. The 2022 Whitehall, NY acquisition demonstrates the current generation's growth ambitions, suggesting the family is building value rather than winding down &mdash; but 5th generation transitions often create exit opportunities.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Dominant position in Passaic County / northern NJ market</li>
-          <li>Multi-material portfolio: trap rock, limestone, granite</li>
-          <li>Active acquirer (Whitehall 2022) &mdash; could be platform or target</li>
-          <li>Congressman Gottheimer toured facility highlighting infrastructure importance</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-green">Multi-Quarry</span>
-      <span class="tag tag-blue">Trap Rock</span>
-      <span class="tag tag-blue">Limestone</span>
-      <span class="tag tag-blue">Granite</span>
-      <span class="tag tag-yellow">5th Gen Family</span>
-      <span class="tag tag-green">Active Acquirer</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Scale platform with growth DNA.</strong> Braen is already executing a mini roll-up strategy of its own (Whitehall acquisition in 2022). This makes it either an ideal platform acquisition for a larger roll-up or a direct competitor. The 5 quarries across NJ/NY provide geographic diversification, and the 1M+ ton annual production provides meaningful scale. The 5th-generation ownership creates the classic family business inflection point. Material diversity (trap rock, limestone, granite) reduces commodity risk. Political visibility (Congressional tour) could be a plus or minus for permitting.</p>
-    </div>
-  </div>
-</div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1979 (46 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership</div>
+            <div class="data-value">Family &mdash; Nannini Family</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Key Principals</div>
+            <div class="data-value">Rob & Jay Nannini (VPs)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material Type</div>
+            <div class="data-value highlight">Shale + Granite + Limestone</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Permitted Acreage (LOM)</div>
+            <div class="data-value">81.9 acres &rarr; Expanding to 117 acres</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">MSHA Status</div>
+            <div class="data-value green">Registered &mdash; Part 46 Compliant</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">NYSDOT Approved</div>
+            <div class="data-value green">Yes &mdash; Limestone</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$8-15M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA (20-25%)</div>
+            <div class="data-value highlight">$1.6-3.8M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range (6-8x)</div>
+            <div class="data-value highlight">$10-30M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Distance to NYC</div>
+            <div class="data-value">~55 miles</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Risk</div>
+            <div class="data-value"><span class="risk-indicator"><span class="risk-dot risk-low"></span> Low</span></div>
+          </div>
+        </div>
 
-<!-- ============================================================ -->
-<!-- TARGET 3: O&G INDUSTRIES -->
-<!-- ============================================================ -->
-<div id="t3" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>O&G Industries, Inc.</h3>
-      <div class="location">Torrington, CT &mdash; 6 Quarries across CT & Eastern NY</div>
-    </div>
-    <div class="rank">#3 &mdash; Largest CT Target</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$333M</div><div class="lbl">Revenue (2021)</div></div>
-      <div class="metric"><div class="val">6</div><div class="lbl">Quarries</div></div>
-      <div class="metric"><div class="val">700+</div><div class="lbl">Employees</div></div>
-      <div class="metric"><div class="val">4th Gen</div><div class="lbl">Oneglia Family</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>Connecticut's largest privately-held construction company. Founded in 1923 by Andrew Oneglia and Flaviano Gervasini. Now a 4th-generation family enterprise and one of the nation's Top 400 Contractors. Fully vertically integrated: 6 quarries, 8 concrete plants, 9 asphalt plants, plus construction and masonry divisions. Fleet of 3,500+ vehicles and equipment. Over 100 years of continuous operation.</p>
-      </div>
-      <div class="info-block">
-        <h4>Quarry Locations &amp; Materials</h4>
-        <ul>
-          <li><strong>Woodbury, CT</strong> &mdash; 225+ acre basalt quarry (purchased 1936)</li>
-          <li><strong>Southbury, CT</strong> &mdash; Silliman Quarry (acquired late 1970s)</li>
-          <li><strong>New Milford, CT</strong> &mdash; 347-acre limestone quarry (from ASI, Inc.)</li>
-          <li>3 additional quarries across CT and Eastern NY</li>
-          <li>Basalt (trap rock), limestone, and other aggregates</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Succession</h4>
-        <p>The Oneglia family has led O&G for four generations. Current leadership includes family members who grew up in the business. The "O" in O&G stands for Oneglia. At $333M revenue and 700+ employees, this is a large, complex family enterprise &mdash; the kind of operation that often faces generational transition pressures. The company diversified heavily into building construction, which could allow a buyer to carve out the materials division.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Dominant CT market position with statewide quarry coverage</li>
-          <li>Full vertical integration: quarries → concrete → asphalt → construction</li>
-          <li>Top 400 US Contractor with major project capabilities</li>
-          <li>Eastern NY presence extends reach beyond CT borders</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-green">Vertically Integrated</span>
-      <span class="tag tag-blue">Basalt</span>
-      <span class="tag tag-blue">Limestone</span>
-      <span class="tag tag-yellow">4th Gen Family</span>
-      <span class="tag tag-red">Large/Complex</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>CT market dominance with carve-out potential.</strong> O&G is the largest independent target in this analysis. At ~$333M revenue, a full acquisition may require significant capital, but the materials division (6 quarries, 8 concrete plants, 9 asphalt plants) could potentially be carved out from the construction/contracting side. The 4th-generation family ownership, combined with the complexity of managing a Top 400 contractor, creates potential for a strategic transaction. The 6 quarries spanning CT and Eastern NY would give an acquirer instant scale in the Connecticut market. Applying the Stavola comp (~12x EBITDA on materials), the quarry/materials division alone could be worth $200-400M+.</p>
-    </div>
-  </div>
-</div>
+        <div class="sub-section">
+          <h4>Permit & Expansion Activity (Critical Signal)</h4>
+          <p>
+            Active DEC mining expansion application filed 2025, with FEIS accepted Feb 2026. Expanding LOM from 81.9 to 117 acres (+35.1 acres) with proposed 200-ft depth increase requiring quarry dewatering of 1.6M gallons/day and new Water Withdrawal permit. This is a <strong>major positive signal</strong> &mdash; indicates decades of remaining reserve life and significant capital commitment. Permits: Mined Land Reclamation Permit modification + Solid Waste Management Permit + new Water Withdrawal Non-Public Permit.
+          </p>
+        </div>
 
-<!-- ============================================================ -->
-<!-- TARGET 4: SUZIO YORK HILL -->
-<!-- ============================================================ -->
-<div id="t4" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>The L. Suzio York Hill Companies</h3>
-      <div class="location">975 Westfield Rd, Meriden, CT &mdash; New Haven County</div>
-    </div>
-    <div class="rank">#4 &mdash; Classic Target</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$30-50M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">350 ac</div><div class="lbl">Property Size</div></div>
-      <div class="metric"><div class="val">100</div><div class="lbl">Employees</div></div>
-      <div class="metric"><div class="val">1898</div><div class="lbl">Founded</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>One of the oldest continuously operating quarries in Connecticut. Founded in 1898 by Italian immigrant Leonardo Suzio. The York Hill Trap Rock Quarry has operated under sole ownership since 1912. Fully automated modern operation with computers monitoring trucks, mixes, and products. Produces crushed trap rock, asphalt, and ready-mix concrete for residential, commercial, and industrial construction.</p>
-      </div>
-      <div class="info-block">
-        <h4>Quarry Details &amp; Materials</h4>
-        <ul>
-          <li><strong>Trap rock (Holyoke Basalt)</strong> &mdash; premium aggregate</li>
-          <li>Quarry pit: 1,200 ft long (N-S) x 800 ft wide (E-W)</li>
-          <li>Walls approximately 180 ft high</li>
-          <li>Crushed stone sizes: 3/8" to 2"</li>
-          <li>Also produces asphalt and ready-mix concrete</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Leadership</h4>
-        <p>Suzio family ownership spanning three centuries. Current leadership: Leonardo H. Suzio (President), Cheryl A. Suzio (Secretary), Henry E. Suzio (VP), Bruce Dykty (VP Sales), Linda Munson (Treasurer). The family's deep Connecticut roots include a grandfather who served as mayor of Meriden and state senator, with I-691 named after him. Political connections could aid or complicate transactions.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>350-acre property in New Haven County &mdash; excellent reserves</li>
-          <li>Central CT location between Hartford and New Haven</li>
-          <li>Premium Holyoke Basalt trap rock &mdash; highest friction aggregate</li>
-          <li>Vertically integrated (quarry + asphalt + concrete)</li>
-          <li>126+ years of continuous operation proves reserve longevity</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-green">Vertically Integrated</span>
-      <span class="tag tag-blue">Trap Rock</span>
-      <span class="tag tag-yellow">Multi-Gen Family</span>
-      <span class="tag tag-green">Deep Reserves</span>
-      <span class="tag tag-green">Central CT</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Textbook family quarry acquisition.</strong> Suzio York Hill is the archetypal target for a quarry roll-up: 125+ year family operation, single-site focus, premium trap rock deposit, integrated asphalt/concrete, and a massive 350-acre property suggesting decades of remaining reserves. The Holyoke Basalt is among the most valued aggregates in the Northeast for its friction and durability characteristics. The Suzio family leadership spans multiple generations with several family members in senior roles, creating the classic succession dynamic. At an estimated $30-50M in revenue with ~25-35% EBITDA margins, the operation could be valued at $75-175M based on current aggregate multiples.</p>
-    </div>
-  </div>
-</div>
+        <div class="sub-section">
+          <h4>Products & Customers</h4>
+          <p>
+            Produces NYS DOT-approved limestone, shale, and Recycled Concrete Aggregate (RCA). Customized aggregate blends available. Marquee project references include Hudson Yards, Little Island, and Shorefront Park Living Shoreline. Services include mobile crushing, screening, demolition, and recycling &mdash; indicating diversified revenue streams beyond raw aggregate. Also operates as a registered C&D processor (Solid Waste Facility #36W16).
+          </p>
+        </div>
 
-<!-- ============================================================ -->
-<!-- TARGET 5: PECKHAM INDUSTRIES -->
-<!-- ============================================================ -->
-<div id="t5" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Peckham Industries, Inc.</h3>
-      <div class="location">HQ: Brewster, NY &mdash; Operations across NY, MA, CT, RI, VT</div>
-    </div>
-    <div class="rank">#5 &mdash; Regional Giant</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$500M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">26</div><div class="lbl">Quarries (5 States)</div></div>
-      <div class="metric"><div class="val">~1,200</div><div class="lbl">Employees</div></div>
-      <div class="metric"><div class="val">1924</div><div class="lbl">Founded</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>The largest independent family-owned aggregate company in the Northeast. Founded by William H. Peckham in 1924 in White Plains, NY. Now led by Chairman/President John Peckham (2nd generation). Operates 26 quarries, 17 HMA plants, plus bulk terminals and paving services across NY, MA, CT, RI, and VT. The Wingdale, NY quarry is one of the only sources of non-carbon, high-friction aggregates east of the Hudson River, with capacity of up to 70,000 tons/day including a unique underground mining operation.</p>
-      </div>
-      <div class="info-block">
-        <h4>Key Quarry Locations</h4>
-        <ul>
-          <li><strong>Wingdale, NY</strong> &mdash; Flagship quarry, limestone/dolomite/traprock, surface + underground mine (220 ft shaft)</li>
-          <li><strong>Patterson, NY</strong> &mdash; Putnam County quarry (since 1970s)</li>
-          <li><strong>Pleasant Valley, NY</strong> &mdash; Dutchess County (acquired Dutchess Quarry)</li>
-          <li>Additional quarries across MA, CT, RI, VT</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Succession</h4>
-        <p>Peckham family, now approaching 100+ years of ownership. John Peckham (son of founder) serves as Chairman/President. The centennial milestone in 2024 represents a natural inflection point. With ~$500M revenue, Peckham has reached a scale where founder family ownership becomes increasingly complex. The company's active acquisition strategy (expanding into CT, RI, VT) suggests ongoing growth ambitions, but the leadership transition question remains.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Only non-carbon high-friction aggregate source east of Hudson</li>
-          <li>NYC suburb location (Westchester/Putnam/Dutchess counties)</li>
-          <li>Unique underground mining operation at Wingdale</li>
-          <li>Multi-state footprint provides instant regional scale</li>
-          <li>Supplies 5 HMA plants serving NYC suburbs</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-green">Regional Scale</span>
-      <span class="tag tag-blue">Limestone</span>
-      <span class="tag tag-blue">Dolomite</span>
-      <span class="tag tag-blue">Trap Rock</span>
-      <span class="tag tag-yellow">Family Owned</span>
-      <span class="tag tag-red">$500M+ Revenue</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>The crown jewel &mdash; if available.</strong> Peckham is the single most valuable independent aggregate platform in the Northeast. At ~$500M revenue with 26 quarries across 5 states, this would be a transformational acquisition comparable in scale to the Stavola deal ($1.2B). The Wingdale quarry alone &mdash; with its unique underground operation and non-carbon high-friction aggregates serving NYC suburbs &mdash; is an irreplaceable strategic asset. The centennial family ownership milestone and inevitable generational transition make this a "watch closely" target. A full acquisition could require $1-2B+ in capital, but the strategic value of controlling the dominant independent aggregate network east of the Hudson is enormous. This may be better suited as a PE-backed take-private than a pure roll-up acquisition.</p>
-    </div>
-  </div>
-</div>
+        <div class="sub-section">
+          <h4>Known Issues</h4>
+          <p>Community scrutiny expected on expansion due to dewatering volumes. However, FEIS acceptance suggests regulatory path is well-advanced.</p>
+        </div>
 
-<!-- ============================================================ -->
-<!-- TARGET 6: HAYNES GROUP -->
-<!-- ============================================================ -->
-<div id="t6" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Haynes Group / Haynes Materials</h3>
-      <div class="location">Seymour, Deep River, Naugatuck, Oxford & additional CT locations</div>
-    </div>
-    <div class="rank">#6 &mdash; CT Mid-Market</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$20M</div><div class="lbl">Revenue (2025)</div></div>
-      <div class="metric"><div class="val">5</div><div class="lbl">Quarries</div></div>
-      <div class="metric"><div class="val">150+</div><div class="lbl">Employees</div></div>
-      <div class="metric"><div class="val">3rd Gen</div><div class="lbl">Family Ownership</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>Founded in 1963 by Raymond Haynes and his brother Gene. Now a 3rd-generation, vertically integrated family business with 5 quarries, 2 retail stores, real estate developments, and 150+ employees. Known for the award-winning Quarry Walk Oxford development &mdash; a former quarry transformed into a mixed-use micro-community. Full line of aggregate products meeting state and local specifications, serving from Rhode Island to the New York border.</p>
-      </div>
-      <div class="info-block">
-        <h4>Quarry Locations &amp; Operations</h4>
-        <ul>
-          <li>Seymour, CT &mdash; Primary quarry operation</li>
-          <li>Deep River, CT &mdash; Haynes Materials of Deep River</li>
-          <li>Naugatuck, CT &mdash; Quarry operation</li>
-          <li>2 additional CT quarry locations</li>
-          <li>Also: ACE Hardware by Haynes, Stoneliving Masonry, specialty fabrication</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Succession</h4>
-        <p>Ray's twin sons Tom and Paul took over the family business (2nd gen). Now in the 3rd generation. The diversification into retail (ACE Hardware, outdoor living showroom) and real estate development (Quarry Walk Oxford) suggests the family may be transitioning from pure aggregate operations into higher-margin, lower-risk businesses &mdash; a potential signal that they'd consider selling quarry assets.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>5 quarries spanning CT = statewide coverage</li>
-          <li>Meets all CT state and local aggregate specifications</li>
-          <li>Serves RI-to-NY corridor</li>
-          <li>Diversified revenue (quarries + retail + development)</li>
-          <li>At $20M revenue with 5 quarries, likely undermonetized</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-green">Multi-Quarry</span>
-      <span class="tag tag-blue">CT Statewide</span>
-      <span class="tag tag-yellow">3rd Gen Family</span>
-      <span class="tag tag-green">Undermonetized</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Undermonetized CT platform with clear upside.</strong> At $20M revenue across 5 quarries and 150+ employees, Haynes appears significantly undermonetized relative to its asset base. The family's diversification into retail and real estate development suggests they may not be fully focused on maximizing quarry throughput. An acquirer with operational focus could substantially increase production and margins from the existing permitted quarry footprint. The 3rd-generation ownership and diversification trend makes this a natural acquisition candidate. At modest revenue multiples, this could be a highly accretive bolt-on in the $15-30M range.</p>
-    </div>
-  </div>
-</div>
+        <div class="tags">
+          <span class="tag tag-green">Active Expansion</span>
+          <span class="tag tag-green">DOT Approved</span>
+          <span class="tag tag-green">Marquee Projects</span>
+          <span class="tag tag-blue">C&D Recycling</span>
+          <span class="tag tag-green">Long Reserve Life</span>
+          <span class="tag tag-orange">Community Review</span>
+        </div>
 
-<!-- ============================================================ -->
-<!-- TARGET 7: CALLAHAN & NANNINI -->
-<!-- ============================================================ -->
-<div id="t7" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Callahan & Nannini Quarry, Inc.</h3>
-      <div class="location">276 Clove Road, Salisbury Mills, NY &mdash; Orange County</div>
-    </div>
-    <div class="rank">#7 &mdash; Growth Story</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$10-20M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">117 ac</div><div class="lbl">Expanding LOM</div></div>
-      <div class="metric"><div class="val">45+ yrs</div><div class="lbl">In Operation</div></div>
-      <div class="metric"><div class="val">Family</div><div class="lbl">Nannini/Callahan</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>Family-owned quarry in Orange County, NY, founded in 1979 by Bob Nannini and Andy Callahan. Now in the 2nd generation with Rob and Jay Nannini serving as Vice Presidents. Produces shale, NYS DOT-approved limestone, and recycled concrete aggregate (RCA). Also provides mobile crushing/screening, demolition, and recycling services. MSHA-registered and fully compliant.</p>
-      </div>
-      <div class="info-block">
-        <h4>Permits &amp; Reserves</h4>
-        <ul>
-          <li>Current Life of Mine (LOM): 81.9 acres, floor at 500 ft AMSL</li>
-          <li><strong>Active expansion:</strong> 33.8-acre northern expansion + 1.3-acre southern expansion</li>
-          <li>New LOM will be 117 acres (43% increase)</li>
-          <li>DEC applications filed 2025, SEQR review in progress</li>
-          <li>Also permitted for uncontaminated C&D processing</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership &amp; Succession</h4>
-        <p>Nannini family and Callahan family co-ownership since 1979. Rob and Jay Nannini (2nd generation) now lead operations. The founders are aging, and the active permit expansion suggests the company is building value &mdash; either for long-term family operation or to enhance attractiveness for a sale. The ongoing DEC expansion process (filed 2025) would significantly increase the asset's reserve life.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Orange County, NY &mdash; 60 miles from NYC, growing demand area</li>
-          <li>Active DEC permit expansion adds decades of reserves</li>
-          <li>Diversified services: crushing, screening, demolition, recycling</li>
-          <li>NYS DOT-approved materials ensure government contract eligibility</li>
-          <li>I-87 corridor access for transport to NYC metro</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-blue">Shale</span>
-      <span class="tag tag-blue">Limestone</span>
-      <span class="tag tag-green">Permit Expansion</span>
-      <span class="tag tag-yellow">2nd Gen Family</span>
-      <span class="tag tag-green">Orange County NY</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Active growth story with expanding reserves.</strong> The in-progress DEC permit expansion (81.9→117 acres) is a major value driver &mdash; new quarry permits in the Northeast take 10-20+ years, so acquiring a site mid-expansion captures significant optionality. Orange County's location along the I-87 corridor provides access to both Hudson Valley and NYC metro markets. The 2nd-generation transition and relatively small scale suggest the operation would benefit from professionalization and capital investment. Mobile crushing/screening services provide additional revenue diversification. This is an excellent bolt-on target at an estimated $10-25M acquisition price.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- TARGET 8: EASTERN MATERIALS -->
-<!-- ============================================================ -->
-<div id="t8" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Eastern Materials, LLC</h3>
-      <div class="location">1007 State Rte 28, Kingston, NY &mdash; Ulster County</div>
-    </div>
-    <div class="rank">#8 &mdash; Hudson Valley</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$5-15M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">4</div><div class="lbl">Counties Served</div></div>
-      <div class="metric"><div class="val">Private</div><div class="lbl">Ownership</div></div>
-      <div class="metric"><div class="val">NYS DOT</div><div class="lbl">Approved</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>Kingston-based producer of NYS-approved crushed stone and asphalt. Serves Dutchess, Ulster, Greene, and Orange counties in the Hudson Valley. Provides aggregate products for drainage, walkways, slope stabilization, and general construction &mdash; serving both commercial and residential customers. Also produces hot-mix asphalt and cold patch products.</p>
-      </div>
-      <div class="info-block">
-        <h4>Products &amp; Markets</h4>
-        <ul>
-          <li>NYS DOT-approved crushed stone (multiple sizes)</li>
-          <li>Hot-mix asphalt</li>
-          <li>Cold patch</li>
-          <li>Drainage and construction aggregate</li>
-          <li>Serves 4-county Hudson Valley area</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership</h4>
-        <p>Privately held LLC. Limited public information on ownership structure. The company operates from a single headquarters location on State Route 28 in Kingston. The relatively modest scale and private ownership structure suggest a small, owner-operated business &mdash; potentially ideal for a tuck-in acquisition.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Kingston location serves growing Hudson Valley demand</li>
-          <li>4-county reach provides established customer base</li>
-          <li>NYS DOT approval is a barrier to entry</li>
-          <li>Route 28 location provides highway access</li>
-          <li>Hot-mix asphalt production adds vertical integration</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-blue">Crushed Stone</span>
-      <span class="tag tag-blue">Hot-Mix Asphalt</span>
-      <span class="tag tag-green">Hudson Valley</span>
-      <span class="tag tag-green">NYS DOT Approved</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Hudson Valley tuck-in with strategic location.</strong> Eastern Materials provides a foothold in the rapidly growing Hudson Valley market, where NYC remote workers and development are driving construction demand. Kingston sits at the intersection of major routes serving 4 counties. The NYS DOT approval and established customer relationships provide immediate revenue base. As a smaller operation, this could be an accretive bolt-on at a modest valuation ($5-15M range), providing geographic coverage for a platform with existing strength in the lower Hudson Valley or northern NJ.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- TARGET 9: LIBERTY STONE -->
-<!-- ============================================================ -->
-<div id="t9" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Liberty Stone & Aggregates &mdash; Clinton Quarry</h3>
-      <div class="location">5 Route 173, Clinton (Union Township), NJ &mdash; Hunterdon County</div>
-    </div>
-    <div class="rank">#9 &mdash; Small/Strategic</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$1.1M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">~15</div><div class="lbl">Employees</div></div>
-      <div class="metric"><div class="val">2011</div><div class="lbl">Established</div></div>
-      <div class="metric"><div class="val">Plymouth Ind.</div><div class="lbl">Parent Owner</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>MSHA-licensed and NJ state-permitted mining and quarry facility. Owned by Plymouth Industries, LLC, which also operates a facility in Jersey City. Team has 100+ combined years of experience in mining, construction, and materials processing. Produces aggregate products, landscape boulders, and topsoil with same-day delivery to NJ, NY, and PA customers. Relatively new operation (2011), suggesting recently permitted site with long reserve life ahead.</p>
-      </div>
-      <div class="info-block">
-        <h4>Products &amp; Services</h4>
-        <ul>
-          <li>Graded aggregate products</li>
-          <li>Landscape boulders</li>
-          <li>Topsoil</li>
-          <li>Same-day delivery to NJ, NY, PA</li>
-          <li>MSHA and NJ DEP licensed</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership</h4>
-        <p>Owned by Plymouth Industries, LLC. Not a family succession situation, but a small privately-held company that may be open to offers. The Jersey City facility provides urban market access. At ~$1.1M revenue and 15 employees, this is a micro-operation with significant growth potential given proper capitalization and management.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Hunterdon County &mdash; western NJ with growing development</li>
-          <li>Route 173 location with highway access</li>
-          <li>Serves NJ/NY/PA tri-state market</li>
-          <li>Recently permitted (2011) = fresh permit with long runway</li>
-          <li>Significantly under-producing relative to permit potential</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-blue">Aggregate</span>
-      <span class="tag tag-green">Recent Permit</span>
-      <span class="tag tag-green">Growth Potential</span>
-      <span class="tag tag-yellow">Privately Held</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Underperforming asset with permit optionality.</strong> At ~$1.1M revenue, Liberty Stone is dramatically under-producing relative to its permitted capacity. The relatively new permit (2011) means decades of reserve life remaining. An acquirer with capital and operational expertise could potentially 5-10x throughput. The Hunterdon County location fills a geographic gap in western NJ. As a Plymouth Industries subsidiary (not a multi-generational family), this could be a more straightforward transaction. Likely acquirable for $2-5M, with substantial upside from capacity utilization improvement.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- TARGET 10: PETER K. FRUEH -->
-<!-- ============================================================ -->
-<div id="t10" class="quarry-card">
-  <div class="quarry-header">
-    <div>
-      <h3>Peter K. Frueh, Inc.</h3>
-      <div class="location">117 Old Quarry Rd, Feura Bush, NY &mdash; Albany County</div>
-    </div>
-    <div class="rank">#10 &mdash; Capital Region</div>
-  </div>
-  <div class="quarry-body">
-    <div class="metrics-row">
-      <div class="metric"><div class="val">~$5-15M</div><div class="lbl">Est. Revenue</div></div>
-      <div class="metric"><div class="val">50+ yrs</div><div class="lbl">In Operation</div></div>
-      <div class="metric"><div class="val">DEC Reg.</div><div class="lbl">Mine Status</div></div>
-      <div class="metric"><div class="val">Family</div><div class="lbl">Ownership</div></div>
-    </div>
-    <div class="info-grid">
-      <div class="info-block">
-        <h4>Company Overview</h4>
-        <p>Family-owned civil construction company and stone quarry in the Albany Capital Region. Located 15 minutes south of Albany in Feura Bush, NY. The Crushed Stone Division was opened in 2010 and has rapidly grown to become one of the company's most demanded services. Operates a DEC-registered mine producing crushed high-grade siltstone/sandstone products. 50+ years of combined company history. Also provides excavation, material recycling, and civil construction services.</p>
-      </div>
-      <div class="info-block">
-        <h4>Products &amp; Materials</h4>
-        <ul>
-          <li>Crusher Run aggregate</li>
-          <li>#2 stone (3/4")</li>
-          <li>#3 stone (1.5"-2")</li>
-          <li>Gabion stone / rip rap</li>
-          <li>High-grade siltstone/sandstone products</li>
-        </ul>
-      </div>
-      <div class="info-block">
-        <h4>Ownership</h4>
-        <p>Family-owned by the Frueh family for 50+ years. The company's diversification from civil construction into quarrying (2010) shows entrepreneurial growth orientation. The address "Old Quarry Road" suggests historic quarrying activity on the site predating Frueh's ownership. The relatively recent entry into crushed stone (2010) means the quarry is in its early-to-mid life with significant remaining reserves.</p>
-      </div>
-      <div class="info-block">
-        <h4>Strategic Value</h4>
-        <ul>
-          <li>Albany Capital Region &mdash; state government and NYS Thruway demand</li>
-          <li>DEC-registered mine with established permits</li>
-          <li>Diversified revenue: quarry + excavation + recycling</li>
-          <li>Young quarry operation (2010) = long reserve life</li>
-          <li>Proximity to I-87 (NYS Thruway) for distribution</li>
-        </ul>
-      </div>
-    </div>
-    <div style="margin-top: 8px;">
-      <span class="tag tag-blue">Siltstone/Sandstone</span>
-      <span class="tag tag-green">DEC Registered</span>
-      <span class="tag tag-yellow">Family Owned</span>
-      <span class="tag tag-green">Capital Region</span>
-    </div>
-    <div class="thesis-box">
-      <h4>Acquisition Thesis</h4>
-      <p><strong>Capital Region foothold with diversified services.</strong> Peter K. Frueh provides geographic coverage in the Albany/Capital Region market, serving NYS government construction and Thruway corridor demand. The young quarry operation (opened 2010) means most of the site's reserves remain, and the DEC registration is an established regulatory asset. The civil construction and recycling services provide additional revenue streams and customer relationships. As a family business with 50+ years of operating history, the company has deep local relationships. Would function well as a northern anchor in a tri-state roll-up, complementing assets in the NYC metro area.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- COMPARABLE TRANSACTIONS -->
-<!-- ============================================================ -->
-<div id="comps">
-  <h2 class="section-title">Comparable Transactions & Valuation Framework</h2>
-</div>
-
-<div class="quarry-card">
-  <div class="quarry-body">
-    <h3 style="margin-bottom: 16px; color: var(--primary);">Recent Aggregate M&A Transactions (Northeast Focus)</h3>
-    <table class="comps-table">
-      <thead>
-        <tr>
-          <th>Transaction</th>
-          <th>Year</th>
-          <th>Deal Value</th>
-          <th>Revenue</th>
-          <th>EBITDA</th>
-          <th>EV/EBITDA</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Arcosa &rarr; Stavola Holdings</strong></td>
-          <td>2024</td>
-          <td>$1.2B</td>
-          <td>$283M</td>
-          <td>$100M</td>
-          <td>~12.0x</td>
-          <td>5 quarries, 12 asphalt plants in NJ/NY metro. Premium for NYC-area reserves.</td>
-        </tr>
-        <tr>
-          <td><strong>CRH &rarr; North American Aggregates</strong></td>
-          <td>2025</td>
-          <td>Undisclosed</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>Est. 10-12x</td>
-          <td>Perth Amboy, NJ waterfront aggregate facility. Expanded Tilcon NY reserves.</td>
-        </tr>
-        <tr>
-          <td><strong>Quikrete &rarr; Summit Materials</strong></td>
-          <td>2024</td>
-          <td>$11.5B</td>
-          <td>$3.8B</td>
-          <td>~$900M</td>
-          <td>~12.8x</td>
-          <td>National platform. Shows premium multiples for aggregate assets.</td>
-        </tr>
-        <tr>
-          <td><strong>Vulcan &rarr; Wake Stone Corp.</strong></td>
-          <td>2024</td>
-          <td>Undisclosed</td>
-          <td>N/A</td>
-          <td>N/A</td>
-          <td>Est. 10-14x</td>
-          <td>Family-owned NC quarry. Classic succession-driven exit.</td>
-        </tr>
-        <tr>
-          <td><strong>Knife River (6 acquisitions)</strong></td>
-          <td>2024-25</td>
-          <td>$129M total</td>
-          <td>Various</td>
-          <td>Various</td>
-          <td>6-8x</td>
-          <td>Smaller bolt-on acquisitions at lower multiples.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3 style="margin: 24px 0 16px; color: var(--primary);">Valuation Framework for Targets</h3>
-    <table class="comps-table">
-      <thead>
-        <tr>
-          <th>Target</th>
-          <th>Est. Revenue</th>
-          <th>Est. EBITDA Margin</th>
-          <th>Est. EBITDA</th>
-          <th>Low Value (7x)</th>
-          <th>Mid Value (9.4x)</th>
-          <th>High Value (12x)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Weldon Materials</strong></td>
-          <td>$75-100M</td>
-          <td>28-32%</td>
-          <td>$22-32M</td>
-          <td>$154-224M</td>
-          <td>$207-301M</td>
-          <td>$264-384M</td>
-        </tr>
-        <tr>
-          <td><strong>Braen Stone</strong></td>
-          <td>$65-100M</td>
-          <td>25-30%</td>
-          <td>$16-30M</td>
-          <td>$112-210M</td>
-          <td>$150-282M</td>
-          <td>$192-360M</td>
-        </tr>
-        <tr>
-          <td><strong>O&G Industries (Materials)</strong></td>
-          <td>$150-200M*</td>
-          <td>25-30%</td>
-          <td>$38-60M</td>
-          <td>$263-420M</td>
-          <td>$353-564M</td>
-          <td>$450-720M</td>
-        </tr>
-        <tr>
-          <td><strong>Suzio York Hill</strong></td>
-          <td>$30-50M</td>
-          <td>28-35%</td>
-          <td>$8-18M</td>
-          <td>$59-123M</td>
-          <td>$79-165M</td>
-          <td>$101-210M</td>
-        </tr>
-        <tr>
-          <td><strong>Peckham Industries</strong></td>
-          <td>~$500M</td>
-          <td>20-28%</td>
-          <td>$100-140M</td>
-          <td>$700M-1.0B</td>
-          <td>$940M-1.3B</td>
-          <td>$1.2-1.7B</td>
-        </tr>
-        <tr>
-          <td><strong>Haynes Group</strong></td>
-          <td>~$20M</td>
-          <td>20-28%</td>
-          <td>$4-6M</td>
-          <td>$28-39M</td>
-          <td>$38-53M</td>
-          <td>$48-67M</td>
-        </tr>
-        <tr>
-          <td><strong>Callahan &amp; Nannini</strong></td>
-          <td>$10-20M</td>
-          <td>22-30%</td>
-          <td>$2-6M</td>
-          <td>$15-42M</td>
-          <td>$21-56M</td>
-          <td>$27-72M</td>
-        </tr>
-        <tr>
-          <td><strong>Eastern Materials</strong></td>
-          <td>$5-15M</td>
-          <td>20-28%</td>
-          <td>$1-4M</td>
-          <td>$7-30M</td>
-          <td>$9-40M</td>
-          <td>$12-50M</td>
-        </tr>
-        <tr>
-          <td><strong>Liberty Stone</strong></td>
-          <td>~$1.1M</td>
-          <td>15-20%</td>
-          <td>$0.2-0.2M</td>
-          <td>$1-2M</td>
-          <td>$2-3M</td>
-          <td>$2-3M</td>
-        </tr>
-        <tr>
-          <td><strong>Peter K. Frueh</strong></td>
-          <td>$5-15M</td>
-          <td>20-25%</td>
-          <td>$1-4M</td>
-          <td>$7-26M</td>
-          <td>$9-34M</td>
-          <td>$12-44M</td>
-        </tr>
-      </tbody>
-    </table>
-    <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 8px;">* O&G Industries materials division estimated as portion of total $333M company revenue. Valuations are illustrative estimates based on industry multiples and public comparable data. Actual values will vary based on specific asset quality, reserves, permits, and market conditions.</p>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- MARKET CONTEXT -->
-<!-- ============================================================ -->
-<div id="methodology">
-  <h2 class="section-title">Market Context & Roll-Up Rationale</h2>
-</div>
-
-<div class="quarry-card">
-  <div class="quarry-body">
-    <div class="info-grid" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));">
-      <div class="info-block">
-        <h4>Why Tri-State Aggregates?</h4>
-        <p>The NY/NJ/CT metro area is the most supply-constrained aggregate market in the US. Zoning restrictions and environmental permitting effectively prevent new quarry development (10-20+ year approval cycles). Meanwhile, 20M+ people and $100B+ annual construction spend drive insatiable demand. The result: aggregate prices in the Northeast ($20-25/ton at the quarry gate) are among the highest in the nation, and transportation costs (50-70% of delivered price) create powerful local monopolies. Every operating quarry near NYC is an irreplaceable strategic asset.</p>
-      </div>
-      <div class="info-block">
-        <h4>Roll-Up Economics</h4>
-        <p>Aggregate industry M&A has averaged 9.4x EV/EBITDA (2024-26), with Northeast/metro-proximate assets commanding 10-12x+. Crushed stone operations typically generate 25-35% EBITDA margins. A roll-up strategy can acquire at 7-9x (smaller, family-owned targets) and create value through: (1) operational synergies (shared equipment, centralized management), (2) pricing power from reduced competition, (3) vertical integration (adding asphalt, concrete, paving), and (4) multiple expansion as the combined platform trades at institutional-grade multiples. The Stavola exit at 12x EBITDA demonstrates the endgame valuation for a well-constructed tri-state platform.</p>
-      </div>
-      <div class="info-block">
-        <h4>Key Risks</h4>
-        <p><strong>Permitting:</strong> Environmental compliance and community opposition are ongoing challenges. Any permit issues at acquired quarries could threaten the investment. <strong>Cyclicality:</strong> Aggregate demand correlates with construction cycles, though infrastructure spending provides a floor. <strong>Competition:</strong> CRH/Tilcon, Arcosa (post-Stavola), and Heidelberg are well-capitalized competitors. <strong>Succession dynamics:</strong> Family owners may have inflated value expectations. <strong>Environmental liability:</strong> Historical operations may carry remediation obligations.</p>
-      </div>
-      <div class="info-block">
-        <h4>Demand Tailwinds</h4>
-        <p><strong>IIJA Infrastructure:</strong> Federal infrastructure spending is driving record state DOT budgets. <strong>Data centers:</strong> Massive concrete/aggregate demand for Northeast data center construction. <strong>Housing:</strong> NJ/CT housing starts recovering. <strong>MTA capital plan:</strong> $68B MTA capital program drives aggregate demand in NY metro. <strong>Climate resilience:</strong> Coastal protection, stormwater, and flood mitigation projects require significant aggregate volumes. These tailwinds suggest above-trend demand for the next 5-10 years.</p>
+        <div class="approach-box">
+          <h4>Approach Strategy</h4>
+          <p>Highest-priority target. The ongoing expansion creates a perfect conversation opener &mdash; the Nanninis need capital for the deepening project and dewatering infrastructure. Approach Rob or Jay Nannini directly; emphasize that a platform can fund the expansion capex while letting them continue to run operations. The 117-acre permitted LOM with 200-ft depth extension represents enormous reserve value. Consider structured deal with earnout tied to expansion milestones.</p>
+        </div>
       </div>
     </div>
 
-    <h3 style="margin: 24px 0 12px; color: var(--primary);">Non-Acquirable Major Operators (For Reference)</h3>
-    <p style="font-size: 0.88rem; margin-bottom: 16px; color: var(--text-light);">These are major corporate operators in the tri-state area that are <strong>not</strong> acquisition targets for a roll-up strategy, but represent the competitive landscape and potential exit buyers:</p>
-    <table class="comps-table">
-      <thead>
-        <tr>
-          <th>Company</th>
-          <th>Parent</th>
-          <th>Tri-State Operations</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Tilcon New York / Tilcon Connecticut</td>
-          <td>CRH plc (Dublin)</td>
-          <td>~20 sites in NY/NJ, 5 quarries + 2 S&G pits in CT</td>
-          <td>Not acquirable</td>
-        </tr>
-        <tr>
-          <td>Callanan Industries</td>
-          <td>CRH plc (via Oldcastle)</td>
-          <td>Multiple quarries, Albany-Kingston-Bridgeville NY</td>
-          <td>Not acquirable</td>
-        </tr>
-        <tr>
-          <td>Trap Rock Industries / Stavola</td>
-          <td>Arcosa, Inc. (Dallas)</td>
-          <td>5 quarries, 12 asphalt plants in NJ/NY</td>
-          <td>Acquired 2024</td>
-        </tr>
-        <tr>
-          <td>North American Aggregates</td>
-          <td>CRH plc (acquired 2025)</td>
-          <td>Perth Amboy, NJ waterfront facility</td>
-          <td>Acquired 2025</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+    <!-- Target 2: Eastern Materials -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">2. Eastern Materials, LLC</div>
+          <div class="target-location">1007 State Route 28, Kingston, Ulster County, NY</div>
+        </div>
+        <span class="tier-badge tier-1">Tier 1 &mdash; Top Priority</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">MSHA Mine ID</div>
+            <div class="data-value">30-03123</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Mine Type</div>
+            <div class="data-value">Surface &mdash; Intermittent</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material Type</div>
+            <div class="data-value">Crushed, Broken Sandstone</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">NYS Approved</div>
+            <div class="data-value green">Yes &mdash; Crushed Stone + Asphalt</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Service Area</div>
+            <div class="data-value">Dutchess, Ulster, Greene, Orange Counties</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">USDOT #</div>
+            <div class="data-value">1587732</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership</div>
+            <div class="data-value">Private LLC</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Products</div>
+            <div class="data-value">Aggregate + Asphalt</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$5-12M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA (18-22%)</div>
+            <div class="data-value highlight">$0.9-2.6M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range (6-8x)</div>
+            <div class="data-value highlight">$5-21M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Distance to NYC</div>
+            <div class="data-value">~95 miles (I-87 corridor)</div>
+          </div>
+        </div>
 
-<div class="disclaimer">
-  <strong>Disclaimer:</strong> This report is prepared for informational and strategic planning purposes only. Revenue, EBITDA, and valuation estimates are based on publicly available information, industry benchmarks, and third-party data sources. Actual financial performance may differ materially. No representations are made regarding the accuracy or completeness of the information contained herein. This does not constitute an offer to buy or sell any securities or business interests. Professional due diligence, including financial, legal, environmental, and regulatory review, is essential before pursuing any acquisition. Prepared by QuarryMe.com, May 2026.
-</div>
+        <div class="sub-section">
+          <h4>Strategic Value</h4>
+          <p>
+            Located directly off I-87 (Exit 19) at the Rt. 209/Sawkill Rd interchange, giving excellent logistical access to the Thruway corridor and NYC-bound trucking. Dual product offering (crushed stone + asphalt) provides vertical integration value. Four-county service territory covers the heart of the Hudson Valley construction market. The intermittent mine status suggests a smaller operation that could benefit significantly from platform investment in equipment and consistent production scheduling.
+          </p>
+        </div>
+
+        <div class="sub-section">
+          <h4>Key Considerations</h4>
+          <p>
+            Sandstone is a lower-value commodity vs. trap rock or granite, but NYS DOT approval provides pricing support. Asphalt capability is a valuable add-on for a platform. I-87 access is a significant logistics advantage for serving Orange/Dutchess county demand. Owner identity requires further diligence &mdash; LLC structure may indicate a smaller, owner-operator profile ideal for acquisition.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">I-87 Access</span>
+          <span class="tag tag-green">NYS DOT Approved</span>
+          <span class="tag tag-blue">Asphalt Operations</span>
+          <span class="tag tag-gray">Sandstone (Lower Premium)</span>
+          <span class="tag tag-orange">Owner ID Needed</span>
+        </div>
+
+        <div class="approach-box">
+          <h4>Approach Strategy</h4>
+          <p>Requires further diligence on ownership. The LLC structure suggests this could be a single-owner or small partnership operation. Pull NY Secretary of State filings for member/manager names. Asphalt plant is the key value driver beyond the aggregate &mdash; emphasize platform scale benefits for asphalt (shared oil purchasing, equipment). The I-87 location makes this an excellent complement to an Orange County (C&N) anchor acquisition.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target 3: Peter K. Frueh -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">3. Peter K. Frueh, Inc.</div>
+          <div class="target-location">153 Old Quarry Rd, Feura Bush, Albany County, NY</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strong Candidate</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">~1970s (50+ years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership</div>
+            <div class="data-value">Family-Owned (Frueh Family)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Employees</div>
+            <div class="data-value">11-50</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material Type</div>
+            <div class="data-value">Crushed Stone / Aggregate</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">DEC Status</div>
+            <div class="data-value green">Registered Mine</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">USDOT #</div>
+            <div class="data-value">1211595</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Service Area</div>
+            <div class="data-value">Albany, Schenectady, Rensselaer, Columbia, Saratoga, Schoharie, Greene (7 counties)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Trucking Fleet</div>
+            <div class="data-value">Single, Tandem, Tri-Axle + Trailers</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Services</div>
+            <div class="data-value">Quarry + Excavation + Snow Removal</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$5-10M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA (18-22%)</div>
+            <div class="data-value highlight">$0.9-2.2M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range (6-7x)</div>
+            <div class="data-value highlight">$5-15M</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Succession & Acquisition Signal</h4>
+          <p>
+            50+ year family operation named after the founder. Classic "founder's name on the door" business &mdash; strong indicator of first-generation ownership with potential succession risk. The company's diversification into excavation and snow removal suggests a traditional family construction operation that has built the quarry as a captive supply source. BBB accredited. 15 minutes south of Albany in the Capital Region.
+          </p>
+        </div>
+
+        <div class="sub-section">
+          <h4>Strategic Fit</h4>
+          <p>
+            Serves the Capital Region (Albany metro) &mdash; a secondary market but with strong state government and institutional construction demand. Seven-county delivery radius is extensive for a small operator. Own trucking fleet adds value. Snow removal contracts provide winter revenue diversification. Would serve as a northern anchor for a tri-state platform, complementing Hudson Valley and NJ operations.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">50+ Year Operation</span>
+          <span class="tag tag-orange">Succession Risk Likely</span>
+          <span class="tag tag-blue">Own Trucking Fleet</span>
+          <span class="tag tag-blue">Diversified Services</span>
+          <span class="tag tag-gray">Capital Region Market</span>
+        </div>
+
+        <div class="approach-box">
+          <h4>Approach Strategy</h4>
+          <p>Classic founder-exit opportunity. Research Peter Frueh's age and family situation &mdash; at 50+ years, the founder (or second generation) is likely approaching retirement. The "Inc." structure and eponymous naming suggest strong personal identification with the business. Approach with respect for legacy; emphasize that the platform will preserve the operation and the Frueh name in the community. The excavation and snow removal businesses may be separable or bundled.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target 4: Liberty Stone & Aggregates -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">4. Liberty Stone & Aggregates &mdash; Clinton Quarry, LLC</div>
+          <div class="target-location">5 Route 173, Clinton (Pittstown), Hunterdon County, NJ</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strong Candidate</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">MSHA Mine ID</div>
+            <div class="data-value">28-01047</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Mine Type</div>
+            <div class="data-value">Surface &mdash; Crushed, Broken Slate</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Parent Entity</div>
+            <div class="data-value">Plymouth Industries, LLC / Vision Development Group</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Key Principal</div>
+            <div class="data-value">Michael Schlaefer (Member)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Employees</div>
+            <div class="data-value">~15</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Established</div>
+            <div class="data-value">2011</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Also Operates</div>
+            <div class="data-value">Jersey City Rock Crushing Facility</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ready Mix</div>
+            <div class="data-value green">Yes &mdash; Batch Plant On-Site</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$1-3M (quarry only)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue (Total)</div>
+            <div class="data-value highlight">$5-10M (incl. Jersey City, Plymouth)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA</div>
+            <div class="data-value highlight">$0.8-2M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range</div>
+            <div class="data-value highlight">$5-15M (full platform)</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Corporate Structure</h4>
+          <p>
+            Part of The Vision Development Group, a conglomerate of 4 companies: Plymouth Industries (parent), Global Development Contractors, Green Earth Container Services, and Liberty Stone & Aggregates. This multi-entity structure means an acquisition could be complex &mdash; the quarry may be entangled with construction, container, and contracting operations. However, it also means there may be motivated sellers if the construction businesses face cyclical pressure.
+          </p>
+        </div>
+
+        <div class="sub-section">
+          <h4>Legal History</h4>
+          <p>
+            Federal lawsuit filed 2019 (Case 3:19-cv-09911, D.N.J.) &mdash; Liberty Stone & Aggregates-Clinton Quarry, LLC v. Penn Jersey Machinery, LLC. This was a <em>plaintiff</em> action (equipment dispute), not an enforcement action. No NJDEP environmental violations found in public records. Quarry accepts clean fill for reclamation, which is a regulated activity under NJ law.
+          </p>
+        </div>
+
+        <div class="sub-section">
+          <h4>Strategic Considerations</h4>
+          <p>
+            The Jersey City rock crushing facility is extremely valuable &mdash; urban waterfront aggregate processing near the NYC market is nearly impossible to permit today. Slate/stone aggregate from Clinton combined with urban recycled aggregate from Jersey City creates an interesting bi-modal supply chain. However, the multi-entity corporate structure and relatively recent establishment (2011) suggest this may be more of a construction-contractor-turned-quarry-operator rather than a pure aggregate play.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">Jersey City Processing</span>
+          <span class="tag tag-blue">Ready-Mix Capability</span>
+          <span class="tag tag-orange">Complex Corp Structure</span>
+          <span class="tag tag-gray">Slate (Lower Premium)</span>
+          <span class="tag tag-green">NJ Market Access</span>
+        </div>
+
+        <div class="approach-box">
+          <h4>Approach Strategy</h4>
+          <p>Approach Michael Schlaefer through Plymouth Industries. The multi-entity structure may mean they'd be willing to carve out the quarry and JC crushing operations specifically. The Jersey City facility is the crown jewel &mdash; urban aggregate processing near the NYC waterfront is irreplaceable. Consider acquiring the full Vision Development Group platform if construction operations are profitable. Due diligence should focus on the corporate inter-entity relationships and any shared liabilities.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target 5: Haynes Group -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">5. Haynes Group, Inc. / Haynes Materials</div>
+          <div class="target-location">Seymour, CT (HQ) &mdash; Multiple locations across Connecticut</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strong Candidate</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1963 (63 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Generation</div>
+            <div class="data-value">3rd Generation</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Founders</div>
+            <div class="data-value">Raymond Haynes (b. 1929) & Gene Haynes</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Current Leadership</div>
+            <div class="data-value">Tom & Paul Haynes (Ray's twin sons)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Employees</div>
+            <div class="data-value">150+</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarries</div>
+            <div class="data-value highlight">5 quarries statewide</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarry Locations</div>
+            <div class="data-value">Deep River, Naugatuck, Oxford, Torrington + 1 more</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Retail Stores</div>
+            <div class="data-value">2 (Deep River, Oxford/Southbury)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ready-Mix Plant</div>
+            <div class="data-value green">Yes &mdash; Seymour, CT</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Revenue (2025)</div>
+            <div class="data-value highlight">$20M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA (20-25%)</div>
+            <div class="data-value highlight">$4-5M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range (7-9x)</div>
+            <div class="data-value highlight">$28-45M</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Business Overview</h4>
+          <p>
+            Vertically integrated platform: quarries &rarr; aggregate &rarr; ready-mix concrete &rarr; retail (masonry/landscape stores) &rarr; real estate development. Five quarries producing full-line aggregate meeting all CT state and local specs. Coverage from Rhode Island border to New York border. Divisions include Haynes Materials, Haynes Outdoor Living, Stoneliving Masonry, ACE Hardware by Haynes, and specialty stone fabrication. Deep River quarry is noted for high-quality aggregate and landscaping stone.
+          </p>
+        </div>
+
+        <div class="sub-section">
+          <h4>Succession Analysis</h4>
+          <p>
+            Founder Raymond Haynes was born in 1929 (would be ~97 today). His twin sons Tom and Paul Haynes represent the second generation and are likely in their 60s-70s. Third generation involvement is mentioned but unclear how deep. Thomas Haynes serves as President. This is a classic 2nd-to-3rd generation transition scenario where the business has outgrown family management capacity. At 150+ employees and $20M revenue with 5 quarries, the operational complexity may be straining family bandwidth.
+          </p>
+        </div>
+
+        <div class="sub-section">
+          <h4>Strategic Considerations</h4>
+          <p>
+            Largest target on this list and the most complex. The 5-quarry footprint across CT provides instant statewide coverage. Real estate development activities could be separated or add value depending on land holdings. The retail stores (outdoor living, ACE Hardware) are non-core and could be divested or spun off. This would be the CT anchor acquisition for the platform. However, at $28-45M, this may require co-investment or financing partners.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">5 Quarries</span>
+          <span class="tag tag-green">Vertically Integrated</span>
+          <span class="tag tag-green">Ready-Mix Concrete</span>
+          <span class="tag tag-orange">3rd Gen Transition</span>
+          <span class="tag tag-blue">Statewide CT Coverage</span>
+          <span class="tag tag-orange">Larger Check Size</span>
+        </div>
+
+        <div class="approach-box">
+          <h4>Approach Strategy</h4>
+          <p>This is the platform-defining CT acquisition. Approach Tom Haynes (President) directly &mdash; emphasize legacy preservation and family name continuation. The real estate development arm may be creating distraction from core quarry operations; offer to let the family retain the development business while acquiring the materials platform. At $20M revenue, this is approaching the upper end of "small independent" but the family dynamics and 3rd-gen transition create a realistic acquisition window. Consider a partial acquisition starting with 2-3 quarries if the full platform is too large.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADDITIONAL TARGETS -->
+  <div id="tab-additional" class="tab-content">
+
+    <!-- Additional 1: Braen Stone -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">6. Braen Stone</div>
+          <div class="target-location">Haledon, NJ (HQ) &mdash; Multiple NJ + Whitehall, NY</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strategic but Large</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1904 (122 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Generation</div>
+            <div class="data-value">5th Generation (Braen Family)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarries</div>
+            <div class="data-value highlight">5 quarries (4 NJ + 1 NY)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Locations</div>
+            <div class="data-value">Haledon, Franklin, Sparta, Ringwood (NJ) + Whitehall (NY)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material</div>
+            <div class="data-value highlight">Trap Rock (Haledon) + Various</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Asphalt Plants</div>
+            <div class="data-value green">Yes &mdash; 500 TPH drum + batch</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$30-50M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA</div>
+            <div class="data-value highlight">$7-12M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range (8-10x)</div>
+            <div class="data-value highlight">$56-120M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Key Asset</div>
+            <div class="data-value highlight">Haledon Trap Rock &mdash; Near NYC</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            Premium NJ aggregate platform. Haledon trap rock quarry is minutes from NYC metro &mdash; irreplaceable asset. 5th generation suggests deep family roots but also potential generational fatigue. Trap rock commands premium pricing ($22-28/ton). Major DOT contractor for Garden State Parkway and NJ Turnpike paving. Whitehall, NY quarry (150 acres) extends reach into upstate NY market. However, at $30-50M+ revenue, this may be at or above the target size range and would require significant capital. Could potentially be the platform anchor acquisition if financing is available.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">Trap Rock Premium</span>
+          <span class="tag tag-green">Near NYC Metro</span>
+          <span class="tag tag-green">5 Quarries</span>
+          <span class="tag tag-orange">5th Gen &mdash; May Be Too Embedded</span>
+          <span class="tag tag-red">Likely Above $50M Revenue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 2: Weldon Materials -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">7. Weldon Materials, Inc.</div>
+          <div class="target-location">Westfield, NJ &mdash; Watchung + Lake Hopatcong quarries</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strategic but Large</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1890s (130+ years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership</div>
+            <div class="data-value">Weldon Family</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarries</div>
+            <div class="data-value">2 hard rock quarries</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Materials</div>
+            <div class="data-value highlight">Trap Rock (Watchung) + Granite (Hopatcong)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Infrastructure</div>
+            <div class="data-value">9 asphalt plants, 3 ready-mix, 2 yards</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$40-60M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Acquisition</div>
+            <div class="data-value highlight">$70-150M+</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Key Asset</div>
+            <div class="data-value highlight">Watchung Trap Rock</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            One of the premier independent aggregate/asphalt platforms in NJ. Watchung trap rock quarry has operated since the 1890s and produces premium ASTM-approved aggregates. Massive downstream infrastructure (9 asphalt plants, 3 ready-mix plants) creates high barriers to entry. However, likely well above the $50M revenue threshold and would require substantial capital. A comparable to Stavola, which traded at 12x EBITDA for $1.2B. Weldon is smaller but similarly structured. This could be a transformative platform acquisition but may require PE co-investment.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">Trap Rock Premium</span>
+          <span class="tag tag-green">Massive Infrastructure</span>
+          <span class="tag tag-red">Likely Above Target Size</span>
+          <span class="tag tag-blue">Platform Anchor Potential</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 3: Cobleskill Stone Products -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">8. Cobleskill Stone Products, Inc.</div>
+          <div class="target-location">Cobleskill, Schoharie County, NY &mdash; Multiple upstate locations</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strong Candidate</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1954 (72 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership</div>
+            <div class="data-value">Galasso Family &mdash; 3rd Gen</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Principal</div>
+            <div class="data-value">Emil J. Galasso</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarries</div>
+            <div class="data-value highlight">6 hard rock + 1 sand/gravel</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Locations</div>
+            <div class="data-value">Cobleskill, Schoharie, Hancock, Howes Cave, Lexington</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Asphalt Plants</div>
+            <div class="data-value">6 plants</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material</div>
+            <div class="data-value">Limestone + High Friction Aggregate</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Revenue</div>
+            <div class="data-value highlight">$27.4M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. EBITDA (18-22%)</div>
+            <div class="data-value highlight">$4.9-6M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range (7-9x)</div>
+            <div class="data-value highlight">$35-54M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Construction Services</div>
+            <div class="data-value green">Yes &mdash; Heavy Highway</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Key Issue</div>
+            <div class="data-value red">Internal Family Lawsuit (2023)</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            Substantial upstate NY aggregate platform with 6 quarries and 6 asphalt plants. High friction aggregate is a specialty product commanding premium pricing. However, a 2023 internal family lawsuit (Galasso v. Cobleskill Stone Products) suggests potential family discord &mdash; which could create a forced sale opportunity. The Galasso family dispute may accelerate a liquidity event. Located in upstate NY (farther from NYC metro), but provides northern geographic coverage for a platform. Construction services add revenue but also cyclical risk. Management team has 20+ years experience each.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">6 Quarries</span>
+          <span class="tag tag-green">High Friction Aggregate</span>
+          <span class="tag tag-red">Family Lawsuit 2023</span>
+          <span class="tag tag-orange">Upstate Location</span>
+          <span class="tag tag-blue">Heavy Highway Construction</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 4: JML Quarries / Masten Enterprises -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">9. JML Quarries / Masten Enterprises</div>
+          <div class="target-location">Wurtsboro / White Lake, Sullivan County, NY</div>
+        </div>
+        <span class="tier-badge tier-1">Tier 1 &mdash; Ideal Bolt-On</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Gravel Plant Since</div>
+            <div class="data-value">1938 (88 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership</div>
+            <div class="data-value">Private LLC</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Operations</div>
+            <div class="data-value">Sand/Gravel + Greywacke Sandstone</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">On-Site Labs</div>
+            <div class="data-value green">Yes &mdash; Quality Testing</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Own Trucking</div>
+            <div class="data-value green">Yes</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Sister Companies</div>
+            <div class="data-value">Sullivan County Paving, Morlyn Asphalt, Sullivan Structures</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">State Approved</div>
+            <div class="data-value green">NYS DOT Approved</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue (Group)</div>
+            <div class="data-value highlight">$10-20M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Acquisition (Quarry)</div>
+            <div class="data-value highlight">$5-12M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Distance to NYC</div>
+            <div class="data-value">~85 miles (Rt. 17/I-86)</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            Vertically integrated Sullivan County construction platform with captive aggregate supply. The quarry (JML Quarries) is the raw material engine for Sullivan County Paving and Morlyn Asphalt &mdash; a classic vertically integrated family operation. Two separate quarry operations: sand/gravel pit and greywacke sandstone ledge rock. On-site testing labs indicate quality-conscious operation. Sullivan County is experiencing growth pressure from NYC exurban development. Could be acquired as a quarry-only carve-out or as the full Masten Enterprises platform.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">88 Year Operation</span>
+          <span class="tag tag-green">Vertically Integrated</span>
+          <span class="tag tag-blue">On-Site Testing Labs</span>
+          <span class="tag tag-blue">Asphalt Operations</span>
+          <span class="tag tag-green">Ideal Bolt-On Size</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 5: Kinsella Quarries -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">10. Kinsella Quarries (T.H. Kinsella, Inc.)</div>
+          <div class="target-location">Fayetteville, Onondaga County, NY &mdash; Multiple Central NY sites</div>
+        </div>
+        <span class="tier-badge tier-3">Tier 3 &mdash; Watch List</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1967 (59 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Generation</div>
+            <div class="data-value">4th Generation</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material</div>
+            <div class="data-value">Crushed Limestone</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarry Sites</div>
+            <div class="data-value">4 (Fayetteville, Jamsville, Delphi, Tully)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Products</div>
+            <div class="data-value">Crushed stone, sized stone, washed sand, topsoil</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$8-15M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range</div>
+            <div class="data-value highlight">$8-20M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Market</div>
+            <div class="data-value">Syracuse / Central NY</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            Strong 4th-generation family operation in the Syracuse market. Four limestone quarries provide solid geographic coverage of Central NY. However, the Syracuse market is significantly farther from NYC metro demand and may be outside the core tri-state roll-up geography. Best suited as a later-stage platform extension rather than an initial acquisition. Watch for signs of 4th-generation transition challenges.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">4 Quarries</span>
+          <span class="tag tag-green">4th Generation</span>
+          <span class="tag tag-gray">Syracuse Market (Distant)</span>
+          <span class="tag tag-blue">Limestone</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 6: County Line Stone -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">11. County Line Stone Co., Inc.</div>
+          <div class="target-location">4515 Crittenden Rd, Akron, Erie County, NY</div>
+        </div>
+        <span class="tier-badge tier-3">Tier 3 &mdash; Watch List</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1958/1959</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Generation</div>
+            <div class="data-value">4th Gen (Buyers Family)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Principals</div>
+            <div class="data-value">John, Mike, Brad, Matt Buyers</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Employees</div>
+            <div class="data-value">30+</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material</div>
+            <div class="data-value">Crushed Limestone</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Products</div>
+            <div class="data-value">Limestone, Hot Mix Asphalt, Ag Lime</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">NYSDOT Approved</div>
+            <div class="data-value green">Yes</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Markets</div>
+            <div class="data-value">Rochester + Buffalo (WNY)</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            One of the few remaining family-run quarries in Western NY. Serves both Rochester and Buffalo markets with 10-county delivery radius. High calcium agricultural lime is a specialty niche product. NYSDOT-approved products. However, Western NY is distant from the core tri-state thesis. Best suited for a later-stage geographic expansion. The 4th-generation, multi-sibling ownership (4 Buyers family members) could create alignment challenges or, conversely, could mean some siblings are ready to exit.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">NYSDOT Approved</span>
+          <span class="tag tag-blue">Ag Lime Specialty</span>
+          <span class="tag tag-gray">Western NY (Distant)</span>
+          <span class="tag tag-orange">Multi-Sibling Ownership</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 7: Rawson Materials -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">12. Rawson Materials, Inc.</div>
+          <div class="target-location">Canterbury, CT &mdash; 10 plants across CT, MA, RI, NY</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strong Candidate</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1947 (79 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Generation</div>
+            <div class="data-value">3rd Generation (Rawson Family)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Founder</div>
+            <div class="data-value">Richard Rawson</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Plants</div>
+            <div class="data-value highlight">10 plants</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material</div>
+            <div class="data-value">Sand & Stone (Concrete, Block, Asphalt feedstock)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Rail Shipping</div>
+            <div class="data-value green">Yes &mdash; Plainfield + Thompson, CT</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Markets</div>
+            <div class="data-value">CT, MA, RI, NY</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$15-25M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range</div>
+            <div class="data-value highlight">$15-35M</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            3rd-generation family operation with significant scale (10 plants, 4-state coverage). Rail shipping capability from two CT locations to NY destinations is a major logistics differentiator &mdash; reduces trucking costs for long-haul aggregate delivery. Products serve as feedstock for concrete, block, and asphalt producers &mdash; B2B wholesale model. 3rd generation joined in 2001, so the transition leadership has been in place for 25 years but the founding generation is aging out. Strong CT + New England complement to a tri-state platform.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">10 Plants</span>
+          <span class="tag tag-green">Rail Shipping</span>
+          <span class="tag tag-green">4-State Coverage</span>
+          <span class="tag tag-orange">3rd Gen Transition</span>
+          <span class="tag tag-blue">B2B Wholesale Model</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional 8: Suzio York Hill -->
+    <div class="target-card">
+      <div class="target-header">
+        <div>
+          <div class="target-name">13. L. Suzio York Hill Companies</div>
+          <div class="target-location">975 Westfield Rd, Meriden, New Haven County, CT</div>
+        </div>
+        <span class="tier-badge tier-2">Tier 2 &mdash; Strong but Complex</span>
+      </div>
+      <div class="target-body">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="data-label">Founded</div>
+            <div class="data-value">1898 (128 years)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Founder</div>
+            <div class="data-value">Leonardo Suzio (Italian immigrant)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Material</div>
+            <div class="data-value highlight">Trap Rock (Premium)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Quarry Site</div>
+            <div class="data-value">York Hill (Chauncey Peak flank)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Ownership Since</div>
+            <div class="data-value">Sole ownership since 1912</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Products</div>
+            <div class="data-value">Crushed Stone + Asphalt + Ready-Mix</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Historical Quarries</div>
+            <div class="data-value">Mt. Carmel, Cheshire, Woodbury, Southwick (MA)</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Est. Revenue</div>
+            <div class="data-value highlight">$15-30M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Acquisition Range</div>
+            <div class="data-value highlight">$15-40M</div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">Key Asset</div>
+            <div class="data-value highlight">Trap Rock Quarry &mdash; 110+ years</div>
+          </div>
+        </div>
+
+        <div class="sub-section">
+          <h4>Assessment</h4>
+          <p>
+            One of CT's most enduring family-owned construction material businesses, spanning three centuries. The York Hill trap rock quarry in Meriden produces premium aggregate. Vertically integrated with asphalt and ready-mix concrete operations. Multiple historical quarry locations suggest significant remaining reserves or land holdings. The company consolidated from multiple quarries down to the Meriden operation, which may indicate either optimized operations or reduced capacity. Trap rock from this location commands premium pricing. A direct competitor/complement to Haynes Group for CT coverage.
+          </p>
+        </div>
+
+        <div class="tags">
+          <span class="tag tag-green">Trap Rock Premium</span>
+          <span class="tag tag-green">128 Year History</span>
+          <span class="tag tag-green">Vertically Integrated</span>
+          <span class="tag tag-blue">Ready-Mix + Asphalt</span>
+          <span class="tag tag-orange">Multi-Gen Succession</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRANSACTION COMPS -->
+  <div id="tab-comps" class="tab-content">
+    <div class="comps-section">
+      <h3>Recent Northeast Aggregate Transaction Comparables</h3>
+      <table class="val-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Target</th>
+            <th>Acquirer</th>
+            <th>Enterprise Value</th>
+            <th>Revenue</th>
+            <th>EBITDA</th>
+            <th>EV/EBITDA</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Aug 2024</td>
+            <td style="color:var(--text);font-weight:600;">Stavola Holdings (NJ)</td>
+            <td>Arcosa, Inc.</td>
+            <td style="color:var(--accent);font-weight:700;">$1.2B</td>
+            <td>$283M</td>
+            <td>$100M (35%)</td>
+            <td style="color:var(--accent);font-weight:700;">12.0x</td>
+            <td>5 quarries, 12 asphalt plants, 3 recycled agg sites. 3rd gen family. Premium for NJ trap rock reserves.</td>
+          </tr>
+          <tr>
+            <td>Dec 2025</td>
+            <td style="color:var(--text);font-weight:600;">North American Aggregates (NJ)</td>
+            <td>CRH plc</td>
+            <td style="color:var(--accent);font-weight:700;">Undisclosed</td>
+            <td>Est. $20-40M</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>Perth Amboy, NJ waterfront. Processing + screening. Integrated into Tilcon NY operations.</td>
+          </tr>
+          <tr>
+            <td>2024-25</td>
+            <td style="color:var(--text);font-weight:600;">6 Small Bolt-Ons</td>
+            <td>Knife River (MDU)</td>
+            <td style="color:var(--accent);font-weight:700;">$129M total</td>
+            <td>Various</td>
+            <td>Various</td>
+            <td style="color:var(--accent);font-weight:700;">6-8x</td>
+            <td>Small independent operators. Forward EBITDA multiples. Average ~$21M per deal.</td>
+          </tr>
+          <tr>
+            <td>2024</td>
+            <td style="color:var(--text);font-weight:600;">Peckham Industries (NY)</td>
+            <td>Expansion (Self)</td>
+            <td>&mdash;</td>
+            <td>Est. $200M+</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>4th gen family. 1,200 employees, 30+ facilities. Active acquirer &mdash; potential competing bidder.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="comps-section">
+      <h3>Implied Valuation Framework for Small Independents</h3>
+      <table class="val-table">
+        <thead>
+          <tr>
+            <th>Revenue Range</th>
+            <th>Typical EBITDA Margin</th>
+            <th>EBITDA Range</th>
+            <th>Multiple Range</th>
+            <th>Implied EV Range</th>
+            <th>Profile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>$1-5M</td>
+            <td>15-20%</td>
+            <td>$150K-1M</td>
+            <td>5-7x</td>
+            <td style="color:var(--accent);font-weight:700;">$750K-7M</td>
+            <td>Single quarry, owner-operator. Asset purchase likely.</td>
+          </tr>
+          <tr>
+            <td>$5-15M</td>
+            <td>18-25%</td>
+            <td>$0.9-3.8M</td>
+            <td>6-8x</td>
+            <td style="color:var(--accent);font-weight:700;">$5-30M</td>
+            <td>Established family operation. DOT contracts. Sweet spot for bolt-ons.</td>
+          </tr>
+          <tr>
+            <td>$15-30M</td>
+            <td>20-28%</td>
+            <td>$3-8.4M</td>
+            <td>7-9x</td>
+            <td style="color:var(--accent);font-weight:700;">$21-76M</td>
+            <td>Multi-site or vertically integrated. Platform potential. May need PE co-invest.</td>
+          </tr>
+          <tr>
+            <td>$30-50M</td>
+            <td>22-35%</td>
+            <td>$6.6-17.5M</td>
+            <td>8-11x</td>
+            <td style="color:var(--accent);font-weight:700;">$53-193M</td>
+            <td>Regional platform. Strategic premium. Comparable to Stavola-type deal.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="comps-section">
+      <h3>Key Valuation Drivers for Premium Multiples</h3>
+      <div class="data-grid" style="margin-top: 16px;">
+        <div class="data-item">
+          <div class="data-label">Material Type</div>
+          <div class="data-value">Trap Rock &gt; Granite &gt; Limestone &gt; Sandstone/Shale</div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Proximity to NYC</div>
+          <div class="data-value">&lt;50 miles = 1-2x premium; &lt;25 miles = 2-3x premium</div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Permit Life</div>
+          <div class="data-value">20+ year remaining LOM adds 1-2x to multiple</div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Vertical Integration</div>
+          <div class="data-value">Asphalt/Ready-Mix adds 0.5-1.5x to multiple</div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">DOT Approval</div>
+          <div class="data-value">NYSDOT/NJDOT approved materials = pricing power</div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Rail Access</div>
+          <div class="data-value">Rail-served quarries command logistics premium</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roll-Up Strategy Summary -->
+  <div class="exec-summary" style="margin-top: 32px;">
+    <h2>Recommended Sequencing</h2>
+    <p>
+      <strong>Phase 1 (Anchor):</strong> Acquire Callahan &amp; Nannini as the platform anchor &mdash; expanding permitted acreage, DOT-approved products, marquee project history, and Orange County location create the ideal foundation. Estimated cost: $10-30M.<br><br>
+      <strong>Phase 2 (Bolt-Ons):</strong> Add Eastern Materials (I-87 corridor, asphalt capability) and JML Quarries/Masten (Sullivan County, vertically integrated) as immediate bolt-ons. Combined estimated cost: $10-33M.<br><br>
+      <strong>Phase 3 (CT Entry):</strong> Acquire Haynes Group for statewide CT coverage (5 quarries, ready-mix, 150+ employees). Estimated cost: $28-45M. Alternative: acquire 1-2 individual Haynes quarries if full platform is unaffordable.<br><br>
+      <strong>Phase 4 (NJ Expansion):</strong> Add Liberty Stone & Aggregates for NJ market access and Jersey City urban processing. Estimated cost: $5-15M.<br><br>
+      <strong>Phase 5 (Scale):</strong> Approach Peter K. Frueh for Capital Region expansion, then evaluate Rawson Materials (CT/New England, rail access) and Suzio York Hill (CT trap rock) for further scale.<br><br>
+      <strong>Total Estimated Platform Build:</strong> $85-215M across 15-25 quarry sites covering NY, NJ, CT with full vertical integration (aggregate + asphalt + ready-mix + recycling).
+    </p>
+  </div>
 
 </div>
 
 <footer>
-  <p>&copy; 2026 <a href="https://quarryme.com">QuarryMe.com</a> &mdash; Tri-State Quarry Acquisition Targets Report</p>
-  <p style="margin-top: 4px;">Confidential &mdash; For Internal Use Only</p>
+  <div class="container">
+    <p>QuarryMe Acquisition Target Database &mdash; Confidential &mdash; Prepared May 2026</p>
+    <p style="margin-top: 4px;">All estimates are based on publicly available data, industry benchmarks, and professional judgment. Actual financials require seller disclosure during LOI/diligence. Revenue and EBITDA estimates use industry-standard production × pricing × margin assumptions.</p>
+    <p style="margin-top: 8px; color: var(--text2);">Data sources: MSHA Mine Data Retrieval System, NYSDEC Mined Land Reclamation Database, NJ DEP, CT DEEP, Pit &amp; Quarry, D&amp;B, USGS Mineral Commodity Summaries, Capstone Partners, Griffin Financial Group, company websites and public filings.</p>
+  </div>
 </footer>
+
+<script>
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tabName).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
 
 </body>
 </html>
