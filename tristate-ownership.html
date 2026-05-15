@@ -36,7 +36,7 @@ main{max-width:1320px;margin:0 auto;padding:32px 24px 64px}
 .toolbar-btn:hover{color:var(--text);border-color:var(--gold)}
 .toolbar-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(212,160,60,0.08)}
 .toolbar-count{margin-left:auto;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
-#map{height:640px;width:100%;background:#0a1628}
+#map{height:640px;width:100%;background:#eef2f5}
 .map-legend{padding:16px 18px;border-top:1px solid var(--border);background:var(--surface2);display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px 18px;font-size:12px}
 .legend-row{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 6px;border-radius:4px;transition:background .2s}
 .legend-row:hover{background:rgba(255,255,255,0.04)}
@@ -119,9 +119,22 @@ footer a{color:var(--gold);text-decoration:none}
   <p>The October 2024 <span class="hl">Arcosa / Stavola</span> deal — $1.2B for three NJ trap-rock quarries, twelve asphalt plants and three recycle yards at ~12× EBITDA — is the comp that reset trap-rock valuations region-wide. Red dots on the map are the Stavola assets that now sit inside Arcosa.</p>
 </div>
 
+<h2 class="sec-h">Listed-company <span>parents</span></h2>
+<p class="sec-sub">Each card aggregates every owned aggregate-producing site we could verify in the tri-state. Production volumes are MSHA-reported tons or company-disclosed where available; otherwise estimated from permitted acreage and reserve life. M&amp;A notes are the most recent material transaction relevant to the regional asset.</p>
+
+<div class="company-grid" id="companies"></div>
+
+<h2 class="sec-h">Independent &amp; family-owned <span>operators</span></h2>
+<p class="sec-sub">Single-site and multi-site private operators not owned by a listed parent. These are the acquisition targets the listed side has spent the last decade hunting. Many have no obvious succession plan — Stavola itself was a third-generation family business when Arcosa bought it.</p>
+
+<div class="company-grid" id="indies"></div>
+
+<h2 class="sec-h">Ownership <span>map</span></h2>
+<p class="sec-sub">Every verified site plotted on a single map. Click a legend entry to toggle that owner on/off; click a marker for site detail and MSHA lookup.</p>
+
 <div class="map-card">
   <div class="map-toolbar">
-    <h2>Ownership Map</h2>
+    <h2>Tri-State View</h2>
     <button class="toolbar-btn active" data-view="all">All States</button>
     <button class="toolbar-btn" data-view="metro">NYC Metro</button>
     <button class="toolbar-btn" data-view="NY">NY</button>
@@ -132,16 +145,6 @@ footer a{color:var(--gold);text-decoration:none}
   <div id="map"></div>
   <div class="map-legend" id="legend"></div>
 </div>
-
-<h2 class="sec-h">Listed-company <span>parents</span></h2>
-<p class="sec-sub">Each card aggregates every owned aggregate-producing site we could verify in the tri-state. Production volumes are MSHA-reported tons or company-disclosed where available; otherwise estimated from permitted acreage and reserve life. M&amp;A notes are the most recent material transaction relevant to the regional asset.</p>
-
-<div class="company-grid" id="companies"></div>
-
-<h2 class="sec-h">Independent &amp; family-owned <span>operators</span></h2>
-<p class="sec-sub">Single-site and multi-site private operators not owned by a listed parent. These are the acquisition targets the listed side has spent the last decade hunting. Many have no obvious succession plan — Stavola itself was a third-generation family business when Arcosa bought it.</p>
-
-<div class="company-grid" id="indies"></div>
 
 </main>
 
@@ -402,7 +405,7 @@ const INDIES = [
 /* ============== MAP INIT ============== */
 const map = L.map('map',{zoomControl:true,scrollWheelZoom:true}).setView([41.2,-74.0],7);
 
-const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18,subdomains:'abcd'
 }).addTo(map);
 
@@ -414,10 +417,10 @@ function renderMarker(s, owner, isIndie){
   const m = L.circleMarker([lat,lng],{
     radius: isIndie ? 5 : 7,
     fillColor: owner.color,
-    color: '#fff',
-    weight: 1.2,
-    fillOpacity: 0.88,
-    opacity: 0.95
+    color: '#1a2a40',
+    weight: 1.4,
+    fillOpacity: 0.92,
+    opacity: 1
   });
   const html = `
     <h3>${name}</h3>
