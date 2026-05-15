@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tri-State Quarry Ownership Map | QuarryMe</title>
+<meta name="description" content="Interactive ownership map of NY/NJ/CT quarries. Color-coded by listed-company parent (Arcosa, Amrize, Heidelberg, Vulcan, Martin Marietta, CRH) versus independent operators.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a1628;--surface:#111d33;--surface2:#162440;--border:#1e3a5f;
+  --text:#e8edf3;--muted:#8899aa;--gold:#d4a03c;
+  --c-arcosa:#e74c3c;--c-amrize:#3498db;--c-heidelberg:#27ae60;
+  --c-vulcan:#e67e22;--c-mlm:#9b59b6;--c-crh:#f1c40f;--c-other:#16a085;
+  --c-indie:#7f8c8d
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.data{font-family:'JetBrains Mono','Courier New',monospace}
+header.hero{padding:48px 24px 32px;background:linear-gradient(180deg,#0d1f38 0%,var(--bg) 100%);border-bottom:1px solid var(--border)}
+header.hero .wrap{max-width:1320px;margin:0 auto}
+header.hero .kicker{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+header.hero h1{font-size:clamp(24px,4.2vw,40px);font-weight:700;margin-bottom:8px;line-height:1.15}
+header.hero h1 span{color:var(--gold)}
+header.hero p.sub{color:var(--muted);font-size:15px;max-width:880px;margin-bottom:18px}
+header.hero .meta{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+main{max-width:1320px;margin:0 auto;padding:32px 24px 64px}
+
+/* Map */
+.map-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:32px;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.map-toolbar{display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.map-toolbar h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text);margin-right:8px}
+.toolbar-btn{background:var(--bg);color:var(--muted);border:1px solid var(--border);padding:6px 12px;border-radius:4px;font-size:12px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.6px}
+.toolbar-btn:hover{color:var(--text);border-color:var(--gold)}
+.toolbar-btn.active{color:var(--gold);border-color:var(--gold);background:rgba(212,160,60,0.08)}
+.toolbar-count{margin-left:auto;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+#map{height:640px;width:100%;background:#0a1628}
+.map-legend{padding:16px 18px;border-top:1px solid var(--border);background:var(--surface2);display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px 18px;font-size:12px}
+.legend-row{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 6px;border-radius:4px;transition:background .2s}
+.legend-row:hover{background:rgba(255,255,255,0.04)}
+.legend-row.dim{opacity:0.35}
+.legend-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid #fff;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.4)}
+.legend-row .lbl{color:var(--text);font-weight:600}
+.legend-row .cnt{color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:auto;font-size:11px}
+
+/* Leaflet popup */
+.leaflet-popup-content-wrapper{background:#0e1a2f;color:var(--text);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
+.leaflet-popup-tip{background:#0e1a2f;border:1px solid var(--border)}
+.leaflet-popup-content{margin:10px 14px;font-size:12px;line-height:1.5;min-width:240px}
+.leaflet-popup-content h3{font-size:13px;color:var(--gold);margin-bottom:4px;font-weight:700}
+.leaflet-popup-content .pop-owner{font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.leaflet-popup-content .pop-row{font-size:11px;color:var(--muted);margin:2px 0}
+.leaflet-popup-content .pop-row b{color:var(--text);font-weight:600}
+.leaflet-popup-content .pop-row a{color:var(--gold);text-decoration:none}
+.leaflet-popup-content .pop-row a:hover{text-decoration:underline}
+.leaflet-popup-content .pop-msha{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+
+/* Hover tooltip (small) */
+.leaflet-tooltip.qm-tip{background:#0e1a2f;border:1px solid var(--border);color:var(--text);font-size:11px;padding:6px 10px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,0.4)}
+.leaflet-tooltip.qm-tip::before{display:none}
+
+/* Company panels */
+.company-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-bottom:48px}
+.co-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px;border-left:4px solid var(--gold);transition:border-color .2s,transform .2s}
+.co-card:hover{transform:translateY(-2px)}
+.co-card .co-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px}
+.co-card h3{font-size:15px;font-weight:700;color:var(--text)}
+.co-card .ticker{font-size:11px;color:var(--gold);font-family:'JetBrains Mono',monospace;background:rgba(212,160,60,0.08);padding:2px 6px;border-radius:3px;border:1px solid rgba(212,160,60,0.3)}
+.co-card .parent{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.co-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.co-stats .s{background:var(--surface2);padding:8px 10px;border-radius:4px;border:1px solid var(--border)}
+.co-stats .s .v{font-size:18px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace;line-height:1.1}
+.co-stats .s .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px}
+.co-card .ma-note{font-size:12px;color:var(--muted);padding-top:10px;border-top:1px dashed var(--border);line-height:1.55}
+.co-card .ma-note b{color:var(--text)}
+
+/* Section header */
+.sec-h{font-size:18px;font-weight:700;margin-bottom:6px;letter-spacing:0.3px}
+.sec-h span{color:var(--gold)}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:20px;max-width:840px}
+
+/* Thesis card */
+.thesis{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:20px 24px;margin-bottom:32px;font-size:14px;line-height:1.7}
+.thesis h2{font-size:14px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.thesis p{margin-bottom:8px}
+.thesis .hl{color:var(--gold);font-weight:600}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:28px 24px;text-align:center;color:var(--muted);font-size:12px;margin-top:32px}
+footer a{color:var(--gold);text-decoration:none}
+
+@media (max-width:720px){
+  header.hero{padding:32px 16px 24px}
+  main{padding:24px 16px 48px}
+  #map{height:480px}
+  .map-toolbar{padding:12px}
+  .map-toolbar h2{width:100%;margin-bottom:6px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Internal Research / Not Linked</div>
+    <h1>Tri-State Quarry <span>Ownership Map</span></h1>
+    <p class="sub">Who actually owns the aggregate base of the New York metro? Every active hard-rock quarry and major sand &amp; gravel pit in NY, NJ, and CT, color-coded by listed-company parent. Built to make the roll-up thesis legible at a glance: a small number of large publics and a long tail of independent acquisition targets.</p>
+    <div class="meta">Data current May 2026 &middot; Sources: MSHA MDRS, NY DEC / NJ DEP / CT DEEP, company location finders, 10-K filings, M&amp;A press releases</div>
+  </div>
+</header>
+
+<main>
+
+<div class="thesis">
+  <h2>Why this map exists</h2>
+  <p>Five listed acquirers — <span class="hl">Arcosa, Amrize, Heidelberg, Vulcan, Martin Marietta</span> — and one dominant incumbent, <span class="hl">CRH</span>, control essentially every large hard-rock quarry inside the New York MSA. The map below shows just how concentrated the listed-company side is, and how shallow the bench of remaining independent targets has become.</p>
+  <p>The October 2024 <span class="hl">Arcosa / Stavola</span> deal — $1.2B for three NJ trap-rock quarries, twelve asphalt plants and three recycle yards at ~12× EBITDA — is the comp that reset trap-rock valuations region-wide. Red dots on the map are the Stavola assets that now sit inside Arcosa.</p>
+</div>
+
+<div class="map-card">
+  <div class="map-toolbar">
+    <h2>Ownership Map</h2>
+    <button class="toolbar-btn active" data-view="all">All States</button>
+    <button class="toolbar-btn" data-view="metro">NYC Metro</button>
+    <button class="toolbar-btn" data-view="NY">NY</button>
+    <button class="toolbar-btn" data-view="NJ">NJ</button>
+    <button class="toolbar-btn" data-view="CT">CT</button>
+    <span class="toolbar-count" id="qcount">— sites</span>
+  </div>
+  <div id="map"></div>
+  <div class="map-legend" id="legend"></div>
+</div>
+
+<h2 class="sec-h">Listed-company <span>parents</span></h2>
+<p class="sec-sub">Each card aggregates every owned aggregate-producing site we could verify in the tri-state. Production volumes are MSHA-reported tons or company-disclosed where available; otherwise estimated from permitted acreage and reserve life. M&amp;A notes are the most recent material transaction relevant to the regional asset.</p>
+
+<div class="company-grid" id="companies"></div>
+
+<h2 class="sec-h">Independent &amp; family-owned <span>operators</span></h2>
+<p class="sec-sub">Single-site and multi-site private operators not owned by a listed parent. These are the acquisition targets the listed side has spent the last decade hunting. Many have no obvious succession plan — Stavola itself was a third-generation family business when Arcosa bought it.</p>
+
+<div class="company-grid" id="indies"></div>
+
+</main>
+
+<footer>
+  Standalone research page &middot; Not linked from the main site &middot;
+  <a href="https://quarryme.com">Back to quarryme.com</a>
+</footer>
+
+<script>
+/* ==================================================================
+   OWNERSHIP DATA — verified May 2026
+   Site arrays: [name, town, state, county, lat, lng, material, mshaId, note]
+   ================================================================== */
+const OWNERS = [
+  {
+    key:"arcosa", color:"#e74c3c",
+    name:"Arcosa Stavola",
+    parent:"Arcosa, Inc.",
+    ticker:"NYSE: ACA",
+    stats:{ttmRev:"$283M", ebitda:"$100M", quarries:"3 NJ + 2 PA", plants:"12 HMA / 3 recycle"},
+    maNote:"Closed Oct 2024 — acquired Stavola Holding for <b>$1.2B</b> (~12× EBITDA), Arcosa's largest-ever deal. Reset trap-rock comp in the NY/NJ basin.",
+    sites:[
+      ["Bound Brook Quarry","Bound Brook","NJ","Somerset",40.5894,-74.5539,"Trap Rock (Orange Mtn Basalt)","2800156","409 Chimney Rock Rd. Flagship NJ trap-rock asset. Also HMA + recycle on same parcel."],
+      ["Oldwick Quarry","Tewksbury Twp","NJ","Hunterdon",40.6735,-74.7864,"Trap Rock (Orange Mtn Basalt)","2801456","30 Rockaway Rd. Acquired by Stavola in 2001."],
+      ["Beaver Run Quarry","Lafayette Twp","NJ","Sussex",41.0721,-74.7016,"Sand &amp; Gravel","2800756","300 Beaver Run Rd. NW NJ S&amp;G feeding the Sussex/Morris construction market."],
+      ["Bound Brook HMA + Recycle","Bound Brook","NJ","Somerset",40.5860,-74.5520,"HMA / Recycled Aggregate","","409 Chimney Rock Rd. Co-located with the trap-rock quarry."],
+      ["Tinton Falls HQ + HMA + Recycle","Tinton Falls","NJ","Monmouth",40.3107,-74.0987,"HMA / Recycle","","Corporate HQ at 175 Drift Rd; HMA + recycle at 10 Hamilton Rd."],
+      ["Old Bridge HMA + Recycle","Old Bridge","NJ","Middlesex",40.4081,-74.3201,"HMA / Recycle","","85 Waterworks Rd."],
+      ["Brick HMA","Brick","NJ","Ocean",40.0517,-74.1352,"HMA","","429 Chambers Bridge Rd."],
+      ["Howell HMA","Howell","NJ","Monmouth",40.1859,-74.2002,"HMA","","104 Yellow Brook Rd."],
+      ["Millstone HMA","Millstone","NJ","Monmouth",40.2151,-74.4221,"HMA","","120 Old Bergen Mills Rd."],
+      ["Flemington HMA","Flemington","NJ","Hunterdon",40.5151,-74.8593,"HMA","","205 Pennsylvania Ave."],
+      ["Hillsborough HMA","Hillsborough","NJ","Somerset",40.5023,-74.6543,"HMA","","340 Valley Rd."],
+      ["Newark HMA","Newark","NJ","Essex",40.6884,-74.1182,"HMA","","330 Doremus Ave. NY metro HMA terminal."]
+    ]
+  },
+
+  {
+    key:"crh", color:"#f1c40f",
+    name:"CRH plc",
+    parent:"Tilcon NY/NJ/CT, Callanan, Weldon, Trap Rock Industries, Dolomite",
+    ticker:"NYSE: CRH",
+    stats:{ttmRev:"$36B (group)", ebitda:"$7.4B (group)", quarries:"~30 tri-state", plants:"50+ HMA / RMC"},
+    maNote:"Dominant tri-state incumbent. Trap Rock Industries (NJ) folded in via Oldcastle 1999; Tilcon/Callanan a CRH Americas Materials core. Continues bolt-on M&amp;A — most recent: Perth Amboy NJ S&amp;G (Dec 2024).",
+    sites:[
+      ["Tilcon Haverstraw Quarry","Haverstraw","NY","Rockland",41.1980,-73.9680,"Trap Rock (Palisades Sill)","3000075","Tilcon NY. Hudson-River barge access; one of the largest E. Coast trap-rock quarries."],
+      ["Tilcon West Nyack Quarry","West Nyack","NY","Rockland",41.0980,-73.9700,"Trap Rock","3000083","1 Crusher Rd. Tilcon NY."],
+      ["Tilcon Clinton Point Quarry","Wappingers Falls","NY","Dutchess",41.5612,-73.9281,"Dolostone","3000082","14 Clinton Point Dr. Hudson barge terminal."],
+      ["Tilcon Mt Marion","Saugerties","NY","Ulster",42.0421,-73.9712,"Dolostone / S&amp;G","3000287","Tilcon NY mill site."],
+      ["Tilcon Goshen Quarry","Goshen","NY","Orange",41.4015,-74.3526,"Sand &amp; Gravel","","2 Quarry Rd."],
+      ["Tilcon Newburgh Asphalt","Newburgh","NY","Orange",41.5023,-74.0192,"HMA","","Tilcon NY HMA terminal."],
+      ["Tilcon Maybrook Asphalt","Maybrook","NY","Orange",41.4810,-74.2150,"HMA","","I-84 corridor."],
+      ["Tilcon Mt Hope Quarry","Wharton","NJ","Morris",40.9088,-74.5742,"Trap Rock","2800026","560-acre Tilcon NJ flagship; on-site 600 t/hr HMA plant."],
+      ["Tilcon Riverdale Quarry","Riverdale","NJ","Morris",40.9890,-74.3081,"Granite Gneiss","2800001","Operating &gt;100 yrs. Tilcon acquired Riverdale Quarry LLC in 2000."],
+      ["Tilcon Oxford Quarry &amp; Mill","White Twp","NJ","Warren",40.8061,-74.9890,"Limestone","2800541","US-46 / CR-519 area."],
+      ["Tilcon Wharton","Wharton","NJ","Morris",40.8941,-74.5810,"Trap Rock","","Tilcon NJ."],
+      ["Weldon Peapack Quarry","Peapack","NJ","Somerset",40.7172,-74.6594,"Trap Rock","","Weldon Materials (CRH)."],
+      ["Weldon Chester Quarry","Chester","NJ","Morris",40.7831,-74.7011,"Trap Rock","","Weldon Materials (CRH)."],
+      ["Weldon Bernardsville","Bernardsville","NJ","Somerset",40.7196,-74.5694,"Trap Rock","","Weldon Materials (CRH)."],
+      ["Trap Rock Kingston Quarry","Franklin Twp","NJ","Somerset",40.3801,-74.6201,"Trap Rock (Diabase)","2800018","Largest diabase quarry in central NJ. CRH via Oldcastle (1999)."],
+      ["Trap Rock Lambertville","Lambertville","NJ","Hunterdon",40.3691,-74.9521,"Trap Rock","","Trap Rock Industries (CRH)."],
+      ["Trap Rock Pennington","Pennington","NJ","Mercer",40.3301,-74.7892,"Trap Rock","","Trap Rock Industries (CRH)."],
+      ["Perth Amboy Sand","Perth Amboy","NJ","Middlesex",40.5102,-74.2701,"Sand","2801048","Tilcon NJ — coastal S&amp;G acquired Dec 2024."],
+      ["Tilcon New Britain Quarry","Plainville","CT","Hartford",41.6620,-72.7785,"Trap Rock (Holyoke Basalt)","0600022","Largest CT quarry. Tilcon CT HQ region."],
+      ["Tilcon Plainville Quarry","Plainville","CT","Hartford",41.6692,-72.8593,"Trap Rock (Talcott Basalt)","","Near reserve depletion."],
+      ["Tilcon Newington Mill","Newington","CT","Hartford",41.6921,-72.7321,"Trap Rock mill","0600003","Tilcon CT processing/distribution."],
+      ["Tilcon North Branford Quarry","North Branford","CT","New Haven",41.3303,-72.7720,"Trap Rock","0600012","Operated since 1914; on Branford Steam Railroad."],
+      ["Tilcon Branford","Branford","CT","New Haven",41.2792,-72.8021,"Trap Rock","","Tilcon CT."],
+      ["Tilcon Wallingford","Wallingford","CT","New Haven",41.4521,-72.8231,"Trap Rock","","Tilcon CT."],
+      ["Tilcon Durham (Reed's Gap)","Durham","CT","Middlesex",41.4671,-72.6802,"Trap Rock","","aka New Haven Trap Rock; Tilcon CT."],
+      ["Callanan South Bethlehem","Bethlehem","NY","Albany",42.5921,-73.8521,"Limestone (Helderberg)","","DEC #40033 (439 ac). Callanan HQ region."],
+      ["Callanan Albany","Albany","NY","Albany",42.6492,-73.7995,"Crushed Stone","","Callanan HQ."],
+      ["Callanan Catskill Quarry","Catskill","NY","Greene",42.2161,-73.8694,"Limestone","3003954","Callanan Industries (CRH)."],
+      ["Callanan Coxsackie","Coxsackie","NY","Greene",42.3501,-73.8001,"Sand &amp; Gravel","","Callanan Industries (CRH)."],
+      ["Callanan Selkirk","Selkirk","NY","Albany",42.5401,-73.8501,"Sand &amp; Gravel","","DEC #40384. Callanan (CRH)."],
+      ["Dolomite Penfield Plant","Penfield","NY","Monroe",43.1501,-77.4501,"Dolostone","3000033","Dolomite Products (CRH) — Rochester area."]
+    ]
+  },
+
+  {
+    key:"heidelberg", color:"#27ae60",
+    name:"Heidelberg Materials",
+    parent:"Heidelberg Materials AG (fmr Lehigh Hanson / Hanson Aggregates)",
+    ticker:"ETR: HEI",
+    stats:{ttmRev:"€21B (group)", ebitda:"€4.4B (group)", quarries:"~6 tri-state cement + agg", plants:"Ravena = 13 NE cement plants"},
+    maNote:"Rebranded from Lehigh Hanson in 2022. NE flagship is the <b>Ravena, NY</b> integrated cement plant (~$400M modernization, 2018). Limited aggregates-only quarry footprint in tri-state; primarily cement + ready-mix.",
+    sites:[
+      ["Ravena Cement Plant + Quarry","Ravena","NY","Albany",42.4733,-73.8127,"Cement + Limestone","3000045","1916 US-9W. NE flagship. Captive limestone quarry feeds kiln. Hudson dock for export."],
+      ["Glens Falls Cement Plant","Glens Falls","NY","Warren",43.3095,-73.6443,"Cement + Limestone","","Legacy Glens Falls Cement → Lehigh → Heidelberg. DEC #50021 (286 ac)."],
+      ["Greenville Quarry","Greenville","NY","Greene",42.4012,-74.0102,"Limestone","","DEC #40041 (347 ac). Hanson Aggregates NY legacy."],
+      ["Hanson Saugerties","Saugerties","NY","Ulster",42.1001,-74.0201,"Crushed Stone","","Hanson Aggregates NY legacy."],
+      ["Hanson Red Hook S&amp;G","Red Hook","NY","Dutchess",41.9801,-73.8801,"Sand &amp; Gravel","","Hanson Aggregates NY legacy."],
+      ["Hanson Rosendale","Rosendale","NY","Ulster",41.8401,-74.0801,"Crushed Stone","","Hanson Aggregates NY legacy."],
+      ["Hanson Saratoga S&amp;G","Saratoga","NY","Saratoga",43.0501,-73.7801,"Sand &amp; Gravel","","Hanson Aggregates NY legacy."],
+      ["Hanson Troy","Troy","NY","Rensselaer",42.7301,-73.6901,"Sand &amp; Gravel","","Hanson Aggregates NY legacy."]
+    ]
+  },
+
+  {
+    key:"amrize", color:"#3498db",
+    name:"Amrize (fmr Holcim NA)",
+    parent:"Amrize Ltd. (spun off from Holcim, Jun 2025)",
+    ticker:"NYSE: AMRZ",
+    stats:{ttmRev:"$11B (NA)", ebitda:"$3.1B (NA)", quarries:"Minimal direct quarry presence", plants:"NJ/NY ready-mix + terminals"},
+    maNote:"Spun off from Holcim Jun 2025. NA business is cement + ready-mix heavy; very thin tri-state hard-rock quarry footprint vs. CRH/Heidelberg. Lafarge legacy NE aggregates were largely divested in the 2015 Holcim-Lafarge merger.",
+    sites:[
+      ["Aggregate Industries NE — North Bergen Terminal","North Bergen","NJ","Hudson",40.7891,-74.0271,"Aggregate Terminal","","Amrize ready-mix + terminal feeding NYC metro."],
+      ["Amrize Ready-Mix — Bronx","Bronx","NY","Bronx",40.8101,-73.8801,"Ready-Mix","","Concrete plant feeding NYC. No on-site quarry."],
+      ["Amrize Ready-Mix — Brooklyn","Brooklyn","NY","Kings",40.6501,-73.9601,"Ready-Mix","","Concrete plant. Imported aggregate."]
+    ]
+  },
+
+  {
+    key:"vulcan", color:"#e67e22",
+    name:"Vulcan Materials",
+    parent:"Vulcan Materials Company",
+    ticker:"NYSE: VMC",
+    stats:{ttmRev:"$8.0B", ebitda:"$2.3B", quarries:"0 owned tri-state quarries", plants:"Eastern Concrete RMC"},
+    maNote:"Largest US aggregates producer — but no tri-state hard-rock quarry. NY metro served by import terminals (Eastern Concrete Materials, legacy US Concrete acquired 2021) fed by Polaris BC + Mexico via vessel.",
+    sites:[
+      ["Eastern Concrete Materials — Bronx","Bronx","NY","Bronx",40.8201,-73.8901,"Ready-Mix + Aggregate Terminal","","Vulcan via 2021 US Concrete deal. Aggregate imported via Hudson."],
+      ["Eastern Marine Terminal — NJ","Bayonne","NJ","Hudson",40.6601,-74.1201,"Aggregate Import Terminal","","Polaris BC trap-rock imports."],
+      ["Eastern Concrete Materials — Long Island","Bohemia","NY","Suffolk",40.7801,-73.1101,"Ready-Mix","","Vulcan/Eastern legacy RMC."]
+    ]
+  },
+
+  {
+    key:"mlm", color:"#9b59b6",
+    name:"Martin Marietta",
+    parent:"Martin Marietta Materials, Inc.",
+    ticker:"NYSE: MLM",
+    stats:{ttmRev:"$6.5B", ebitda:"$1.9B", quarries:"0 tri-state quarries", plants:"None in NY/NJ/CT"},
+    maNote:"No tri-state operations. Nearest assets are eastern PA (Bethlehem, Easton) and Mid-Atlantic. Active acquirer regionally — has been rumored as a bidder on multiple NE roll-up candidates.",
+    sites:[]
+  },
+
+  {
+    key:"other", color:"#16a085",
+    name:"Other listed acquirers",
+    parent:"CRH bolt-ons / Knife River / Eagle / USLM",
+    ticker:"—",
+    stats:{ttmRev:"varies", ebitda:"varies", quarries:"~0–3 tri-state", plants:"limited"},
+    maNote:"Knife River (KNF, spun 2023) NE presence is Maine via Pike Industries — not tri-state. Eagle Materials (EXP) is cement/gypsum, no quarries. USLM is TX/AR/OK/MO/LA/CO only. Summit (now Quikrete) has no legacy NE quarries. Listed-acquirer competition is effectively a 4-horse race in the tri-state: CRH + Arcosa + Heidelberg + (potentially) MLM/Vulcan.",
+    sites:[]
+  }
+];
+
+const INDIES = [
+  {
+    key:"og", color:"#7f8c8d",
+    name:"O&amp;G Industries",
+    parent:"Family-owned (Oneglia &amp; Gervasini)",
+    ticker:"Private",
+    stats:{ttmRev:"~$700M est", ebitda:"~$120M est", quarries:"6 CT quarries", plants:"30+ CT facilities"},
+    maNote:"4th-generation Torrington CT family business. <b>Largest privately-held aggregate target in tri-state</b>. Would be a transformative acquisition for any of the listed acquirers at ~$1.2-1.8B implied EV.",
+    sites:[
+      ["O&amp;G Southbury","Southbury","CT","New Haven",41.4801,-73.2201,"Trap Rock","0600295","O&amp;G Industries."],
+      ["O&amp;G Woodbury","Woodbury","CT","Litchfield",41.5501,-73.2001,"Crushed Stone","0600017","O&amp;G Industries."],
+      ["O&amp;G Torrington","Torrington","CT","Litchfield",41.8001,-73.1201,"Crushed Stone","","O&amp;G HQ region."],
+      ["O&amp;G New Milford","New Milford","CT","Litchfield",41.5801,-73.4101,"Crushed Stone","","O&amp;G Industries."],
+      ["O&amp;G Danbury","Danbury","CT","Fairfield",41.3901,-73.4501,"Crushed Stone","","O&amp;G Industries."],
+      ["O&amp;G Washington","Washington","CT","Litchfield",41.6301,-73.3101,"Crushed Stone","","O&amp;G Industries."]
+    ]
+  },
+  {
+    key:"peckham", color:"#95a5a6",
+    name:"Peckham Industries",
+    parent:"Family-owned (Peckham family)",
+    ticker:"Private",
+    stats:{ttmRev:"~$650M est", ebitda:"~$95M est", quarries:"6+ tri-state", plants:"40+ NE facilities"},
+    maNote:"Regional NE platform — NY Hudson Valley + New England. Multi-generational ownership. <b>Frequently cited as the next big NE roll-up candidate</b> after Stavola.",
+    sites:[
+      ["Peckham Hudson","Hudson","NY","Columbia",42.2461,-73.7901,"Limestone","","DEC #40081 (312 ac)."],
+      ["Peckham Pleasant Valley","Pleasant Valley","NY","Dutchess",41.7501,-73.8201,"Sand &amp; Gravel","","Peckham Materials."],
+      ["Peckham Windham","Windham","NY","Greene",42.3001,-74.2401,"Limestone","","DEC #40055."],
+      ["Peckham Chatham","Chatham","NY","Columbia",42.3701,-73.6001,"Sand &amp; Gravel","","Peckham Materials."],
+      ["Peckham E Canaan","East Canaan","CT","Litchfield",42.0201,-73.3301,"Crushed Stone","","Peckham Materials."],
+      ["Peckham Old Saybrook","Old Saybrook","CT","Middlesex",41.3001,-72.3501,"Sand &amp; Gravel","","Peckham Materials."],
+      ["Peckham Waterbury","Waterbury","CT","New Haven",41.5601,-73.0501,"Crushed Stone","","Peckham Materials."]
+    ]
+  },
+  {
+    key:"carver", color:"#bdc3c7",
+    name:"Carver Companies",
+    parent:"Privately-held (Coeymans Industrial Park)",
+    ticker:"Private",
+    stats:{ttmRev:"NA", ebitda:"NA", quarries:"Port of Coeymans + 2", plants:"Hudson barge terminal"},
+    maNote:"Operates the Port of Coeymans deep-water Hudson terminal — strategic asset for aggregate import / cement export. Adjacent to (not owned by) the Heidelberg Ravena cement plant.",
+    sites:[
+      ["Port of Coeymans","Coeymans","NY","Albany",42.4801,-73.7901,"Aggregate Terminal","","Hudson deep-water dock. DEC #40251."],
+      ["Carver Monroe","Monroe","NY","Orange",41.3301,-74.1801,"Sand &amp; Gravel","","Carver Companies."]
+    ]
+  },
+  {
+    key:"cobleskill", color:"#7f8c8d",
+    name:"Cobleskill Stone Products",
+    parent:"Family-owned (Cobleskill area)",
+    ticker:"Private",
+    stats:{ttmRev:"NA", ebitda:"NA", quarries:"3 NY", plants:"Limestone, RMC"},
+    maNote:"NY Schoharie / Mohawk Valley limestone producer. Smaller acquisition target.",
+    sites:[
+      ["Cobleskill Stone HQ Quarry","Cobleskill","NY","Schoharie",42.6701,-74.4801,"Limestone","","DEC #40077 (102 ac)."],
+      ["Cobleskill Howes Cave","Howes Cave","NY","Schoharie",42.6901,-74.3701,"Limestone","","DEC #40209 (159 ac)."],
+      ["Cobleskill Central Bridge","Central Bridge","NY","Schoharie",42.6001,-74.3501,"Limestone","","DEC #40094 (99 ac)."]
+    ]
+  },
+  {
+    key:"braen", color:"#95a5a6",
+    name:"Braen Stone",
+    parent:"Braen family (NJ)",
+    ticker:"Private",
+    stats:{ttmRev:"NA", ebitda:"NA", quarries:"2 NJ", plants:"Trap rock, NJ metro"},
+    maNote:"3rd-generation NJ trap-rock operator. Bergen/Passaic county exposure — closest competitor to Stavola pre-Arcosa.",
+    sites:[
+      ["Braen Haledon","Haledon","NJ","Passaic",40.9401,-74.1901,"Basalt","","Braen Stone."],
+      ["Braen Franklin Lakes","Franklin Lakes","NJ","Bergen",41.0101,-74.2101,"Basalt","","Braen Stone."]
+    ]
+  },
+  {
+    key:"haynes", color:"#bdc3c7",
+    name:"Haynes Materials",
+    parent:"Haynes family (CT)",
+    ticker:"Private",
+    stats:{ttmRev:"NA", ebitda:"NA", quarries:"3 CT", plants:"Trap rock"},
+    maNote:"CT trap-rock + RMC operator. Competes with Tilcon CT for north-Hartford market.",
+    sites:[
+      ["Haynes E Granby","East Granby","CT","Hartford",41.9301,-72.7401,"Trap Rock","","Haynes Materials."],
+      ["Haynes Bloomfield","Bloomfield","CT","Hartford",41.8301,-72.7301,"Trap Rock","","Haynes Materials."],
+      ["Haynes Suffield","Suffield","CT","Hartford",41.9801,-72.6501,"Sand &amp; Gravel","","Haynes Materials."]
+    ]
+  },
+  {
+    key:"misc", color:"#7f8c8d",
+    name:"Other independents (50+)",
+    parent:"Single-site &amp; small family operators",
+    ticker:"Private",
+    stats:{ttmRev:"varies", ebitda:"varies", quarries:"~50 tri-state", plants:"acquisition pipeline"},
+    maNote:"Long tail of single-site operators across NY/NJ/CT — Suit-Kote, Fred Weber, Jointa-Galusha, Buffalo Crushed Stone, Hamburg Quarry, Suffolk Asphalt, RCA, Fanwood Crushed Stone, Independence Materials, Haines &amp; Kibblehouse, Clayton Block, NJ Sand &amp; Gravel, Thalle Industries, Fort Miller, Luck Stone (Hudson Valley), Blasius Industries (CT), New England Silica, etc.",
+    sites:[
+      ["Fanwood Crushed Stone","Fanwood","NJ","Union",40.6401,-74.3801,"Trap Rock","","Independent — premium NJ trap-rock asset."],
+      ["Hamburg Quarry","Hamburg","NJ","Sussex",41.1501,-74.5801,"Limestone","","Independent."],
+      ["Haines &amp; Kibblehouse","Flemington","NJ","Hunterdon",40.5501,-74.9001,"Crushed Stone","","H&amp;K Group (PA-based)."],
+      ["Independence Materials","Independence","NJ","Warren",40.8501,-74.9301,"Limestone","","Independent."],
+      ["NJ Sand &amp; Gravel","Flemington","NJ","Hunterdon",40.5101,-74.8601,"Sand &amp; Gravel","","Independent."],
+      ["Jointa Galusha","Schoharie","NY","Schoharie",42.6501,-74.3001,"Limestone","","DEC #40094 (99 ac). Independent."],
+      ["Fort Miller Group","Ft Edward","NY","Washington",43.0901,-73.5801,"Crushed Stone","","Independent."],
+      ["Suit-Kote Syracuse","Syracuse","NY","Onondaga",43.0501,-76.1501,"Crushed Stone","","Suit-Kote — large NY private (Cortland)."],
+      ["Thalle Industries","Briarcliff Manor","NY","Westchester",41.1001,-73.8501,"Sand &amp; Gravel","","Thalle Industries."],
+      ["Luck Stone Hudson Valley","Goshen","NY","Orange",41.3501,-74.1001,"Crushed Stone","","Luck Stone (VA family) — Hudson Valley site."],
+      ["Buffalo Crushed Stone","Buffalo","NY","Erie",42.8801,-78.7201,"Crushed Stone","","Independent — outside metro but tri-state-relevant."],
+      ["New England Silica","Berlin","CT","Hartford",41.5601,-72.8501,"Sand &amp; Gravel","","Independent."],
+      ["Blasius Industries","Waterbury","CT","New Haven",41.5501,-73.0201,"Sand &amp; Gravel","","Independent."],
+      ["Suffolk Asphalt","Calverton","NY","Suffolk",40.8501,-73.0001,"Sand &amp; Gravel","","Suffolk County asphalt + S&amp;G."]
+    ]
+  }
+];
+
+/* ============== MAP INIT ============== */
+const map = L.map('map',{zoomControl:true,scrollWheelZoom:true}).setView([41.2,-74.0],7);
+
+const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18,subdomains:'abcd'
+}).addTo(map);
+
+const allGroups = {};
+let markerCount = 0;
+
+function renderMarker(s, owner, isIndie){
+  const [name,town,state,county,lat,lng,material,msha,note] = s;
+  const m = L.circleMarker([lat,lng],{
+    radius: isIndie ? 5 : 7,
+    fillColor: owner.color,
+    color: '#fff',
+    weight: 1.2,
+    fillOpacity: 0.88,
+    opacity: 0.95
+  });
+  const html = `
+    <h3>${name}</h3>
+    <div class="pop-owner" style="color:${owner.color}">${owner.name}${owner.ticker && owner.ticker !== '—' && owner.ticker !== 'Private' ? ' &middot; '+owner.ticker : ''}</div>
+    <div class="pop-row"><b>Location:</b> ${town}, ${county} County, ${state}</div>
+    <div class="pop-row"><b>Material:</b> ${material}</div>
+    ${note ? `<div class="pop-row" style="margin-top:6px">${note}</div>` : ''}
+    ${msha ? `<div class="pop-msha">MSHA #${msha} &middot; <a href="https://www.msha.gov/data-and-reports/mine-data-retrieval-system" target="_blank">lookup</a></div>` : ''}
+  `;
+  m.bindPopup(html,{maxWidth:340});
+  m.bindTooltip(`<b>${name}</b><br>${owner.name}`,{className:'qm-tip',direction:'top',offset:[0,-4]});
+  return m;
+}
+
+function buildAll(){
+  ([...OWNERS, ...INDIES]).forEach(owner=>{
+    const grp = L.layerGroup();
+    (owner.sites||[]).forEach(s=>{
+      const m = renderMarker(s, owner, INDIES.includes(owner));
+      m.addTo(grp);
+      markerCount++;
+    });
+    grp.addTo(map);
+    allGroups[owner.key] = {layer: grp, owner};
+  });
+  document.getElementById('qcount').textContent = markerCount + ' sites mapped';
+}
+
+/* ============== LEGEND ============== */
+function buildLegend(){
+  const legend = document.getElementById('legend');
+  const items = [];
+  OWNERS.forEach(o=>{
+    if(!o.sites || o.sites.length===0) return;
+    items.push(`<div class="legend-row" data-key="${o.key}"><div class="legend-dot" style="background:${o.color}"></div><span class="lbl">${o.name}</span><span class="cnt">${o.sites.length}</span></div>`);
+  });
+  INDIES.forEach(o=>{
+    if(!o.sites || o.sites.length===0) return;
+    items.push(`<div class="legend-row" data-key="${o.key}"><div class="legend-dot" style="background:${o.color}"></div><span class="lbl">${o.name}</span><span class="cnt">${o.sites.length}</span></div>`);
+  });
+  legend.innerHTML = items.join('');
+  legend.querySelectorAll('.legend-row').forEach(row=>{
+    row.addEventListener('click',()=>{
+      const k = row.dataset.key;
+      const grp = allGroups[k];
+      if(!grp) return;
+      if(map.hasLayer(grp.layer)){
+        map.removeLayer(grp.layer);
+        row.classList.add('dim');
+      } else {
+        grp.layer.addTo(map);
+        row.classList.remove('dim');
+      }
+    });
+  });
+}
+
+/* ============== COMPANY CARDS ============== */
+function fmtTicker(t){ return t && t !== '—' ? `<span class="ticker">${t}</span>` : ''; }
+
+function renderCards(list, target){
+  const html = list.map(o=>`
+    <div class="co-card" style="border-left-color:${o.color}">
+      <div class="co-head">
+        <h3>${o.name}</h3>
+        ${fmtTicker(o.ticker)}
+      </div>
+      <div class="parent">${o.parent}</div>
+      <div class="co-stats">
+        <div class="s"><div class="v">${o.stats.quarries}</div><div class="l">Quarries / sites</div></div>
+        <div class="s"><div class="v">${o.stats.plants}</div><div class="l">Plants</div></div>
+        <div class="s"><div class="v">${o.stats.ttmRev}</div><div class="l">TTM Revenue</div></div>
+        <div class="s"><div class="v">${o.stats.ebitda}</div><div class="l">EBITDA</div></div>
+      </div>
+      <div class="ma-note">${o.maNote}</div>
+    </div>
+  `).join('');
+  document.getElementById(target).innerHTML = html;
+}
+
+/* ============== VIEW BUTTONS ============== */
+const VIEWS = {
+  all:   {center:[41.4,-74.0], zoom:7},
+  metro: {center:[40.85,-74.0], zoom:9},
+  NY:    {center:[42.5,-75.0], zoom:7},
+  NJ:    {center:[40.5,-74.5], zoom:8},
+  CT:    {center:[41.55,-72.8], zoom:9}
+};
+document.querySelectorAll('[data-view]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('[data-view]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const v = VIEWS[btn.dataset.view];
+    map.flyTo(v.center, v.zoom, {duration:0.7});
+  });
+});
+
+/* ============== INIT ============== */
+buildAll();
+buildLegend();
+renderCards(OWNERS, 'companies');
+renderCards(INDIES, 'indies');
+</script>
+</body>
+</html>
