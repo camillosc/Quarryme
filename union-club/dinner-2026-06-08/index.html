@@ -12,6 +12,7 @@
     --sepia: #7a5a3a;
     --sepia-soft: #b89876;
     --rule: #e6dfd1;
+    --muted: #8a7c6c;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -22,10 +23,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  body {
-    min-height: 100vh;
-    padding: 4rem 1.5rem 6rem;
-  }
+  body { min-height: 100vh; padding: 4rem 1.5rem 6rem; }
   .wrap { max-width: 980px; margin: 0 auto; }
   header { text-align: center; margin-bottom: 3.5rem; }
   header h1 {
@@ -52,10 +50,10 @@
   .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2.4rem 1.6rem;
+    gap: 2.6rem 1.6rem;
   }
   @media (max-width: 760px) {
-    .grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 2.2rem 1rem; }
     body { padding: 2.5rem 1rem 4rem; }
   }
   .card { text-align: center; transition: transform 0.25s ease; }
@@ -96,6 +94,15 @@
     color: var(--ink);
     letter-spacing: 0.01em;
   }
+  .caption {
+    margin-top: 0.18rem;
+    font-style: italic;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    min-height: 1em;
+  }
   footer {
     text-align: center;
     margin-top: 5rem;
@@ -115,35 +122,35 @@
     </header>
 
     <section class="grid" aria-label="Dinner attendees">
-      <article class="card"><div class="avatar"><img src="photos/eide.jpg" alt="William Eide"></div><div class="name">William Eide</div></article>
-      <article class="card"><div class="avatar"><span class="initials">SM</span></div><div class="name">Sebastian Morris</div></article>
-      <article class="card"><div class="avatar"><img src="photos/braccia.jpg" alt="David Braccia"></div><div class="name">David Braccia</div></article>
-      <article class="card"><div class="avatar"><span class="initials">BW</span></div><div class="name">Bradford Willett</div></article>
-      <article class="card"><div class="avatar"><span class="initials">TM</span></div><div class="name">Thomas Miller</div></article>
-      <article class="card"><div class="avatar"><span class="initials">SB</span></div><div class="name">Samuel Bristol</div></article>
-      <article class="card"><div class="avatar"><span class="initials">DB</span></div><div class="name">David Blais</div></article>
-      <article class="card"><div class="avatar"><span class="initials">AM</span></div><div class="name">Alexander Ma</div></article>
-      <article class="card"><div class="avatar"><img src="photos/carlotti.jpg" alt="Valentino Carlotti"></div><div class="name">Valentino Carlotti</div></article>
-      <article class="card"><div class="avatar"><span class="initials">JB</span></div><div class="name">John Bell</div></article>
-      <article class="card"><div class="avatar"><span class="initials">LS</span></div><div class="name">Lawrence Slocum</div></article>
-      <article class="card"><div class="avatar"><span class="initials">PB</span></div><div class="name">Preston Blankenship</div></article>
-      <article class="card"><div class="avatar"><span class="initials">ES</span></div><div class="name">Evan Sarno</div></article>
-      <article class="card"><div class="avatar"><span class="initials">BD</span></div><div class="name">Brant Duber</div></article>
-      <article class="card"><div class="avatar"><span class="initials">MO</span></div><div class="name">Michael O&rsquo;Neal</div></article>
-      <article class="card"><div class="avatar"><span class="initials">RC</span></div><div class="name">Robert Crosby</div></article>
-      <article class="card"><div class="avatar"><img src="photos/coles.jpg" alt="Edward Coles"></div><div class="name">Edward Coles</div></article>
-      <article class="card"><div class="avatar"><span class="initials">EP</span></div><div class="name">Edgard Puente</div></article>
-      <article class="card"><div class="avatar"><span class="initials">SF</span></div><div class="name">Spencer Feldman</div></article>
-      <article class="card"><div class="avatar"><span class="initials">BH</span></div><div class="name">Benjamin Hertz</div></article>
-      <article class="card"><div class="avatar"><span class="initials">PW</span></div><div class="name">Patrick Wilson</div></article>
-      <article class="card"><div class="avatar"><span class="initials">CE</span></div><div class="name">Chandler Elwyn</div></article>
-      <article class="card"><div class="avatar"><span class="initials">PF</span></div><div class="name">Peter Faulkner</div></article>
-      <article class="card"><div class="avatar"><img src="photos/cody.jpg" alt="Hiram Cody"></div><div class="name">Hiram Cody</div></article>
-      <article class="card"><div class="avatar"><span class="initials">WB</span></div><div class="name">William Beischer</div></article>
-      <article class="card"><div class="avatar"><span class="initials">SP</span></div><div class="name">Stephen Preefer</div></article>
-      <article class="card"><div class="avatar"><span class="initials">CS</span></div><div class="name">Camillo Schmidt Chiari</div></article>
-      <article class="card"><div class="avatar"><span class="initials">MM</span></div><div class="name">Matthew Moran</div></article>
-      <article class="card"><div class="avatar"><span class="initials">RC</span></div><div class="name">Robert Cox</div></article>
+      <article class="card"><div class="avatar"><img src="photos/eide.jpg" alt="William Eide"></div><div class="name">William Eide</div><div class="caption">Rothschild &amp; Co &middot; MD, Tech IB</div></article>
+      <article class="card"><div class="avatar"><span class="initials">SM</span></div><div class="name">Sebastian Morris</div><div class="caption">Citi</div></article>
+      <article class="card"><div class="avatar"><img src="photos/braccia.jpg" alt="David Braccia"></div><div class="name">David Braccia</div><div class="caption">Kingswood U.S. &middot; ex-Blackstone</div></article>
+      <article class="card"><div class="avatar"><span class="initials">BW</span></div><div class="name">Bradford Willett</div><div class="caption">Citi &middot; ex-Barclays</div></article>
+      <article class="card"><div class="avatar"><span class="initials">TM</span></div><div class="name">Thomas Miller</div><div class="caption">Bank of America &middot; VP, Global Sustainable Finance</div></article>
+      <article class="card"><div class="avatar"><span class="initials">SB</span></div><div class="name">Samuel Bristol</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><span class="initials">DB</span></div><div class="name">David Blais</div><div class="caption">Guggenheim Securities</div></article>
+      <article class="card"><div class="avatar"><span class="initials">AM</span></div><div class="name">Alexander Ma</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><img src="photos/carlotti.jpg" alt="Valentino Carlotti"></div><div class="name">Valentino Carlotti</div><div class="caption">Brown Brothers Harriman &middot; Partner (ex-GS)</div></article>
+      <article class="card"><div class="avatar"><span class="initials">JB</span></div><div class="name">John Bell</div><div class="caption">Bank of America &middot; Market Executive, WM</div></article>
+      <article class="card"><div class="avatar"><span class="initials">LS</span></div><div class="name">Lawrence Slocum</div><div class="caption">RiteSize &middot; Head of Procurement</div></article>
+      <article class="card"><div class="avatar"><span class="initials">PB</span></div><div class="name">Preston Blankenship</div><div class="caption">Deutsche Bank / BMO &middot; Securitized Products</div></article>
+      <article class="card"><div class="avatar"><span class="initials">ES</span></div><div class="name">Evan Sarno</div><div class="caption">Morgan Stanley</div></article>
+      <article class="card"><div class="avatar"><span class="initials">BD</span></div><div class="name">Brant Duber</div><div class="caption">Eminence Capital &middot; ex-GS MD</div></article>
+      <article class="card"><div class="avatar"><span class="initials">MO</span></div><div class="name">Michael O&rsquo;Neal</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><span class="initials">RC</span></div><div class="name">Robert Crosby</div><div class="caption">Crosby Resource Capital &middot; CIO (ex-Citadel/Balyasny/Elliott)</div></article>
+      <article class="card"><div class="avatar"><img src="photos/coles.jpg" alt="Edward Coles"></div><div class="name">Edward Coles</div><div class="caption">The Raine Group</div></article>
+      <article class="card"><div class="avatar"><span class="initials">EP</span></div><div class="name">Edgard Puente</div><div class="caption">Truist Securities</div></article>
+      <article class="card"><div class="avatar"><img src="photos/feldman.jpg" alt="Spencer Feldman"></div><div class="name">Spencer Feldman</div><div class="caption">Olshan Frome Wolosky &middot; Securities Attorney</div></article>
+      <article class="card"><div class="avatar"><span class="initials">BH</span></div><div class="name">Benjamin Hertz</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><span class="initials">PW</span></div><div class="name">Patrick Wilson</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><span class="initials">CE</span></div><div class="name">Chandler Elwyn</div><div class="caption">NY Fed &middot; Markets Group</div></article>
+      <article class="card"><div class="avatar"><span class="initials">PF</span></div><div class="name">Peter Faulkner</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><img src="photos/cody.jpg" alt="Hiram Cody"></div><div class="name">Hiram Cody</div><div class="caption">Memorial Sloan Kettering &middot; Surgical Oncologist</div></article>
+      <article class="card"><div class="avatar"><span class="initials">WB</span></div><div class="name">William Beischer</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><span class="initials">SP</span></div><div class="name">Stephen Preefer</div><div class="caption">Guggenheim Partners &middot; Senior MD</div></article>
+      <article class="card"><div class="avatar"><span class="initials">CS</span></div><div class="name">Camillo Schmidt Chiari</div><div class="caption">Gabelli &middot; Equity Research Analyst</div></article>
+      <article class="card"><div class="avatar"><span class="initials">MM</span></div><div class="name">Matthew Moran</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><span class="initials">RC</span></div><div class="name">Robert Cox</div><div class="caption"></div></article>
     </section>
 
     <footer>
