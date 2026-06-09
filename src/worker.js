@@ -1,15 +1,17 @@
 /**
  * Cloudflare Worker for quarryme.com
- * Proxies MSHA public web pages to avoid browser CORS restrictions.
- * No API key required — all data sourced from public MSHA pages.
  *
  * Routes:
- *   GET /api/msha/:mineId             -> Mine info (arlweb.msha.gov HTML scrape)
- *   GET /api/msha/:mineId/violations  -> Violations (arlweb.msha.gov HTML scrape)
- *   GET /api/msha/:mineId/inspections -> Inspections (arlweb.msha.gov HTML scrape)
- *   GET /api/msha/:mineId/production  -> Annual production (arlweb.msha.gov HTML scrape)
- *   everything else -> static assets
+ *   /union-club/*                     -> HTTP Basic Auth gate (password-protected)
+ *   /api/msha/:mineId                 -> Mine info (arlweb.msha.gov HTML scrape)
+ *   /api/msha/:mineId/violations      -> Violations (arlweb.msha.gov HTML scrape)
+ *   /api/msha/:mineId/inspections     -> Inspections (arlweb.msha.gov HTML scrape)
+ *   /api/msha/:mineId/production      -> Annual production (arlweb.msha.gov HTML scrape)
+ *   everything else                   -> static assets
  */
+
+// Password gate for /union-club/* — accepts any username, password must match
+const UNION_CLUB_PASSWORD = 'natalia';
 
 export default {
   async fetch(request, env) {
@@ -19,6 +21,16 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders() });
     }
 
+    // Password-gate the entire Union Club tree, including sub-pages such as
+    // /union-club/dinner-2026-06-08/. Matches both the bare /union-club path
+    // (served as union-club.html) and any /union-club/... descendant.
+    if (url.pathname === '/union-club' ||
+        url.pathname === '/union-club.html' ||
+        url.pathname.startsWith('/union-club/')) {
+      const authResp = checkBasicAuth(request);
+      if (authResp) return authResp;
+    }
+
     if (url.pathname.startsWith('/api/msha/')) {
       return proxyMsha(url, env, request);
     }
@@ -26,6 +38,33 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
+
+// ---------------------------------------------------------------------------
+// HTTP Basic Auth gate
+// ---------------------------------------------------------------------------
+function checkBasicAuth(request) {
+  const auth = request.headers.get('Authorization') || '';
+  if (auth.startsWith('Basic ')) {
+    try {
+      const decoded = atob(auth.slice(6));
+      const idx = decoded.indexOf(':');
+      const password = idx >= 0 ? decoded.slice(idx + 1) : '';
+      if (password === UNION_CLUB_PASSWORD) {
+        return null; // authorized — let the request through
+      }
+    } catch (_) {
+      // fall through to 401
+    }
+  }
+  return new Response('Authentication required.', {
+    status: 401,
+    headers: {
+      'WWW-Authenticate': 'Basic realm="Union Club", charset="UTF-8"',
+      'Content-Type': 'text/plain; charset=UTF-8',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
 
 async function proxyMsha(url, env, request) {
   const after = url.pathname.slice('/api/msha/'.length);
@@ -79,34 +118,27 @@ async function fetchMineInfo(mineId) {
 }
 
 function parseMineInfoHtml(html, mineId) {
-  // Strip tags helper
   const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim();
 
   const result = { MINE_ID: mineId };
-
-  // The BasicMineInfoResults page uses a table with two-column rows: label | value
-  // Match every <tr>…</tr> that contains at least two <td> cells
   const rowRe = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
-  const cellRe = /<td[^>]*>([\s\S]*?)<\/td>/gi;
 
   let rowMatch;
   while ((rowMatch = rowRe.exec(html)) !== null) {
     const rowHtml = rowMatch[1];
     const cells = [];
-    let cellMatch;
     const localCellRe = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+    let cellMatch;
     while ((cellMatch = localCellRe.exec(rowHtml)) !== null) {
       cells.push(strip(cellMatch[1]));
     }
     if (cells.length >= 2 && cells[0]) {
-      // Normalise the label: upper-snake-case, strip trailing colon
       const label = cells[0].replace(/:$/, '').trim().toUpperCase().replace(/\s+/g, '_');
       const value = cells[1];
       if (label && value) result[label] = value;
     }
   }
 
-  // Also try to pull the mine name from a heading if present
   const nameMatch = html.match(/<h[123][^>]*>([\s\S]*?)<\/h[123]>/i);
   if (nameMatch && !result.MINE_NAME) {
     result.MINE_NAME = strip(nameMatch[1]);
@@ -182,18 +214,10 @@ async function fetchInspections(mineId) {
   return jsonResp({ value: rows.slice(0, 5) });
 }
 
-// ---------------------------------------------------------------------------
-// Production — no direct HTML page; return empty gracefully
-// ---------------------------------------------------------------------------
 async function fetchProduction(mineId) {
-  // MSHA's production data is bulk-download only; return empty so the UI
-  // degrades gracefully rather than erroring.
   return jsonResp({ value: [], note: 'Production data not available via this proxy' });
 }
 
-// ---------------------------------------------------------------------------
-// Generic HTML table → array-of-objects parser
-// ---------------------------------------------------------------------------
 function parseTableRows(html) {
   const strip = (s) =>
     s.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim();
@@ -201,7 +225,6 @@ function parseTableRows(html) {
   const rows = [];
   const headers = [];
 
-  // Extract header row (th cells)
   const theadMatch = html.match(/<thead[^>]*>([\s\S]*?)<\/thead>/i);
   if (theadMatch) {
     const thRe = /<th[^>]*>([\s\S]*?)<\/th>/gi;
@@ -211,7 +234,6 @@ function parseTableRows(html) {
     }
   }
 
-  // If no thead, try first tr for headers
   const allRows = [];
   const trRe = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
   let trMatch;
@@ -251,9 +273,6 @@ function parseTableRows(html) {
   return rows;
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 function corsHeaders() {
   return {
     'Access-Control-Allow-Origin': '*',
