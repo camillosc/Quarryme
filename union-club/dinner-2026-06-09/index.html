@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Union Club &middot; June 9, 2026</title>
+<style>
+  :root {
+    --ink: #1b1612;
+    --paper: #fdfcf8;
+    --sepia: #7a5a3a;
+    --sepia-soft: #b89876;
+    --rule: #e6dfd1;
+    --muted: #8a7c6c;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "EB Garamond", "Adobe Garamond Pro", Garamond, "Times New Roman", serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body { min-height: 100vh; padding: 4rem 1.5rem 6rem; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 3.5rem; }
+  header h1 {
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  header .sep {
+    display: inline-block;
+    width: 64px;
+    height: 1px;
+    background: var(--sepia-soft);
+    margin: 1.2rem auto 0;
+    vertical-align: middle;
+  }
+  header .sub {
+    margin-top: 0.9rem;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--sepia);
+    letter-spacing: 0.04em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.6rem 1.6rem;
+  }
+  @media (max-width: 760px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 2.2rem 1rem; }
+    body { padding: 2.5rem 1rem 4rem; }
+  }
+  .card { text-align: center; transition: transform 0.25s ease; }
+  .card:hover { transform: scale(1.025); }
+  .avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 0.9rem;
+    background: #f3ecdf;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 1px var(--rule) inset;
+  }
+  @media (max-width: 760px) {
+    .avatar { width: 112px; height: 112px; }
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: saturate(0.92);
+  }
+  .initials {
+    font-size: 2.2rem;
+    color: var(--sepia);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    user-select: none;
+  }
+  .name {
+    font-size: 1.02rem;
+    line-height: 1.3;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .caption {
+    margin-top: 0.18rem;
+    font-style: italic;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    min-height: 1em;
+  }
+  footer {
+    text-align: center;
+    margin-top: 5rem;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--sepia-soft);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Union Club</h1>
+      <div><span class="sep"></span></div>
+      <p class="sub">June 9, 2026</p>
+    </header>
+
+    <section class="grid" aria-label="Dinner attendees">
+      <article class="card"><div class="avatar"><span class="initials">WG</span></div><div class="name">Walter Glennon</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><img src="photos/kolman.jpg" alt="Richard Kolman"></div><div class="name">Richard Kolman</div><div class="caption">Academy Securities &middot; Vice Chairman, Public Sector &amp; Infrastructure</div></article>
+      <article class="card"><div class="avatar"><img src="photos/eide.jpg" alt="William Eide"></div><div class="name">William Eide</div><div class="caption">Rothschild &amp; Co &middot; MD, Tech IB</div></article>
+      <article class="card"><div class="avatar"><span class="initials">SM</span></div><div class="name">Sebastian Morris</div><div class="caption">Citi</div></article>
+      <article class="card"><div class="avatar"><img src="photos/carlotti.jpg" alt="Valentino Carlotti"></div><div class="name">Valentino Carlotti</div><div class="caption">Brown Brothers Harriman &middot; Partner (ex-GS)</div></article>
+      <article class="card"><div class="avatar"><img src="photos/diamandakis.jpg" alt="Anthony Diamandakis"></div><div class="name">Anthony Diamandakis</div><div class="caption">J.P. Morgan &middot; Vice Chair, Strategic Investors (ex-Citi)</div></article>
+      <article class="card"><div class="avatar"><img src="photos/hein.jpg" alt="Peter Hein"></div><div class="name">Peter Hein</div><div class="caption">Wachtell Lipton &middot; Of Counsel, Litigation</div></article>
+      <article class="card"><div class="avatar"><img src="photos/wurgler.jpg" alt="Jeffrey Wurgler"></div><div class="name">Jeffrey Wurgler</div><div class="caption">NYU Stern &middot; Nomura Professor of Finance</div></article>
+      <article class="card"><div class="avatar"><img src="photos/heenan.jpg" alt="Charles Heenan"></div><div class="name">Charles Heenan</div><div class="caption">Kennox Asset Management &middot; Investment Director</div></article>
+      <article class="card"><div class="avatar"><img src="photos/coles.jpg" alt="Edward Coles"></div><div class="name">Edward Coles</div><div class="caption">The Raine Group</div></article>
+      <article class="card"><div class="avatar"><img src="photos/hixon.jpg" alt="Graham Hixon"></div><div class="name">Graham Hixon</div><div class="caption">KBW (Stifel) &middot; Director, Depositories</div></article>
+      <article class="card"><div class="avatar"><span class="initials">AB</span></div><div class="name">Mrs. Allan Benton</div><div class="caption"></div></article>
+      <article class="card"><div class="avatar"><img src="photos/schmidt-chiari.jpg" alt="Camillo Schmidt Chiari"></div><div class="name">Camillo Schmidt Chiari</div><div class="caption">Gabelli &middot; Equity Research Analyst</div></article>
+      <article class="card"><div class="avatar"><span class="initials">WP</span></div><div class="name">William Philip</div><div class="caption"></div></article>
+    </section>
+
+    <footer>
+      Fourteen guests &middot; The Union Club of the City of New York
+    </footer>
+  </div>
+</body>
+</html>
